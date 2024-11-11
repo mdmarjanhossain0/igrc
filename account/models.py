@@ -1,6 +1,6 @@
 from re import T
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, Group, Permission
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -44,54 +44,37 @@ def profile_picture_location(instance, filename):
     return file_path
 
 class Account(AbstractBaseUser, PermissionsMixin):
-    STUDENT = "Student"
-    TEACHER = "Teacher"
-    ROLES = (
-        (STUDENT, STUDENT),
-        (TEACHER, TEACHER)
-    )
+
 
     date_joined                 = models.DateTimeField(verbose_name="date_joined", auto_now_add=True)
     last_login                  = models.DateTimeField(verbose_name="last_login", auto_now=True)
     otp                         = models.CharField(max_length=6, null=True, blank=True)
     otp_send_time               = models.DateTimeField(null=True, blank=True)
+    
     is_admin                    = models.BooleanField(default=False)
     is_active                   = models.BooleanField(default=True)
     is_staff                    = models.BooleanField(default=False)
     is_superuser                = models.BooleanField(default=False)
 
-
-    mobile                      = models.CharField(max_length=11, unique=True, verbose_name='mobile')
+    id                          = models.AutoField(primary_key=True)
+    email                       = models.EmailField(unique=True, null=False, blank=False)
     username                    = models.CharField(max_length=100, null=False, blank=False)
+    password                    = models.CharField(max_length=100, null=False, blank=False)
     profile_picture             = models.ImageField(upload_to=profile_picture_location, null=True, blank=True)
 
-    institution                 = models.CharField(max_length=255, null=True)
-    occupation                  = models.CharField(max_length=255, null=True)
 
-    level                       = models.CharField(max_length=32, null=True, blank=True)
-    department                  = models.CharField(max_length=32, null=True, blank=True)
-    favorite_subject            = models.CharField(max_length=32, null=True, blank=True)
-    slug                        = models.CharField(max_length=32, blank=True, unique=True)
-    role                        = models.CharField(max_length=32, default=STUDENT, choices=ROLES)
     is_verified                 = models.BooleanField(default=False)
+    verified_at                 = models.DateTimeField(null=True, blank=True)
 
-    # Socal Medias
-    email                       = models.CharField(max_length=100, null=False, blank=False)
-    facebook                    = models.CharField(max_length=255, null=True)      
-    youtube                     = models.CharField(max_length=255, null=True)      
-    telegram                    = models.CharField(max_length=255, null=True)      
-    insta                       = models.CharField(max_length=255, null=True)
+    tenant_limit                = models.IntegerField(default=1)
 
-    region                      = models.CharField(max_length=255, null=True)
-    district                    = models.CharField(max_length=255, null=True)
-    division                    = models.CharField(max_length=255, null=True)
-    lat                         = models.DecimalField(max_digits=10, decimal_places=2)      
-    long                        = models.DecimalField(max_digits=10, decimal_places=2)      
-
+    role                        = models.CharField(max_length=100, null=True, blank=True)
+    groups                      = models.ManyToManyField(Group, related_name="account_groups", blank=True)
+    user_permissions            = models.ManyToManyField(Permission, related_name="account_permissions", blank=True)
 
     
 
-    USERNAME_FIELD = 'mobile'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ["username", ]
 
     objects = MyAccountManager()
@@ -114,65 +97,65 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 
 
-class ChatGroup(models.Model):
-    pass
+# class ChatGroup(models.Model):
+#     pass
 
-def cover_image_location(instance, filename):
-    file_path = 'cover_image/{filename}'.format(
-        filename=filename
-    )
-    return file_path
+# def cover_image_location(instance, filename):
+#     file_path = 'cover_image/{filename}'.format(
+#         filename=filename
+#     )
+#     return file_path
 
-class CoverImage(models.Model):
-    image = models.ImageField(upload_to=cover_image_location)
+# class CoverImage(models.Model):
+#     image = models.ImageField(upload_to=cover_image_location)
 
 
-def organization_logo_location(instance, filename):
-    file_path = 'organization/{filename}'.format(
-        filename=filename
-    )
-    return file_path
+# def organization_logo_location(instance, filename):
+#     file_path = 'organization/{filename}'.format(
+#         filename=filename
+#     )
+#     return file_path
 
-class Organization(models.Model):
-    owner                       = models.OneToOneField(Account, on_delete=models.CASCADE)
-    name                        = models.CharField(max_length=100, null=True, blank=True, unique=True)
-    is_online                   = models.BooleanField(default=True)
-    title                       = models.CharField(max_length=255)
-    description                 = CKEditor5Field("Text", config_name="extends")
+# class Organization(models.Model):
+#     owner                       = models.OneToOneField(Account, on_delete=models.CASCADE)
+#     name                        = models.CharField(max_length=100, null=True, blank=True, unique=True)
+#     is_online                   = models.BooleanField(default=True)
+#     title                       = models.CharField(max_length=255)
+#     description                 = CKEditor5Field("Text", config_name="extends")
 
-    # 1, 2, 3, 4, 5, 6.... 12
-    levels                      = models.CharField(max_length=100, null=True, blank=True)
-    departments                 = models.CharField(max_length=255, null=True, blank=True)
-    logo                        = models.ImageField(upload_to=organization_logo_location, null=True, blank=True)
-    cover_images                 = models.ManyToManyField()
-    is_verified                 = models.BooleanField(default=False)
-    domain                      = models.CharField(max_length=32, null=False, blank=False)
-    members                     = models.ManyToManyField(Account)
+#     # 1, 2, 3, 4, 5, 6.... 12
+#     levels                      = models.CharField(max_length=100, null=True, blank=True)
+#     departments                 = models.CharField(max_length=255, null=True, blank=True)
+#     logo                        = models.ImageField(upload_to=organization_logo_location, null=True, blank=True)
+#     cover_images                 = models.ManyToManyField()
+#     is_verified                 = models.BooleanField(default=False)
+#     domain                      = models.CharField(max_length=32, null=False, blank=False)
+#     members                     = models.ManyToManyField(Account)
 
-    email                       = models.CharField(max_length=100, null=False, blank=False)
-    facebook                    = models.CharField(max_length=255, null=True)      
-    youtube                     = models.CharField(max_length=255, null=True)      
-    telegram                    = models.CharField(max_length=255, null=True)      
-    insta                       = models.CharField(max_length=255, null=True)
+#     email                       = models.CharField(max_length=100, null=False, blank=False)
+#     facebook                    = models.CharField(max_length=255, null=True)      
+#     youtube                     = models.CharField(max_length=255, null=True)      
+#     telegram                    = models.CharField(max_length=255, null=True)      
+#     insta                       = models.CharField(max_length=255, null=True)
 
-    region                      = models.CharField(max_length=255, null=True)
-    district                    = models.CharField(max_length=255, null=True)
-    division                    = models.CharField(max_length=255, null=True)
-    address                     = models.CharField(max_length=255)
-    lat                         = models.DecimalField(max_digits=10, decimal_places=2)      
-    long                        = models.DecimalField(max_digits=10, decimal_places=2)
+#     `region`                      = models.CharField(max_length=255, null=True)
+#     district                    = models.CharField(max_length=255, null=True)
+#     division                    = models.CharField(max_length=255, null=True)
+#     address                     = models.CharField(max_length=255)
+#     lat                         = models.DecimalField(max_digits=10, decimal_places=2)      
+#     long                        = models.DecimalField(max_digits=10, decimal_places=2)
+        
+#     # success_story
+#     # reviews
+#     # courses
+#     # theme
 
-    # success_story
-    # reviews
-    # courses
-    # theme
+#     def __str__(self):
+#         return self.account.username
 
-    def __str__(self):
-        return self.account.username
-
-    def save(self, *args, **kwargs):
-        if not self.domain:
-            self.domain = slugify(self.name)
-            if Organization.objects.filter(domain=slugify(self.name)).exists():
-                self.domain = slugify(self.name + self.owner.mobile)
-        super(Organization, self).save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         if not self.domain:
+#             self.domain = slugify(self.name)
+#             if Organization.objects.filter(domain=slugify(self.name)).exists():
+#                 self.domain = slugify(self.name + self.owner.mobile)
+#         super(Organization, self).save(*args, **kwargs)

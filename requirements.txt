@@ -7,3 +7,4 @@ python-decouple
 python-slugify
 djangorestframework-simplejwt
 django-ckeditor-5
+mysqlclient

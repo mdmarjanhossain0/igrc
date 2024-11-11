@@ -33,7 +33,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_ckeditor_5',    
 
-    # "account"
+    "account",
+    'app'
 ]
 SITE_ID = 1
 CORS_ALLOW_ALL_ORIGINS = True
