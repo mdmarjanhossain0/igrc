@@ -1,0 +1,9 @@
+Django==4.2
+djangorestframework==3.14
+django-cors-headers==3.13.0
+Pillow
+requests
+python-decouple
+python-slugify
+djangorestframework-simplejwt
+django-ckeditor-5

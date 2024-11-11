@@ -1,0 +1,2 @@
+SUCCSS = "success"
+ERROR = "error"
