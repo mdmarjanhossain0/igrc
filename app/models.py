@@ -40,10 +40,19 @@ class Clause(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
 
+    title=models.CharField(max_length=255, null=False,blank=False)
+    description=models.TextField(null=True,blank=True)
+
+
 
 class Policy(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
+
+    title=models.CharField(max_length=255, null=False,blank=False)
+    description=models.TextField(null=True,blank=True)
+    content=models.TextField(null=False,blank=False)
+
     
 
 class Control(BaseModel):
@@ -124,9 +133,13 @@ class ProjectControl(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
 
-class Evidance(BaseModel):
+class Evidence(BaseModel):
     # project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(ProjectControl, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, null=False, blank=False)
+    description = models.TextField(max_length=255, null=True, blank=True)
+    content = models.TextField(null=False, blank=False)
+    file = models.FileField(upload_to='evidance/', null=True, blank=True)
 
 
 

@@ -1,8 +1,7 @@
 from rest_framework import serializers
 
 from account.models import (
-    Account,
-    Organization
+    Account
 )
 
 
@@ -11,14 +10,10 @@ class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = [
-            "mobile",
+            "email",
             "username",
             "profile_picture",
             "role",
-            "region",
-            "district",
-            "institution",
-            "occupation"
         ]
 
 class AccountSerializer(serializers.ModelSerializer):
@@ -27,9 +22,3 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         # fields = "__all__"
         exclude = ["groups", "user_permissions"]
-
-class OrganizationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Organization
-        fields = "__all__"
