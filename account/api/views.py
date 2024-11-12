@@ -23,12 +23,10 @@ from account.api.utils import (
 )
 from account.models import (
 	Account,
-	Organization
 )
 
 from account.api.serializers import (
 	AccountSerializer,
-	OrganizationSerializer,
 	RegisterSerializer
 )
 

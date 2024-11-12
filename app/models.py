@@ -38,7 +38,7 @@ class Task(BaseModel):
 
 class Clause(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
@@ -47,7 +47,7 @@ class Clause(BaseModel):
 
 class Policy(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
@@ -57,7 +57,19 @@ class Policy(BaseModel):
 
 class Control(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    title=models.CharField(max_length=255, null=False,blank=False)
+    description=models.TextField(null=True,blank=True)
+
+
+    def __str__(self):
+        return self.title
+    
+class SubControl(BaseModel):
+    framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
+    control = models.ForeignKey(Control, on_delete=models.CASCADE)
     
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
@@ -83,7 +95,10 @@ class Tenant(BaseModel):
 
 class Project(BaseModel):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
-    framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
+    framework = models.ForeignKey(Framework, on_delete=models.SET_NULL, null=True, blank=True)
+
+    framework_title = models.CharField(max_length=255)
+    framework_description=models.TextField(null=False,blank=False)
 
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, null=False, blank=False)
@@ -109,7 +124,7 @@ class ProjectMember(BaseModel):
 
 class ProjectTask(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 
     assigned_member = models.ForeignKey(Account, on_delete=models.DO_NOTHING, null=True, blank=True)
     is_completed = models.BooleanField(default=False)
@@ -133,9 +148,18 @@ class ProjectControl(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
 
+class ProjectSubControl(BaseModel):
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    sub_control = models.ForeignKey(SubControl, on_delete=models.SET_NULL, null=True, blank=True)
+    project_control = models.ForeignKey(ProjectControl, on_delete=models.CASCADE)
+
 class Evidence(BaseModel):
     # project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    control = models.ForeignKey(ProjectControl, on_delete=models.CASCADE)
+    tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+    policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
+    control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
+    sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
+
     title = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(max_length=255, null=True, blank=True)
     content = models.TextField(null=False, blank=False)

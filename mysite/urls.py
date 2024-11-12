@@ -13,6 +13,7 @@ urlpatterns = [
 
     
     path("api/account/", include("account.api.urls", "account_api")),
+    # path("app/api/", include("app.api.urls", "app_api")),
     
     path(
         "password_change/done/",
@@ -50,7 +51,6 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    path("app/api/", include("app.api.urls")),
 ]
 
 if settings.DEBUG:

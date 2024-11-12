@@ -11,8 +11,7 @@ from app.models import(
     ProjectTask,
     ProjectClause,
     TenantPolicy,
-    ProjectControl,
-    Evidance
+    ProjectControl
 )
 
 # Register your models here.
@@ -28,4 +27,3 @@ admin.site.register(ProjectTask)
 admin.site.register(ProjectClause)
 admin.site.register(TenantPolicy)
 admin.site.register(ProjectControl)
-admin.site.register(Evidance)

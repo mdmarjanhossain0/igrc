@@ -2,7 +2,6 @@ import random
 
 from account.models import (
     Account,
-    Organization
 )
 
 def mobile_check(mobile):
