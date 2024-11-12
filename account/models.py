@@ -6,7 +6,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from django_ckeditor_5.fields import CKEditor5Field
-from slugify import slugify
 
 
 class MyAccountManager(BaseUserManager):
@@ -56,7 +55,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
     is_staff                    = models.BooleanField(default=False)
     is_superuser                = models.BooleanField(default=False)
 
-    id                          = models.AutoField(primary_key=True)
     email                       = models.EmailField(unique=True, null=False, blank=False)
     username                    = models.CharField(max_length=100, null=False, blank=False)
     password                    = models.CharField(max_length=100, null=False, blank=False)
@@ -89,8 +87,4 @@ class Account(AbstractBaseUser, PermissionsMixin):
     #     return True
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.username)
-            if Account.objects.filter(slug=slugify(self.username)).exists():
-                self.slug = slugify(self.username + self.mobile)
         super(Account, self).save(*args, **kwargs)
