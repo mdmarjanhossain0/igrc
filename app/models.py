@@ -2,80 +2,77 @@ from django.db import models
 from mysite.settings import DEFAULT_AUTO_FIELD
 from account.models import Account
 
-class Framework(models.Model):
+# from django_ckeditor_5.fields import CKEditor5Field
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+class BaseModel(models.Model):
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+class Framework(BaseModel):
     id=models.AutoField(primary_key=True)
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=False,blank=False)
     reference_link=models.CharField(max_length=255, null=True,blank=True)
 
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
-
     def __str__(self):
         return self.title
-    pass
 
-class Task(models.Model):
+
+class Task(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
     
     id=models.AutoField(primary_key=True,)
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
 
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
-
     def __str__(self):
         return self.title
     
-    pass
 
-class Clause(models.Model):
+
+class Clause(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
-    pass
 
-class Policy(models.Model):
+
+class Policy(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
     
-    pass
 
-class Control(models.Model):
-    
-    # framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
+class Control(BaseModel):
+    framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, null=True, blank=True)
     
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
 
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
 
-    pass
 
 
 
 
-
-
-class Tenant(models.Model):
+class Tenant(BaseModel):
     id=models.AutoField(primary_key=True)
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=False,blank=False)
     contact_email=models.EmailField(null=False,blank=False)
     owner=models.ForeignKey(Account, on_delete=models.CASCADE)
 
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
-
     def __str__(self):
         return self.title
-    pass
 
-class Project(models.Model):
+
+class Project(BaseModel):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
 
@@ -84,9 +81,7 @@ class Project(models.Model):
     description=models.TextField(null=True,blank=True)
 
 
-    pass
-
-class ProjectMember(models.Model):
+class ProjectMember(BaseModel):
 
     ROLE_CHOICES = [
         ('viewer', 'Viewer'),
@@ -98,15 +93,12 @@ class ProjectMember(models.Model):
     member = models.ForeignKey(Account, blank=False, on_delete=models.CASCADE)
     role=models.CharField(max_length=255, choices=ROLE_CHOICES ,default="viewer")
 
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
-
     def __str__(self):
         return self.member.username
-    pass
 
 
-class ProjectTask(models.Model):
+
+class ProjectTask(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
 
@@ -116,24 +108,48 @@ class ProjectTask(models.Model):
     deadline = models.DateTimeField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)
 
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
 
-    pass
 
-class ProjectClause(models.Model):
+class ProjectClause(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    pass
+    clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
 
-class TenantPolicy(models.Model):
+
+class TenantPolicy(BaseModel):
     project = models.ManyToManyField(Project, blank=True)
-    pass
+    title = models.CharField(max_length=255)
+    description = models.TextField()
 
-class ProjectControl(models.Model):
+class ProjectControl(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    pass
+    control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
 
-class Evidance(models.Model):
+class Evidance(BaseModel):
     # project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(ProjectControl, on_delete=models.CASCADE)
-    pass
+
+
+
+
+@receiver(post_save, sender=Project)
+def created_project_receiver(sender, instance=None, created=False, **kwargs):
+    if created:
+        for item in instance.framework.task_set.all():
+            ProjectTask.objects.create(
+                project=instance,
+                task=item
+            )
+        for item in instance.framework.clause_set.all():
+            ProjectClause.objects.create(
+                project=instance,
+                clause=item
+            )
+        for item in instance.framework.policy_set.all():
+            TenantPolicy.objects.create(
+                project=instance
+            )
+        for item in instance.framework.control_set.all():
+            ProjectControl.objects.create(
+                project=instance,
+                control=item
+            )

@@ -6,5 +6,6 @@ requests
 python-decouple
 python-slugify
 djangorestframework-simplejwt
-django-ckeditor-5
 mysqlclient
+django-ckeditor-5==0.2.15
+django-filter==24.3
