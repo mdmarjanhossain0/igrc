@@ -16,12 +16,12 @@ class BaseModel(models.Model):
 
 class Framework(BaseModel):
     id=models.AutoField(primary_key=True)
-    title=models.CharField(max_length=255, null=False,blank=False)
+    name=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=False,blank=False)
     reference_link=models.CharField(max_length=255, null=True,blank=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class Task(BaseModel):
@@ -97,12 +97,22 @@ class Project(BaseModel):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     framework = models.ForeignKey(Framework, on_delete=models.SET_NULL, null=True, blank=True)
 
-    framework_title = models.CharField(max_length=255)
+    framework_name = models.CharField(max_length=255)
     framework_description=models.TextField(null=False,blank=False)
 
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, null=False, blank=False)
     description=models.TextField(null=True,blank=True)
+    
+    def save(self, *args, **kwargs):
+        if not self.framework_name and self.framework:
+            self.framework_name = self.framework.name
+        if not self.framework_description and self.framework:
+            self.framework_description = self.framework.description
+        
+
+
+        super(Project, self).save(*args, **kwargs)
 
 
 class ProjectMember(BaseModel):
@@ -143,6 +153,7 @@ class TenantPolicy(BaseModel):
     project = models.ManyToManyField(Project, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
+    content = models.TextField()
 
 class ProjectControl(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -207,11 +218,25 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
                 clause=item
             )
         for item in instance.framework.policy_set.all():
-            TenantPolicy.objects.create(
-                project=instance
+            tp = TenantPolicy(
+                title=item.title,
+                description=item.description,
+                content=item.content
             )
+            tp.save()
+            tp.project.set([item.pk])
+            # tp.save()
+
+
         for item in instance.framework.control_set.all():
             ProjectControl.objects.create(
                 project=instance,
                 control=item
+            )
+
+        for item in instance.framework.subcontrol_set.all():
+            ProjectSubControl.objects.create(
+                project=instance,
+                sub_control=item,
+                project_control=item.control.projectcontrol_set.first()
             )
