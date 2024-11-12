@@ -1,0 +1,6 @@
+DEBUG=True
+SECRET_KEY=django-insecure-p1mn$k(u=-r72fi1&ts2x=(*+hg6tzwr37(m3yl*t^$h^9^tb3
+DATABASE_NAME=igrc
+DATABASE_USER=root
+PASSWORD=
+HOST=localhost
