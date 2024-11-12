@@ -163,7 +163,7 @@ class Evidence(BaseModel):
     title = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(max_length=255, null=True, blank=True)
     content = models.TextField(null=False, blank=False)
-    file = models.FileField(upload_to='evidance/', null=True, blank=True)
+    file = models.FileField(upload_to='evidence/', null=True, blank=True)
 
 
 
