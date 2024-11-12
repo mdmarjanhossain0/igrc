@@ -153,6 +153,10 @@ class ProjectSubControl(BaseModel):
     sub_control = models.ForeignKey(SubControl, on_delete=models.SET_NULL, null=True, blank=True)
     project_control = models.ForeignKey(ProjectControl, on_delete=models.CASCADE)
 
+
+class EvidenceFile(BaseModel):
+    file = models.FileField(upload_to='evidence/', null=True, blank=True)
+
 class Evidence(BaseModel):
     # project = models.ForeignKey(Project, on_delete=models.CASCADE)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
@@ -163,9 +167,30 @@ class Evidence(BaseModel):
     title = models.CharField(max_length=255, null=False, blank=False)
     description = models.TextField(max_length=255, null=True, blank=True)
     content = models.TextField(null=False, blank=False)
-    file = models.FileField(upload_to='evidence/', null=True, blank=True)
+    files = models.ManyToManyField(EvidenceFile, blank=True)
 
 
+
+class Comment(BaseModel):
+    policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
+    control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
+    sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
+
+class Note(BaseModel):
+    policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
+    control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
+    sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
+
+class AuditorFeedback(BaseModel):
+    policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
+    control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
+    sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
+    content = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
 
 
 @receiver(post_save, sender=Project)
