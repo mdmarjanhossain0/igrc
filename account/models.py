@@ -10,23 +10,23 @@ from django_ckeditor_5.fields import CKEditor5Field
 
 class MyAccountManager(BaseUserManager):
 
-    def create_user(self, mobile, username, password=None):
-        if not mobile:
+    def create_user(self, email, username, password=None):
+        if not email:
             raise ValueError("User must have an phone number")
         if not username:
             raise ValueError("User must have an username address")
 
         user = self.model(
             username=username,
-            mobile=mobile
+            email=email
         )
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, mobile, username, password):
+    def create_superuser(self, email, username, password):
         user = self.create_user(
-            mobile=mobile,
+            email=email,
             username=username
         )
         user.set_password(password)
