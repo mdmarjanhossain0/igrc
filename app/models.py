@@ -2,6 +2,7 @@ from django.db import models
 from mysite.settings import DEFAULT_AUTO_FIELD
 from account.models import Account
 
+from django.core.validators import MinValueValidator, MaxValueValidator
 # from django_ckeditor_5.fields import CKEditor5Field
 
 from django.db.models.signals import post_save
@@ -159,10 +160,18 @@ class ProjectControl(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
 
+    def average_completion(self):
+        avg_completion=ProjectSubControl.objects.filter(project_control=self).aggregate(models.Avg('completion'))
+        return avg_completion['completion__avg'] or 0
+
 class ProjectSubControl(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     sub_control = models.ForeignKey(SubControl, on_delete=models.SET_NULL, null=True, blank=True)
     project_control = models.ForeignKey(ProjectControl, on_delete=models.CASCADE)
+
+    completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+
+
 
 
 class EvidenceFile(BaseModel):

@@ -1,17 +1,6 @@
 from rest_framework import serializers
-from app.models import (
-    Framework,
-    Task, 
-    Clause, 
-    Policy, 
-    Control, 
-    Project, 
-    ProjectMember, 
-    ProjectTask, 
-    ProjectClause, 
-    TenantPolicy, 
-    ProjectControl
-)
+from app.models import (Clause, Control, Framework, Policy, Project, ProjectClause, ProjectControl,
+    ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task, Tenant, TenantPolicy)
 
 
 class FrameworkSerializer(serializers.ModelSerializer):
@@ -44,6 +33,12 @@ class SubControlSerializer(serializers.ModelSerializer):
         model = SubControl
         fields = '__all__'
 
+class TenantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Tenant
+        fields = '__all__'
+
+
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
@@ -70,6 +65,15 @@ class TenantPolicySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProjectControlSerializer(serializers.ModelSerializer):
+    completion=serializers.SerializerMethodField()
     class Meta:
         model = ProjectControl
+        fields = '__all__'
+    
+    def get_completion(self, obj):
+        return obj.average_completion()
+
+class ProjectSubControlSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectSubControl
         fields = '__all__'
