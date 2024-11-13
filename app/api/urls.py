@@ -14,6 +14,8 @@ from .views import (
     ProjectControlModelViewSet
 )
 
+app_name='app_api'
+
 router = DefaultRouter()
 router.register(r'frameworks', FrameworkModelViewSet)
 router.register(r'tasks', TaskModelViewSet)

@@ -1,14 +1,13 @@
 from rest_framework import viewsets
-from app.models import (
-  Framework, Task, Clause, Policy, Control, Project, ProjectMember, 
-  ProjectTask, ProjectClause, TenantPolicy, ProjectControl
-)
+from app.models import (Clause, Control, Framework, Policy, Project, ProjectClause, ProjectControl,
+    ProjectMember, ProjectTask, SubControl, Task, TenantPolicy)
 from .serializers import (
   FrameworkSerializer,
   TaskSerializer,
   ClauseSerializer,
   PolicySerializer,
   ControlSerializer,
+  SubControlSerializer,
   ProjectSerializer,
   ProjectMemberSerializer,
   ProjectTaskSerializer,
@@ -36,6 +35,11 @@ class PolicyModelViewSet(viewsets.ModelViewSet):
 class ControlModelViewSet(viewsets.ModelViewSet):
     queryset = Control.objects.all()
     serializer_class = ControlSerializer
+
+class SubControlViewSet(viewsets.ModelViewSet):
+    queryset = SubControl.objects.all()
+    serializer_class = SubControlSerializer
+
 
 class ProjectModelViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()

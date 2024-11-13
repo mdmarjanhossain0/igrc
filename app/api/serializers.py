@@ -39,6 +39,11 @@ class ControlSerializer(serializers.ModelSerializer):
         model = Control
         fields = '__all__'
 
+class SubControlSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubControl
+        fields = '__all__'
+
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project

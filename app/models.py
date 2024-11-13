@@ -240,3 +240,17 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
                 sub_control=item,
                 project_control=item.control.projectcontrol_set.first()
             )
+
+        for item in instance.framework.subcontrol_set.all():
+            ProjectSubControl.objects.create(
+                project=instance,
+                sub_control=item,
+                project_control=item.control.projectcontrol_set.first()
+            )
+
+        for item in instance.framework.subcontrol_set.all():
+            ProjectSubControl.objects.create(
+                project=instance,
+                sub_control=item,
+                project_control=item.control.projectcontrol_set.first()
+            )

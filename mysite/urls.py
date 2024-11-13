@@ -13,7 +13,7 @@ urlpatterns = [
 
     
     path("api/account/", include("account.api.urls", "account_api")),
-    # path("api/app/", include("app.api.urls", "app_api")),
+    path("api/app/", include("app.api.urls", "app_api")),
     
     path(
         "password_change/done/",
