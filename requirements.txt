@@ -9,3 +9,4 @@ djangorestframework-simplejwt
 mysqlclient
 django-ckeditor-5==0.2.15
 django-filter==24.3
+drf-yasg
