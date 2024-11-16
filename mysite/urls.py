@@ -6,6 +6,7 @@ from django.conf import settings
 from django.contrib.sitemaps.views import sitemap
 
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("ckeditor5/", include('django_ckeditor_5.urls')),
