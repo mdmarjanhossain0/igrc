@@ -36,14 +36,12 @@ class Task(BaseModel):
         return self.title
     
 
-
 class Clause(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
-
 
 
 class Policy(BaseModel):
@@ -54,7 +52,6 @@ class Policy(BaseModel):
     description=models.TextField(null=True,blank=True)
     content=models.TextField(null=False,blank=False)
 
-    
 
 class Control(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
@@ -79,10 +76,6 @@ class SubControl(BaseModel):
     def __str__(self):
         return self.title
 
-
-
-
-
 class Tenant(BaseModel):
     id=models.AutoField(primary_key=True)
     title=models.CharField(max_length=255, null=False,blank=False)
@@ -92,7 +85,6 @@ class Tenant(BaseModel):
 
     def __str__(self):
         return self.title
-
 
 class Project(BaseModel):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
@@ -115,7 +107,6 @@ class Project(BaseModel):
 
         super(Project, self).save(*args, **kwargs)
 
-
 class ProjectMember(BaseModel):
 
     ROLE_CHOICES = [
@@ -131,8 +122,6 @@ class ProjectMember(BaseModel):
     def __str__(self):
         return self.member.username
 
-
-
 class ProjectTask(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
@@ -143,12 +132,9 @@ class ProjectTask(BaseModel):
     deadline = models.DateTimeField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)
 
-
-
 class ProjectClause(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
-
 
 class TenantPolicy(BaseModel):
     project = models.ManyToManyField(Project, blank=True)
@@ -171,15 +157,14 @@ class ProjectSubControl(BaseModel):
 
     completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
-
-
-
 class EvidenceFile(BaseModel):
     file = models.FileField(upload_to='evidence/', null=True, blank=True)
 
 class Evidence(BaseModel):
     # project = models.ForeignKey(Project, on_delete=models.CASCADE)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+    task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
+    clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
     policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
     control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
     sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
@@ -188,8 +173,6 @@ class Evidence(BaseModel):
     description = models.TextField(max_length=255, null=True, blank=True)
     content = models.TextField(null=False, blank=False)
     files = models.ManyToManyField(EvidenceFile, blank=True)
-
-
 
 class Comment(BaseModel):
     policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
@@ -234,7 +217,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
             )
             tp.save()
             tp.project.set([item.pk])
-            # tp.save()
+            tp.save()
 
 
         for item in instance.framework.control_set.all():
