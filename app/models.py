@@ -111,13 +111,23 @@ class ProjectMember(BaseModel):
 
     ROLE_CHOICES = [
         ('viewer', 'Viewer'),
-        ('editor', 'Editor'),
+        ('Editor', 'Editor'),
+        ('Admin', 'Admin'),
         # ('external_auditor', 'Auditor(External)'),
         # ('internal_auditor', 'Auditor(Internal)'),
     ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     member = models.ForeignKey(Account, blank=False, on_delete=models.CASCADE)
     role=models.CharField(max_length=255, choices=ROLE_CHOICES ,default="viewer")
+    
+    all_clause = models.BooleanField(default=True)
+    clauses = models.ManyToManyField('ProjectClause', blank=True)
+    all_policy = models.BooleanField(default=True)
+    policies = models.ManyToManyField('TenantPolicy', blank=True)
+    all_control = models.BooleanField(default=True)
+    controls = models.ManyToManyField("ProjectControl", blank=True)
+    all_sub_control = models.BooleanField(default=True)
+    sub_controls = models.ManyToManyField("ProjectSubControl", blank=True)
 
     def __str__(self):
         return self.member.username
