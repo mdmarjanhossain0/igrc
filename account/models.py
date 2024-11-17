@@ -57,7 +57,6 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
     email                       = models.EmailField(unique=True, null=False, blank=False)
     username                    = models.CharField(max_length=100, null=False, blank=False)
-    password                    = models.CharField(max_length=100, null=False, blank=False)
     profile_picture             = models.ImageField(upload_to=profile_picture_location, null=True, blank=True)
 
 
@@ -89,3 +88,23 @@ class Account(AbstractBaseUser, PermissionsMixin):
     def save(self, *args, **kwargs):
         super(Account, self).save(*args, **kwargs)
 
+
+
+
+class Audit(models.Model):
+    title = models.CharField(max_length=60)
+    auditor = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
+
+    # copy from Account model because maybe user will deleted
+    username = models.CharField(max_length=100)
+
+    start = models.DateTimeField(null=False, blank=False)
+    end = models.DateTimeField(null=False, blank=False)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
+
+
+    def save(self, *args, **kwargs):
+        if self.auditor:
+            self.username = self.auditor.username
+        super(Audit, self).save(*args, **kwargs)

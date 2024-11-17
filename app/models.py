@@ -1,6 +1,6 @@
 from django.db import models
 from mysite.settings import DEFAULT_AUTO_FIELD
-from account.models import Account
+from account.models import Account, Audit
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 # from django_ckeditor_5.fields import CKEditor5Field
@@ -15,6 +15,7 @@ class BaseModel(models.Model):
     class Meta:
         abstract = True
 
+
 class Framework(BaseModel):
     id=models.AutoField(primary_key=True)
     name=models.CharField(max_length=255, null=False,blank=False)
@@ -23,7 +24,6 @@ class Framework(BaseModel):
 
     def __str__(self):
         return self.name
-
 
 class Task(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
@@ -35,14 +35,12 @@ class Task(BaseModel):
     def __str__(self):
         return self.title
     
-
 class Clause(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
-
 
 class Policy(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
@@ -51,7 +49,6 @@ class Policy(BaseModel):
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
     content=models.TextField(null=False,blank=False)
-
 
 class Control(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
@@ -75,6 +72,9 @@ class SubControl(BaseModel):
 
     def __str__(self):
         return self.title
+
+
+
 
 class Tenant(BaseModel):
     id=models.AutoField(primary_key=True)
@@ -161,8 +161,8 @@ class EvidenceFile(BaseModel):
     file = models.FileField(upload_to='evidence/', null=True, blank=True)
 
 class Evidence(BaseModel):
-    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
     task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
     clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
     policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
@@ -179,6 +179,7 @@ class Comment(BaseModel):
     control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
     sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
     content = models.TextField(null=True, blank=True)
+    is_auditor = models.BooleanField(default=False)
     created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
 
 class Note(BaseModel):
@@ -186,6 +187,7 @@ class Note(BaseModel):
     control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
     sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
     content = models.TextField(null=True, blank=True)
+    audit = models.ForeignKey(Audit, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
 
 class AuditorFeedback(BaseModel):
@@ -224,20 +226,6 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
             ProjectControl.objects.create(
                 project=instance,
                 control=item
-            )
-
-        for item in instance.framework.subcontrol_set.all():
-            ProjectSubControl.objects.create(
-                project=instance,
-                sub_control=item,
-                project_control=item.control.projectcontrol_set.first()
-            )
-
-        for item in instance.framework.subcontrol_set.all():
-            ProjectSubControl.objects.create(
-                project=instance,
-                sub_control=item,
-                project_control=item.control.projectcontrol_set.first()
             )
 
         for item in instance.framework.subcontrol_set.all():
