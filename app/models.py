@@ -64,7 +64,7 @@ class Control(BaseModel):
 class SubControl(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
-    control = models.ForeignKey(Control, on_delete=models.CASCADE)
+    control = models.ForeignKey(Control, related_name="subcontrols",on_delete=models.CASCADE)
     
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
@@ -90,8 +90,8 @@ class Project(BaseModel):
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     framework = models.ForeignKey(Framework, on_delete=models.SET_NULL, null=True, blank=True)
 
-    framework_name = models.CharField(max_length=255)
-    framework_description=models.TextField(null=False,blank=False)
+    framework_name = models.CharField(max_length=255, null=True,blank=True)
+    framework_description=models.TextField(null=True,blank=True)
 
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=255, null=False, blank=False)
@@ -225,6 +225,8 @@ class AuditorFeedback(BaseModel):
 @receiver(post_save, sender=Project)
 def created_project_receiver(sender, instance=None, created=False, **kwargs):
     if created:
+        instance.framework_name = instance.framework.name
+        instance.framework_description = instance.framework.description
         for item in instance.framework.task_set.all():
             ProjectTask.objects.create(
                 project=instance,

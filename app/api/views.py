@@ -1,10 +1,13 @@
 from rest_framework import viewsets
 from app.models import (Clause, Control, Framework, Policy, Project, ProjectClause, ProjectControl,
-    ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task, TenantPolicy)
-from .serializers import (ClauseSerializer, ControlSerializer, FrameworkSerializer,
-    PolicySerializer, ProjectClauseSerializer, ProjectControlSerializer, ProjectMemberSerializer,
-    ProjectSerializer, ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer,
-    TaskSerializer, TenantPolicySerializer, TenantSerializer)
+    ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task, Tenant, TenantPolicy)
+from .serializers import (ClauseSerializer, ControlSerializer, ControlWithSubControlSerializer,
+    FrameworkSerializer, PolicySerializer, ProjectClauseSerializer, ProjectControlSerializer,
+    ProjectMemberSerializer, ProjectSerializer, ProjectSubControlSerializer, ProjectTaskSerializer,
+    SubControlSerializer, TaskSerializer, TenantPolicySerializer, TenantSerializer)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 class FrameworkModelViewSet(viewsets.ModelViewSet):
     queryset = Framework.objects.all()
@@ -31,7 +34,7 @@ class SubControlModelViewSet(viewsets.ModelViewSet):
     serializer_class = SubControlSerializer
 
 class TenantModelViewSet(viewsets.ModelViewSet):
-    queryset=Project.objects.all()
+    queryset=Tenant.objects.all()
     serializer_class = TenantSerializer
 
 
@@ -62,3 +65,22 @@ class ProjectControlModelViewSet(viewsets.ModelViewSet):
 class ProjectSubControlModelViewSet(viewsets.ModelViewSet):
     queryset = ProjectSubControl.objects.all()
     serializer_class = ProjectSubControlSerializer
+
+
+class ClausesByProjectView(APIView):
+    def get(self, request, project_id):
+        clauses=Clause.objects.filter(projectclause__project_id=project_id)
+        serializer=ClauseSerializer(clauses, many=True,)
+        return Response(serializer.data)
+
+class ControlsByProjectView(APIView):
+    def get(self, request, project_id):
+        controls=Control.objects.filter(projectcontrol__project_id=project_id)
+        serializer=ControlSerializer(controls, many=True,)
+        return Response(serializer.data)
+
+class ControlWithSubControlsByProjectView(APIView):
+    def get(self, request, project_id):
+        controls=Control.objects.filter(projectcontrol__project_id=project_id)
+        serializer=ControlWithSubControlSerializer(controls, many=True,)
+        return Response(serializer.data)

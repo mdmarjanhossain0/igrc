@@ -77,3 +77,21 @@ class ProjectSubControlSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectSubControl
         fields = '__all__'
+
+
+
+# class ClauseByProjectSerializer(serializers.ModelSerializer):
+#     project_clauses=serializers.SerializerMethodField()
+#     class Meta:
+#         model = Clause
+#         fields = '__all__'
+
+class ControlWithSubControlSerializer(serializers.ModelSerializer):
+    subcontrols=SubControlSerializer()
+    class Meta:
+        model = Control
+        fields = '__all__'
+    
+    def get_subcontrols(self,obj):
+        subcontrols=SubControl.objects.filter(control=obj)
+        return SubControlSerializer(subcontrols, many=True).data

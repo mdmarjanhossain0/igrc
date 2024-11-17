@@ -1,6 +1,7 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import (ClauseModelViewSet, ControlModelViewSet, FrameworkModelViewSet,
+from .views import (ClauseModelViewSet, ClausesByProjectView, ControlModelViewSet,
+    ControlsByProjectView, ControlWithSubControlsByProjectView, FrameworkModelViewSet,
     PolicyModelViewSet, ProjectClauseModelViewSet, ProjectControlModelViewSet,
     ProjectMemberModelViewSet, ProjectModelViewSet, ProjectSubControlModelViewSet,
     ProjectTaskModelViewSet, SubControlModelViewSet, TaskModelViewSet, TenantModelViewSet,
@@ -28,6 +29,7 @@ router.register(r'tenant-policies', TenantPolicyModelViewSet)
 router.register(r'project-controls', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
 
+
 schema_view=get_schema_view(
     openapi.Info(
         title="API",
@@ -46,5 +48,8 @@ schema_view=get_schema_view(
 urlpatterns = [
     path('', include(router.urls)),
     path("swagger", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+    path("project/<int:project_id>/clauses/", ClausesByProjectView.as_view(), name="project-clauses-by-project"),
+    path("project/<int:project_id>/controls/", ControlsByProjectView.as_view(), name="project-controls-by-project"),
+    path("project/<int:project_id>/controls-with-subcontrols/", ControlWithSubControlsByProjectView.as_view(), name="project-controls-by-project"),
 
 ]
