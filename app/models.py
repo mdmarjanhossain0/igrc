@@ -113,8 +113,8 @@ class ProjectMember(BaseModel):
         ('viewer', 'Viewer'),
         ('Editor', 'Editor'),
         ('Admin', 'Admin'),
-        # ('external_auditor', 'Auditor(External)'),
-        # ('internal_auditor', 'Auditor(Internal)'),
+        ('external_auditor', 'Auditor(External)'),
+        ('internal_auditor', 'Auditor(Internal)'),
     ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     member = models.ForeignKey(Account, blank=False, on_delete=models.CASCADE)
