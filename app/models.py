@@ -132,6 +132,20 @@ class ProjectMember(BaseModel):
     def __str__(self):
         return self.member.username
 
+@receiver(post_save, sender=ProjectMember)
+def assign_all_related_fields(sender, instance, created, **kwargs):
+    if created:
+        if instance.all_clause:
+            instance.clauses.set(ProjectClause.objects.filter(project=instance.project))
+        if instance.all_policy:
+            instance.policies.set(TenantPolicy.objects.filter(project=instance.project))
+        if instance.all_control:
+            instance.controls.set(ProjectControl.objects.filter(project=instance.project))
+        if instance.all_sub_control:
+            instance.sub_controls.set(ProjectSubControl.objects.filter(project=instance.project))
+        if instance.all_task:
+            instance.tasks.set(ProjectTask.objects.filter(project=instance.project))
+
 class ProjectTask(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
