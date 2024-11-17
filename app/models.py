@@ -203,7 +203,7 @@ class Comment(BaseModel):
     control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
     sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
     content = models.TextField(null=True, blank=True)
-    is_auditor = models.BooleanField(default=False)
+    audit = models.ForeignKey(Audit, on_delete=models.SET_NULL, null=True, blank=True)
     created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
 
 class Note(BaseModel):

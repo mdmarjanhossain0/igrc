@@ -102,6 +102,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 
 class Audit(models.Model):
 	title = models.CharField(max_length=60)
+	project = models.ForeignKey("app.Project", on_delete=models.CASCADE)
 	auditor = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
 
 	# copy from Account model because maybe user will deleted
@@ -109,6 +110,8 @@ class Audit(models.Model):
 
 	start = models.DateTimeField(null=False, blank=False)
 	end = models.DateTimeField(null=False, blank=False)
+
+	review = models.TextField(null=True, blank=True)
 	created_at=models.DateTimeField(auto_now_add=True)
 	updated_at=models.DateTimeField(auto_now=True)
 
