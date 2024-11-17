@@ -1,0 +1,37 @@
+Governance:
+	Framework
+		Clause
+		
+		Control
+			Subcontrol
+		TaskList
+		Policy
+
+
+	Branch/Tenant
+	TenanetPolicy
+	Project
+
+		ProjectTaskList
+
+		ProjectMember
+		ProjectClause
+		ProjectControl
+			ProjectSubcontrol
+		Comment
+		Note
+
+		Evidence
+
+
+Compliance:
+	Auditor
+		comment
+		Note
+		Status
+	
+
+
+
+
+Risk Management:
