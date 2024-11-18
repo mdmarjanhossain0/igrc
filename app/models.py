@@ -83,6 +83,7 @@ class Tenant(BaseModel):
     contact_email=models.EmailField(null=False,blank=False)
     owner=models.ForeignKey(Account, on_delete=models.CASCADE)
 
+
     def __str__(self):
         return self.title
 
@@ -113,6 +114,7 @@ class ProjectMember(BaseModel):
         ('viewer', 'Viewer'),
         ('Editor', 'Editor'),
         ('Admin', 'Admin'),
+        ('Manager','Manager'),
         ('external_auditor', 'Auditor(External)'),
         ('internal_auditor', 'Auditor(Internal)'),
     ]
