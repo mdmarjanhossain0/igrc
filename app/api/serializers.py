@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from app.models import (Clause, Control, Framework, Policy, Project, ProjectClause, ProjectControl,
-    ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task, Tenant, TenantPolicy)
+from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Policy, Project,
+    ProjectClause, ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task,
+    Tenant, TenantPolicy)
 
 
 class FrameworkSerializer(serializers.ModelSerializer):
@@ -78,7 +79,16 @@ class ProjectSubControlSerializer(serializers.ModelSerializer):
         model = ProjectSubControl
         fields = '__all__'
 
+class EvidenceFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EvidenceFile
+        fields = '__all__'
+class EvidenceSerializer(serializers.ModelSerializer):
+    files = EvidenceFileSerializer(many=True, read_only=True)
 
+    class Meta:
+        model = Evidence
+        fields = '__all__'
 
 # class ClauseByProjectSerializer(serializers.ModelSerializer):
 #     project_clauses=serializers.SerializerMethodField()
@@ -87,11 +97,16 @@ class ProjectSubControlSerializer(serializers.ModelSerializer):
 #         fields = '__all__'
 
 class ControlWithSubControlSerializer(serializers.ModelSerializer):
-    subcontrols=SubControlSerializer()
+    subcontrols=SubControlSerializer(many=True, read_only=True)
+    evidences=serializers.SerializerMethodField()
     class Meta:
         model = Control
         fields = '__all__'
     
-    def get_subcontrols(self,obj):
-        subcontrols=SubControl.objects.filter(control=obj)
-        return SubControlSerializer(subcontrols, many=True).data
+    # def get_subcontrols(self,obj):
+    #     subcontrols=SubControl.objects.filter(control=obj)
+    #     return SubControlSerializer(subcontrols, many=True).data
+
+    def get_evidences(self, obj):
+        evidences=Evidence.objects.filter(control__control=obj)
+        return EvidenceSerializer(evidences,many=True).data

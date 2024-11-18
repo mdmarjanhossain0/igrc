@@ -1,10 +1,12 @@
 from rest_framework import viewsets
-from app.models import (Clause, Control, Framework, Policy, Project, ProjectClause, ProjectControl,
-    ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task, Tenant, TenantPolicy)
+from app.models import (Clause, Control, Evidence, Framework, Policy, Project, ProjectClause,
+    ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task, Tenant,
+    TenantPolicy)
 from .serializers import (ClauseSerializer, ControlSerializer, ControlWithSubControlSerializer,
-    FrameworkSerializer, PolicySerializer, ProjectClauseSerializer, ProjectControlSerializer,
-    ProjectMemberSerializer, ProjectSerializer, ProjectSubControlSerializer, ProjectTaskSerializer,
-    SubControlSerializer, TaskSerializer, TenantPolicySerializer, TenantSerializer)
+    EvidenceSerializer, FrameworkSerializer, PolicySerializer, ProjectClauseSerializer,
+    ProjectControlSerializer, ProjectMemberSerializer, ProjectSerializer,
+    ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
+    TenantPolicySerializer, TenantSerializer)
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -65,6 +67,11 @@ class ProjectControlModelViewSet(viewsets.ModelViewSet):
 class ProjectSubControlModelViewSet(viewsets.ModelViewSet):
     queryset = ProjectSubControl.objects.all()
     serializer_class = ProjectSubControlSerializer
+
+
+class ProjectEvidenceModelViewSet(viewsets.ModelViewSet):
+    queryset = Evidence.objects.all()
+    serializer_class = EvidenceSerializer
 
 
 class ClausesByProjectView(APIView):

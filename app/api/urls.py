@@ -3,9 +3,9 @@ from rest_framework.routers import DefaultRouter
 from .views import (ClauseModelViewSet, ClausesByProjectView, ControlModelViewSet,
     ControlsByProjectView, ControlWithSubControlsByProjectView, FrameworkModelViewSet,
     PolicyModelViewSet, ProjectClauseModelViewSet, ProjectControlModelViewSet,
-    ProjectMemberModelViewSet, ProjectModelViewSet, ProjectSubControlModelViewSet,
-    ProjectTaskModelViewSet, SubControlModelViewSet, TaskModelViewSet, TenantModelViewSet,
-    TenantPolicyModelViewSet)
+    ProjectEvidenceModelViewSet, ProjectMemberModelViewSet, ProjectModelViewSet,
+    ProjectSubControlModelViewSet, ProjectTaskModelViewSet, SubControlModelViewSet,
+    TaskModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -28,6 +28,7 @@ router.register(r'project-clauses', ProjectClauseModelViewSet)
 router.register(r'tenant-policies', TenantPolicyModelViewSet)
 router.register(r'project-controls', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
+router.register(r'evidence', ProjectEvidenceModelViewSet)
 
 
 schema_view=get_schema_view(
