@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (ClauseModelViewSet, ClausesByProjectView, ControlModelViewSet,
     ControlsByProjectView, ControlWithSubControlsByProjectView, FrameworkModelViewSet,
     PolicyModelViewSet, ProjectClauseModelViewSet, ProjectControlModelViewSet,
-    ProjectEvidenceModelViewSet, ProjectMemberModelViewSet, ProjectModelViewSet,
+    EvidenceModelViewSet, ProjectMemberModelViewSet, ProjectModelViewSet,
     ProjectSubControlModelViewSet, ProjectTaskModelViewSet, SubControlModelViewSet,
     TaskModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet)
 
@@ -28,7 +28,7 @@ router.register(r'project-clauses', ProjectClauseModelViewSet)
 router.register(r'tenant-policies', TenantPolicyModelViewSet)
 router.register(r'project-controls', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
-router.register(r'evidence', ProjectEvidenceModelViewSet)
+router.register(r'evidence', EvidenceModelViewSet)
 
 
 schema_view=get_schema_view(

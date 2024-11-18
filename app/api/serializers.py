@@ -83,6 +83,7 @@ class EvidenceFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = EvidenceFile
         fields = '__all__'
+
 class EvidenceSerializer(serializers.ModelSerializer):
     files = EvidenceFileSerializer(many=True, read_only=True)
 
@@ -97,15 +98,21 @@ class EvidenceSerializer(serializers.ModelSerializer):
 #         fields = '__all__'
 
 class ControlWithSubControlSerializer(serializers.ModelSerializer):
-    subcontrols=SubControlSerializer(many=True, read_only=True)
+    subcontrols=serializers.SerializerMethodField()
     evidences=serializers.SerializerMethodField()
     class Meta:
         model = Control
         fields = '__all__'
     
-    # def get_subcontrols(self,obj):
-    #     subcontrols=SubControl.objects.filter(control=obj)
-    #     return SubControlSerializer(subcontrols, many=True).data
+    def get_subcontrols(self,obj):
+        subcontrols=SubControl.objects.filter(control=obj)
+
+        subcontrols_data = SubControlSerializer(subcontrols, many=True).data
+        for subcontrol in subcontrols_data:
+            subcontrol_obj = SubControl.objects.get(id=subcontrol['id'])
+            evidences = Evidence.objects.filter(sub_control__sub_control=subcontrol_obj)
+            subcontrol['evidences'] = EvidenceSerializer(evidences, many=True).data
+        return subcontrols_data
 
     def get_evidences(self, obj):
         evidences=Evidence.objects.filter(control__control=obj)

@@ -1,7 +1,7 @@
 from rest_framework import viewsets
-from app.models import (Clause, Control, Evidence, Framework, Policy, Project, ProjectClause,
-    ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task, Tenant,
-    TenantPolicy)
+from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Policy, Project,
+    ProjectClause, ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task,
+    Tenant, TenantPolicy)
 from .serializers import (ClauseSerializer, ControlSerializer, ControlWithSubControlSerializer,
     EvidenceSerializer, FrameworkSerializer, PolicySerializer, ProjectClauseSerializer,
     ProjectControlSerializer, ProjectMemberSerializer, ProjectSerializer,
@@ -69,10 +69,16 @@ class ProjectSubControlModelViewSet(viewsets.ModelViewSet):
     serializer_class = ProjectSubControlSerializer
 
 
-class ProjectEvidenceModelViewSet(viewsets.ModelViewSet):
+class EvidenceModelViewSet(viewsets.ModelViewSet):
     queryset = Evidence.objects.all()
     serializer_class = EvidenceSerializer
 
+    def perform_create(self, serializer):
+        evidence = serializer.save()
+        files = self.request.FILES.getlist('files')
+        for file in files:
+            evidence_file = EvidenceFile.objects.create(file=file)
+            evidence.files.add(evidence_file)
 
 class ClausesByProjectView(APIView):
     def get(self, request, project_id):

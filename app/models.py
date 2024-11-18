@@ -128,7 +128,8 @@ class ProjectMember(BaseModel):
     controls = models.ManyToManyField("ProjectControl", blank=True)
     all_sub_control = models.BooleanField(default=True)
     sub_controls = models.ManyToManyField("ProjectSubControl", blank=True)
-
+    all_task = models.BooleanField(default=True)
+    tasks=models.ManyToManyField("ProjectTask", blank=True)
     def __str__(self):
         return self.member.username
 
@@ -150,7 +151,7 @@ class ProjectTask(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 
-    assigned_member = models.ForeignKey(Account, on_delete=models.DO_NOTHING, null=True, blank=True)
+    # assigned_member = models.ForeignKey(Account, on_delete=models.DO_NOTHING, null=True, blank=True)
     is_completed = models.BooleanField(default=False)
 
     deadline = models.DateTimeField(null=True, blank=True)
