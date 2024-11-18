@@ -151,15 +151,23 @@ class ProjectTask(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 
+    title=models.CharField(max_length=255, null=True,blank=True)
+    description=models.TextField(null=True, blank=True)
+    
     # assigned_member = models.ForeignKey(Account, on_delete=models.DO_NOTHING, null=True, blank=True)
     is_completed = models.BooleanField(default=False)
 
     deadline = models.DateTimeField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)
 
+
 class ProjectClause(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
+
+    title=models.CharField(max_length=255, null=True,blank=True)
+    description=models.TextField(null=True,blank=True)
+    
 
 class TenantPolicy(BaseModel):
     project = models.ManyToManyField(Project, blank=True)
@@ -171,6 +179,9 @@ class ProjectControl(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
 
+    title=models.CharField(max_length=255, null=True,blank=True)
+    description=models.TextField(null=True,blank=True)
+    
     def average_completion(self):
         avg_completion=ProjectSubControl.objects.filter(project_control=self).aggregate(models.Avg('completion'))
         return avg_completion['completion__avg'] or 0
@@ -180,7 +191,11 @@ class ProjectSubControl(BaseModel):
     sub_control = models.ForeignKey(SubControl, on_delete=models.SET_NULL, null=True, blank=True)
     project_control = models.ForeignKey(ProjectControl, on_delete=models.CASCADE)
 
+    title=models.CharField(max_length=255, null=True,blank=True)
+    description=models.TextField(null=True,blank=True)
+    
     completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+
 
 class EvidenceFile(BaseModel):
     file = models.FileField(upload_to='evidence/', null=True, blank=True)
@@ -231,12 +246,16 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
         for item in instance.framework.task_set.all():
             ProjectTask.objects.create(
                 project=instance,
-                task=item
+                task=item,
+                title=item.title,
+                description=item.description
             )
         for item in instance.framework.clause_set.all():
             ProjectClause.objects.create(
                 project=instance,
-                clause=item
+                clause=item,
+                title=item.title,
+                description=item.description
             )
         for item in instance.framework.policy_set.all():
             tp = TenantPolicy(
@@ -253,11 +272,14 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
             ProjectControl.objects.create(
                 project=instance,
                 control=item
+                
             )
 
         for item in instance.framework.subcontrol_set.all():
             ProjectSubControl.objects.create(
                 project=instance,
                 sub_control=item,
-                project_control=item.control.projectcontrol_set.first()
+                project_control=item.control.projectcontrol_set.first(),
+                title=item.title,
+                description=item.description
             )

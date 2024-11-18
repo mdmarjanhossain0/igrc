@@ -97,3 +97,9 @@ class ControlWithSubControlsByProjectView(APIView):
         controls=Control.objects.filter(projectcontrol__project_id=project_id)
         serializer=ControlWithSubControlSerializer(controls, many=True,)
         return Response(serializer.data)
+    
+class TasksByProjectView(APIView):
+    def get(self, request, project_id):
+        tasks=Task.objects.filter(projecttask__project_id=project_id)
+        serializer=TaskSerializer(tasks, many=True,)
+        return Response(serializer.data)

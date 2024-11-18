@@ -1,11 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import (ClauseModelViewSet, ClausesByProjectView, ControlModelViewSet,
-    ControlsByProjectView, ControlWithSubControlsByProjectView, FrameworkModelViewSet,
-    PolicyModelViewSet, ProjectClauseModelViewSet, ProjectControlModelViewSet,
-    EvidenceModelViewSet, ProjectMemberModelViewSet, ProjectModelViewSet,
+    ControlsByProjectView, ControlWithSubControlsByProjectView, EvidenceModelViewSet,
+    FrameworkModelViewSet, PolicyModelViewSet, ProjectClauseModelViewSet,
+    ProjectControlModelViewSet, ProjectMemberModelViewSet, ProjectModelViewSet,
     ProjectSubControlModelViewSet, ProjectTaskModelViewSet, SubControlModelViewSet,
-    TaskModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet)
+    TaskModelViewSet, TasksByProjectView, TenantModelViewSet, TenantPolicyModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -51,6 +51,7 @@ urlpatterns = [
     path("swagger", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path("project/<int:project_id>/clauses/", ClausesByProjectView.as_view(), name="project-clauses-by-project"),
     path("project/<int:project_id>/controls/", ControlsByProjectView.as_view(), name="project-controls-by-project"),
-    path("project/<int:project_id>/controls-with-subcontrols/", ControlWithSubControlsByProjectView.as_view(), name="project-controls-by-project"),
+    path("project/<int:project_id>/controls-with-subcontrols/", ControlWithSubControlsByProjectView.as_view(), name="project-controls-with-subcontrols-by-project"),
+    path("project/<int:project_id>/tasks/", TasksByProjectView.as_view(), name="project-tasks-by-project"),
 
 ]
