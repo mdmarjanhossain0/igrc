@@ -108,11 +108,32 @@ class EvidenceModelViewSet(viewsets.ModelViewSet):
             evidence_file = EvidenceFile.objects.create(file=file)
             evidence.files.add(evidence_file)
 
-class ClausesByProjectView(APIView):
-    def get(self, request, project_id):
-        clauses=Clause.objects.filter(projectclause__project_id=project_id)
-        serializer=ClauseSerializer(clauses, many=True,)
-        return Response(serializer.data)
+
+
+class ClausesByProjectView(viewsets.ModelViewSet):
+    serializer_class = ProjectClauseSerializer
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        return ProjectClause.objects.filter(project_id=project_id)
+
+    def get_permissions(self):
+        if self.action == 'list':
+            return [IsAuthenticated()]
+        return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+
+    def perform_create(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+
+    def perform_update(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+    
 
 class ControlsByProjectView(APIView):
     def get(self, request, project_id):
@@ -140,10 +161,11 @@ class ProjectMembersByProject(APIView):
             return  [IsAuthenticated()]
         return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
 
-
+    
     def get(self, request, project_id):
         project_members=ProjectMember.objects.filter(project_id=project_id)
         serializer=ProjectMemberSerializer(project_members, many=True,)
+        print(str(IsProjectAdmin()))
         return Response(serializer.data)
 
     def post(self, request, project_id):

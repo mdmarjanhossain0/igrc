@@ -16,14 +16,11 @@ class Or(BasePermission):
 
 class IsProjectAdmin(BasePermission):
     def has_permission(self, request, view):
-        # Check if the user is authenticated
         if not request.user.is_authenticated:
             return False
         
-        # Get the project ID from the view's kwargs
-        project_id = view.kwargs.get('pk')
+        project_id = view.kwargs.get('project_id')
         
-        # Check if the user is an admin in the specific project
         return ProjectMember.objects.filter(
             project_id=project_id,
             member=request.user,
@@ -32,23 +29,34 @@ class IsProjectAdmin(BasePermission):
     
 class IsProjectManager(BasePermission):
     def has_permission(self, request, view):
-        # Check if the user is authenticated
         if not request.user.is_authenticated:
             return False
         
-        # Get the project ID from the view's kwargs
-        project_id = view.kwargs.get('pk')
-        
-        # Check if the user is an admin in the specific project
-        return ProjectMember.objects.filter(
+        project_id = view.kwargs.get('project_id')
+        print(project_id)
+        exists=ProjectMember.objects.filter(
             project_id=project_id,
             member=request.user,
             role='Manager'
         ).exists()
+        print(exists)
+        return exists
 
+class IsProjectViewer(BasePermission):
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        
+        project_id = view.kwargs.get('project_id')
+        
+        return ProjectMember.objects.filter(
+            project_id=project_id,
+            member=request.user,
+            role='Viewer'
+        ).exists()
+    
 class IsGrcAdmin(BasePermission):
     def has_permission(self, request, view):
-        # Check if the user is authenticated
         return request.user.is_authenticated and request.user.role== Account.ADMIN
 
 
