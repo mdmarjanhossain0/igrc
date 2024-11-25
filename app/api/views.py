@@ -1,7 +1,9 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, status
 from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Policy, Project,
     ProjectClause, ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task,
     Tenant, TenantPolicy)
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from app.api.permissions import IsGrcAdmin, IsProjectAdmin, IsProjectManager, Or
 from .serializers import (ClauseSerializer, ControlSerializer, ControlWithSubControlSerializer,
     EvidenceSerializer, FrameworkSerializer, PolicySerializer, ProjectClauseSerializer,
     ProjectControlSerializer, ProjectMemberSerializer, ProjectSerializer,
@@ -39,14 +41,40 @@ class TenantModelViewSet(viewsets.ModelViewSet):
     queryset=Tenant.objects.all()
     serializer_class = TenantSerializer
 
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            self.permission_classes=[IsGrcAdmin]
+        return super(TenantModelViewSet, self).get_permissions()
+
+
+
+
+
 
 class ProjectModelViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
+    def get_permissions(self):
+        if self.action == 'create':
+            self.permission_classes=[IsGrcAdmin]
+        if self.action in ['update', 'partial_update', 'destroy']:
+            self.permission_classes = [IsProjectAdmin]
+        
+        return super(ProjectModelViewSet, self).get_permissions()
+
+
 class ProjectMemberModelViewSet(viewsets.ModelViewSet):
     queryset = ProjectMember.objects.all()
     serializer_class = ProjectMemberSerializer
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            self.permission_classes=[(IsGrcAdmin)]
+        return super(ProjectMemberModelViewSet, self).get_permissions()
+
+
+    
 
 class ProjectTaskModelViewSet(viewsets.ModelViewSet):
     queryset = ProjectTask.objects.all()
@@ -80,11 +108,32 @@ class EvidenceModelViewSet(viewsets.ModelViewSet):
             evidence_file = EvidenceFile.objects.create(file=file)
             evidence.files.add(evidence_file)
 
-class ClausesByProjectView(APIView):
-    def get(self, request, project_id):
-        clauses=Clause.objects.filter(projectclause__project_id=project_id)
-        serializer=ClauseSerializer(clauses, many=True,)
-        return Response(serializer.data)
+
+
+class ClausesByProjectView(viewsets.ModelViewSet):
+    serializer_class = ProjectClauseSerializer
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        return ProjectClause.objects.filter(project_id=project_id)
+
+    def get_permissions(self):
+        if self.action == 'list':
+            return [IsAuthenticated()]
+        return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+
+    def perform_create(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+
+    def perform_update(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+    
 
 class ControlsByProjectView(APIView):
     def get(self, request, project_id):
@@ -103,3 +152,63 @@ class TasksByProjectView(APIView):
         tasks=Task.objects.filter(projecttask__project_id=project_id)
         serializer=TaskSerializer(tasks, many=True,)
         return Response(serializer.data)
+    
+
+class ProjectMembersByProject(APIView):
+
+    def get_permissions(self):
+        if self.request.method == 'GET':
+            return  [IsAuthenticated()]
+        return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+
+    
+    def get(self, request, project_id):
+        project_members=ProjectMember.objects.filter(project_id=project_id)
+        serializer=ProjectMemberSerializer(project_members, many=True,)
+        print(str(IsProjectAdmin()))
+        return Response(serializer.data)
+
+    def post(self, request, project_id):
+        data = request.data.copy()
+        data['project'] = project_id
+        serializer = ProjectMemberSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    
+class ProjectMemberByProject(APIView):
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+        else:
+            return [IsAuthenticated()]
+
+
+    def get(self, request, project_id, member_id):
+        project_member=ProjectMember.objects.get(project_id=project_id, id=member_id)
+        serializer=ProjectMemberSerializer(project_member)
+        return Response(serializer.data)
+
+    def put(self, request, project_id, member_id):
+        try:
+            project_member = ProjectMember.objects.get(project_id=project_id, id=member_id)
+        except ProjectMember.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = ProjectMemberSerializer(project_member, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, project_id, member_id):
+        try:
+            project_member = ProjectMember.objects.get(project_id=project_id, id=member_id)
+        except ProjectMember.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
+        project_member.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
