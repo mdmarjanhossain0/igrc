@@ -30,8 +30,8 @@ Compliance:
 		Note
 		Status
 	
-
-
-
-
 Risk Management:
+	Risk Register
+	Risk Mitigation
+	Risk Review
+	RiskReviewProject
