@@ -41,6 +41,10 @@ class ControlRegister(BaseModel):
     name = models.CharField(max_length=255)
 
 
+
+class Team(BaseModel):
+    name = models.CharField(max_length=255)
+
 class RiskRegister(BaseModel):
     EXTERNAL = "External"
     PEOPLE = "People"
@@ -103,6 +107,12 @@ class RiskRegister(BaseModel):
     tags = models.CharField(max_length=255)
 
 
+class MitigationControl(BaseModel):
+    title = models.CharField(max_length=255, null=False, blank=False)
+    description =  models.TextField(null=True, blank=True)
+
+
+
 class RiskMitigation(BaseModel):
     ACCEPTED = "Accepted"
     MITIGATE = "Mitigate"
@@ -130,6 +140,25 @@ class RiskMitigation(BaseModel):
         (EXCEPTIONAL, EXCEPTIONAL)
     )
 
+
+
+    CLOSED = "Closed"
+    MITIGATION_REVIEWED = "Mitigation Reviewd"
+    MITIGATION_PLANNE = "Mitigation Planne"
+    NEW = "New"
+    RESPONSED = "Responsed"
+    TREATED = "Treated"
+    UNTREATED = "Untreated"
+    STATUSSES = (
+        (CLOSED, CLOSED),
+        (MITIGATION_REVIEWED, MITIGATION_REVIEWED),
+        (MITIGATION_PLANNE, MITIGATION_PLANNE),
+        (NEW, NEW),
+        (RESPONSED, RESPONSED),
+        (TREATED, TREATED),
+        (UNTREATED, UNTREATED)
+    )
+
     risk = models.OneToOneField(RiskRegister, on_delete=models.CASCADE)
     submittion_date = models.DateTimeField()
     planned_mitigation_date = models.DateTimeField()
@@ -137,12 +166,21 @@ class RiskMitigation(BaseModel):
     mitigation_effort = models.CharField(max_length=255, choices=MITIGATION_EFFORTS, null=True, blank=True)
     mitigation_cost = models.CharField(max_length=255, null=True, blank=True)
     mitigation_owner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True, related_name="mitigation_owner")
-    migitation_team = models.ManyToManyField(Account, blank=True)
+    migitation_team = models.ManyToManyField(Team, blank=True)
     mitigation_percent = models.IntegerField(default=0)
+    mitigation_control = models.ManyToManyField(MitigationControl, blank=True)
     current_solution = models.CharField(max_length=255, null=True, blank=True)
     security_requirements = models.TextField(null=True, blank=True)
     security_recommendations = models.TextField(null=True, blank=True)
     supporting_documentation = models.TextField(null=True, blank=True)
+    status = models.CharField(max_length=32, default=NEW, choices=STATUSSES)
+
+
+
+
+
+
+
 
 class Review(BaseModel):
     APPROVE_RISK = "Approve Risk"
@@ -170,6 +208,26 @@ class Review(BaseModel):
     is_different_instend = models.BooleanField(default=False)
 
 
+class PlanProject(BaseModel):
+    UNASSIGNED = "Unassigned"
+    PUBLIC = "Public"
+    INTERNAL = "Internal"
+    CONFIDENTIAL = "Confidential"
+    RESTRICTED = "Restricted"
+    DATA_CLASSIFICATIONS = (
+        (UNASSIGNED, UNASSIGNED),
+        (PUBLIC, PUBLIC),
+        (INTERNAL, INTERNAL),
+        (CONFIDENTIAL, CONFIDENTIAL),
+        (RESTRICTED, RESTRICTED)
+    )
+    mitigation = models.ForeignKey(MitigationControl, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    priority = models.IntegerField(null=True, blank=True)
+    due = models.DateField(null=True, blank=True)
+    consultant = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
+    business_owner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
+    data_classification = models.CharField(max_length=255, choices=DATA_CLASSIFICATIONS, null=True, blank=True)
 
 class ReviewProject(BaseModel):
     name = models.CharField(max_length=255, null=False, blank=False)
