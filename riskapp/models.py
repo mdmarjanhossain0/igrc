@@ -50,6 +50,7 @@ class ControlRegister(BaseModel):
 class Team(BaseModel):
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
+    members = models.ManyToManyField(Account, blank=True)
 
 class RiskRegister(BaseModel):
     EXTERNAL = "External"
@@ -103,7 +104,7 @@ class RiskRegister(BaseModel):
     courrent_likelihood = models.CharField(max_length=32, choices=LIKELIHOODS, null=False, blank=False)
     control_regulation = models.ForeignKey(ControlRegister, on_delete=models.SET_NULL, null=True, blank=True)
     current_impact = models.CharField(max_length=32, choices=IMPACTS, null=False, blank=False)
-    control_number = models.CharField(max_length=100, null=False, blank=False)
+    control = models.ManyToManyField(ProjectControl, blank=True)
     affected_assets = models.CharField(max_length=100, null=False, blank=False)
     risk_assessment = models.TextField(null=True, blank=True)
     additional_notes = models.TextField(null=True, blank=True)

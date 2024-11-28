@@ -164,7 +164,7 @@ class ProjectTask(BaseModel):
 
 
 class ProjectClause(BaseModel):
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
 
     title=models.CharField(max_length=255, null=True,blank=True)
