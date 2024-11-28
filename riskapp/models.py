@@ -98,10 +98,10 @@ class RiskRegister(BaseModel):
     category = models.ManyToManyField(RiskCategory)
     risk_source = models.CharField(max_length=32, choices=RISK_SOURCES, null=False, blank=False)
     location = models.CharField(max_length=100, null=False, blank=False)
-    risk_scoring_method = models.ForeignKey(RiskScroingMethod)
+    risk_scoring_method = models.ForeignKey(RiskScroingMethod, on_delete=models.SET_NULL, null=True, blank=True)
     external_reference_id = models.CharField(max_length=100, null=False, blank=False)
     courrent_likelihood = models.CharField(max_length=32, choices=LIKELIHOODS, null=False, blank=False)
-    control_regulation = models.ForeignKey(ControlRegister)
+    control_regulation = models.ForeignKey(ControlRegister, on_delete=models.SET_NULL, null=True, blank=True)
     current_impact = models.CharField(max_length=32, choices=IMPACTS, null=False, blank=False)
     control_number = models.CharField(max_length=100, null=False, blank=False)
     affected_assets = models.CharField(max_length=100, null=False, blank=False)
@@ -112,12 +112,9 @@ class RiskRegister(BaseModel):
     supporting_document = models.FileField(upload_to="risk_register/document")
     tags = models.CharField(max_length=255)
 
-
 class MitigationControl(BaseModel):
     title = models.CharField(max_length=255, null=False, blank=False)
     description =  models.TextField(null=True, blank=True)
-
-
 
 class RiskMitigation(BaseModel):
     ACCEPTED = "Accepted"
@@ -181,13 +178,6 @@ class RiskMitigation(BaseModel):
     supporting_documentation = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=32, default=NEW, choices=STATUSSES)
 
-
-
-
-
-
-
-
 class Review(BaseModel):
     APPROVE_RISK = "Approve Risk"
     REJECT_RISK_AND_CLOSE = "Reject Risk and Close"
@@ -213,7 +203,6 @@ class Review(BaseModel):
     next_date = models.DateField(null=True, blank=True)
     is_different_instend = models.BooleanField(default=False)
 
-
 class PlanProject(BaseModel):
     UNASSIGNED = "Unassigned"
     PUBLIC = "Public"
@@ -231,18 +220,15 @@ class PlanProject(BaseModel):
     name = models.CharField(max_length=255)
     priority = models.IntegerField(null=True, blank=True)
     due = models.DateField(null=True, blank=True)
-    consultant = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
-    business_owner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
+    consultant = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True, related_name="consultant")
+    business_owner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True, related_name="business_owner")
     data_classification = models.CharField(max_length=255, choices=DATA_CLASSIFICATIONS, null=True, blank=True)
 
 class ReviewProject(BaseModel):
     name = models.CharField(max_length=255, null=False, blank=False)
     status = models.IntegerField(default=0, validators=[MaxValueValidator(100)])
 
-
-
-
 class Comment(BaseModel):
     mitigation = models.ForeignKey(RiskMitigation, on_delete=models.CASCADE)
     content = models.TextField(null=True, blank=True)
-    created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
+    created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False, related_name="created_by")
