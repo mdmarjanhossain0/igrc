@@ -26,24 +26,30 @@ from django.core.validators import MaxValueValidator
 
 class RiskMapping(BaseModel):
     name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
 
 class ThreatMapping(BaseModel):
     name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
 
 class RiskCategory(BaseModel):
     name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
 
 
 class RiskScroingMethod(BaseModel):
     name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
 
 class ControlRegister(BaseModel):
     name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
 
 
 
 class Team(BaseModel):
     name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
 
 class RiskRegister(BaseModel):
     EXTERNAL = "External"
