@@ -193,4 +193,12 @@ def forget_password_view(request):
 class AccountListApiView(ListAPIView):
 	queryset = Account.objects.all()
 	serializer_class = AccountSerializer
+
+class TenantAccountListApiView(ListAPIView):
+	serializer_class = AccountSerializer
+
+
+	def get_queryset(self):
+		tenant_id = self.kwargs.get('tenant_id')
+		return Account.objects.filter(tenant_id=tenant_id)
 	

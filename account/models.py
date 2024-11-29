@@ -67,6 +67,7 @@ class Account(AbstractBaseUser, PermissionsMixin):
 	email                       = models.EmailField(unique=True, null=False, blank=False)
 	username                    = models.CharField(max_length=100, null=False, blank=False)
 	profile_picture             = models.ImageField(upload_to=profile_picture_location, null=True, blank=True)
+	tenant 						= models.ForeignKey("app.Tenant", on_delete=models.SET_NULL, null=True, blank=True)
 
 
 	is_verified                 = models.BooleanField(default=False)

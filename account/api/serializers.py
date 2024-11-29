@@ -5,7 +5,7 @@ from account.models import (
 )
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(required=True)
+    email = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
     
 class RegisterSerializer(serializers.ModelSerializer):

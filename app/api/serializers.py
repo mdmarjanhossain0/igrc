@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Policy, Project,
-    ProjectClause, ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task,
+    ProjectClause, ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task, Comment, Note,
     Tenant, TenantPolicy)
 from django.db.models import Sum, Avg
 
@@ -46,9 +46,25 @@ class ProjectSerializer(serializers.ModelSerializer):
     toatl_clauses = serializers.SerializerMethodField("get_total_clauses")
     toatl_policies = serializers.SerializerMethodField("get_total_policies")
     toatl_controls = serializers.SerializerMethodField("get_total_controls")
+    total_evidences = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField("get_status")
+    owner_name = serializers.SerializerMethodField()
     class Meta:
         model = Project
         fields = '__all__'
+
+    def get_owner_name(self, obj):
+        try:
+            return obj.owner.username
+        except:
+            return None
+        
+    def get_status(self, obj):
+        try:
+            return obj.status.name
+        except:
+            return "In Progress"
+    
     def get_total_clauses(self, obj):
         return obj.projectclause_set.all().count()
     
@@ -72,6 +88,13 @@ class ProjectSerializer(serializers.ModelSerializer):
             for item in controls:
                 sum += item.average_completion()
             return sum / len(controls)
+        
+    def get_total_evidences(self, obj):
+        objs = obj.evidence_set.all()
+        sum = 0
+        for item in objs:
+            sum += 1 if obj.is_complete else 0
+        return sum / len(objs) if len(objs) > 0 else 1
 
 class ProjectMemberSerializer(serializers.ModelSerializer):
     class Meta:
@@ -95,17 +118,33 @@ class TenantPolicySerializer(serializers.ModelSerializer):
 
 class ProjectControlSerializer(serializers.ModelSerializer):
     completion=serializers.SerializerMethodField()
+    evidences = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
     class Meta:
         model = ProjectControl
         fields = '__all__'
     
     def get_completion(self, obj):
         return obj.average_completion()
+    def get_evidences(self, obj):
+        return EvidenceSerializer(obj.evidence_set.all(), many=True).data
+    def get_comments(self, obj):
+        return CommentSerializer(obj.comment_set.all(), many=True).data
 
 class ProjectSubControlSerializer(serializers.ModelSerializer):
+    evidences = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+    notes = serializers.SerializerMethodField()
     class Meta:
         model = ProjectSubControl
         fields = '__all__'
+    
+    def get_evidences(self, obj):
+        return EvidenceSerializer(obj.evidence_set.all(), many=True).data
+    def get_comments(self, obj):
+        return CommentSerializer(obj.comment_set.all(), many=True).data
+    def get_notes(self, obj):
+        return NoteSerializer(obj.note_set.all(), many=True).data
 
 class EvidenceFileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -127,7 +166,9 @@ class EvidenceSerializer(serializers.ModelSerializer):
 
 class ControlWithSubControlSerializer(serializers.ModelSerializer):
     subcontrols=serializers.SerializerMethodField()
-    evidences=serializers.SerializerMethodField()
+    evidences = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+    notes = serializers.SerializerMethodField()
     class Meta:
         model = Control
         fields = '__all__'
@@ -141,7 +182,41 @@ class ControlWithSubControlSerializer(serializers.ModelSerializer):
             evidences = Evidence.objects.filter(sub_control__sub_control=subcontrol_obj)
             subcontrol['evidences'] = EvidenceSerializer(evidences, many=True).data
         return subcontrols_data
-
+    
     def get_evidences(self, obj):
-        evidences=Evidence.objects.filter(control__control=obj)
-        return EvidenceSerializer(evidences,many=True).data
+        return EvidenceSerializer(obj.evidence_set.all(), many=True).data
+    def get_comments(self, obj):
+        return CommentSerializer(obj.comment_set.all(), many=True).data
+    def get_notes(self, obj):
+        return NoteSerializer(obj.note_set.all(), many=True).data
+    
+
+class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
+    subcontrols=serializers.SerializerMethodField()
+    evidences = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+    notes = serializers.SerializerMethodField()
+    class Meta:
+        model = ProjectControl
+        fields = '__all__'
+    
+    def get_subcontrols(self,obj):
+        subcontrols=ProjectSubControl.objects.filter(project_control=obj)
+        return ProjectSubControlSerializer(subcontrols, many=True).data
+    
+    def get_evidences(self, obj):
+        return EvidenceSerializer(obj.evidence_set.all(), many=True).data
+    def get_comments(self, obj):
+        return CommentSerializer(obj.comment_set.all(), many=True).data
+    def get_notes(self, obj):
+        return NoteSerializer(obj.note_set.all(), many=True).data
+
+
+class CommentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Comment
+class NoteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Note

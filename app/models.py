@@ -76,7 +76,7 @@ class Tenant(BaseModel):
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=False,blank=False)
     contact_email=models.EmailField(null=False,blank=False)
-    owner=models.ForeignKey(Account, on_delete=models.CASCADE)
+    owner=models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False, related_name="tenant_owner")
 
 
     def __str__(self):
@@ -215,6 +215,7 @@ class Evidence(BaseModel):
     description = models.TextField(max_length=255, null=True, blank=True)
     content = models.TextField(null=False, blank=False)
     files = models.ManyToManyField(EvidenceFile, blank=True)
+    is_complete = models.BooleanField(default=False)
 
 class Comment(BaseModel):
     policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)

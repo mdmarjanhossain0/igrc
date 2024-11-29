@@ -8,7 +8,7 @@ from .serializers import (ClauseSerializer, ControlSerializer, ControlWithSubCon
     EvidenceSerializer, FrameworkSerializer, PolicySerializer, ProjectClauseSerializer,
     ProjectControlSerializer, ProjectMemberSerializer, ProjectSerializer,
     ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
-    TenantPolicySerializer, TenantSerializer)
+    TenantPolicySerializer, TenantSerializer, ProjectControlWithSubControlSerializer)
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -145,14 +145,16 @@ class ControlsByProjectView(APIView):
 
 class ControlWithSubControlsByProjectView(APIView):
     def get(self, request, project_id):
-        controls=Control.objects.filter(projectcontrol__project_id=project_id)
-        serializer=ControlWithSubControlSerializer(controls, many=True,)
+        controls=ProjectControl.objects.filter(project_id=project_id)
+        serializer=ProjectControlWithSubControlSerializer(controls, many=True,)
         return Response(serializer.data)
     
 class TasksByProjectView(APIView):
     def get(self, request, project_id):
-        tasks=Task.objects.filter(projecttask__project_id=project_id)
-        serializer=TaskSerializer(tasks, many=True,)
+        print(project_id)
+        tasks=ProjectTask.objects.filter(project_id=project_id)
+        print(tasks)
+        serializer=ProjectTaskSerializer(tasks, many=True)
         return Response(serializer.data)
     
 
