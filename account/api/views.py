@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import UpdateAPIView
 from django.contrib.auth import authenticate
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.generics import ListAPIView
 
 from django.utils import timezone
 import requests
@@ -174,12 +175,7 @@ def forget_password_view(request):
 
 
 
-@api_view(
-	[
-		"POST",
-	]
-)
-@permission_classes([])
-@authentication_classes([])
-def user_list_view(request):
-	pass
+class AccountListApiView(ListAPIView):
+	queryset = Account.objects.all()
+	serializer_class = AccountSerializer
+	
