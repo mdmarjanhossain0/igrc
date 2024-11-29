@@ -51,6 +51,7 @@ schema_view=get_schema_view(
 urlpatterns = [
     path('', include(router.urls)),
     path("swagger", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
+    path('redoc', schema_view.with_ui('redoc', cache_timeout=0), name='redoc-ui'),
     # path("project/<int:project_id>/clauses/", ClausesByProjectView.as_view(), name="project-clauses-by-project"),
     path("project/<int:project_id>/controls/", ControlsByProjectView.as_view(), name="project-controls-by-project"),
     path("project/<int:project_id>/controls-with-subcontrols/", ControlWithSubControlsByProjectView.as_view(), name="project-controls-with-subcontrols-by-project"),

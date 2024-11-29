@@ -2,7 +2,7 @@ from rest_framework import serializers
 from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Policy, Project,
     ProjectClause, ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task,
     Tenant, TenantPolicy)
-
+from django.db.models import Sum, Avg
 
 class FrameworkSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,9 +41,37 @@ class TenantSerializer(serializers.ModelSerializer):
 
 
 class ProjectSerializer(serializers.ModelSerializer):
+    completion = serializers.SerializerMethodField("get_completion")
+    implementation = serializers.SerializerMethodField("get_implementation")
+    toatl_clauses = serializers.SerializerMethodField("get_total_clauses")
+    toatl_policies = serializers.SerializerMethodField("get_total_policies")
+    toatl_controls = serializers.SerializerMethodField("get_total_controls")
     class Meta:
         model = Project
         fields = '__all__'
+    def get_total_clauses(self, obj):
+        return obj.projectclause_set.all().count()
+    
+    def get_total_policies(self, obj):
+        return obj.tenantpolicy_set.all().count()
+    
+    def get_total_controls(self, obj):
+        return obj.projectcontrol_set.all().count()
+    
+    def get_completion(self, obj):
+        avg_completion=ProjectClause.objects.filter(project=obj).aggregate(Avg('completion'))
+        print(avg_completion)
+        return avg_completion['completion__avg'] or 0
+    
+    def get_implementation(self, obj):
+        controls = obj.projectcontrol_set.all()
+        if len(controls) == 0:
+            return 0
+        else:
+            sum = 0
+            for item in controls:
+                sum += item.average_completion()
+            return sum / len(controls)
 
 class ProjectMemberSerializer(serializers.ModelSerializer):
     class Meta:

@@ -10,6 +10,7 @@ from rest_framework.generics import UpdateAPIView
 from django.contrib.auth import authenticate
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import AllowAny
 
 from django.utils import timezone
 import requests
@@ -28,16 +29,23 @@ from account.models import (
 
 from account.api.serializers import (
 	AccountSerializer,
-	RegisterSerializer
+	RegisterSerializer,
+	LoginSerializer
 )
 
+from drf_yasg.utils import swagger_auto_schema
 
 class Login(APIView):
+	permission_classes = [AllowAny]
+	@swagger_auto_schema(
+        request_body=LoginSerializer,
+        responses={200: AccountSerializer}
+    )
 	def post(self, request):
-		mobile = request.data.get("mobile")
+		email = request.data.get("email")
 		password = request.data.get("password")
 
-		user = authenticate(mobile=mobile, password=password)
+		user = authenticate(email=email, password=password)
 		if user is not None:
 			refresh = RefreshToken.for_user(user)
 			serializer = AccountSerializer(user)
@@ -74,6 +82,13 @@ def send_otp_view(request, mobile):
 			}
 		)
 
+
+
+@swagger_auto_schema(
+    method='post',
+    request_body=RegisterSerializer,
+    responses={200: AccountSerializer, 401: 'Invalid credentials'},
+)
 @api_view(["POST"])
 @permission_classes([])
 @authentication_classes([])

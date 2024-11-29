@@ -12,6 +12,8 @@ from .serializers import (ClauseSerializer, ControlSerializer, ControlWithSubCon
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class FrameworkModelViewSet(viewsets.ModelViewSet):
     queryset = Framework.objects.all()
@@ -168,6 +170,18 @@ class ProjectMembersByProject(APIView):
         print(str(IsProjectAdmin()))
         return Response(serializer.data)
 
+    @swagger_auto_schema(
+        operation_description="Add a new member to a project",
+        request_body=ProjectMemberSerializer,
+        responses={
+            201: ProjectMemberSerializer,
+            400: openapi.Response(description="Bad Request", examples={
+                'application/json': {'detail': 'Invalid data'}
+            })
+        },
+        tags=["Project Members"],
+        operation_summary="Add Project Member"
+    )
     def post(self, request, project_id):
         data = request.data.copy()
         data['project'] = project_id
@@ -191,7 +205,17 @@ class ProjectMemberByProject(APIView):
         project_member=ProjectMember.objects.get(project_id=project_id, id=member_id)
         serializer=ProjectMemberSerializer(project_member)
         return Response(serializer.data)
-
+    
+    @swagger_auto_schema(
+        request_body=ProjectMemberSerializer,
+        responses={
+            201: ProjectMemberSerializer,
+            400: openapi.Response(description="Bad Request", examples={
+                'application/json': {'detail': 'Invalid data'}
+            })
+        },
+        operation_summary="Add Project Member"
+    )
     def put(self, request, project_id, member_id):
         try:
             project_member = ProjectMember.objects.get(project_id=project_id, id=member_id)

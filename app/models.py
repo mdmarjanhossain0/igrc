@@ -8,13 +8,10 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-class BaseModel(models.Model):
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
-
+from grc_config.models import (
+    BaseModel,
+    StatusDB
+)
 
 class Framework(BaseModel):
     id=models.AutoField(primary_key=True)
@@ -74,8 +71,6 @@ class SubControl(BaseModel):
         return self.title
 
 
-
-
 class Tenant(BaseModel):
     id=models.AutoField(primary_key=True)
     title=models.CharField(max_length=255, null=False,blank=False)
@@ -94,9 +89,11 @@ class Project(BaseModel):
     framework_name = models.CharField(max_length=255, null=True,blank=True)
     framework_description=models.TextField(null=True,blank=True)
 
-    id = models.AutoField(primary_key=True)
+    owner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
+    status = models.ForeignKey(StatusDB, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=255, null=False, blank=False)
     description=models.TextField(null=True,blank=True)
+    is_auditable = models.BooleanField(default=False)
     
     def save(self, *args, **kwargs):
         if not self.framework_name and self.framework:
@@ -155,6 +152,7 @@ class ProjectTask(BaseModel):
 
     title=models.CharField(max_length=255, null=True,blank=True)
     description=models.TextField(null=True, blank=True)
+    status = models.ForeignKey(StatusDB, on_delete=models.SET_NULL, null=True, blank=True)
     
     # assigned_member = models.ForeignKey(Account, on_delete=models.DO_NOTHING, null=True, blank=True)
     is_completed = models.BooleanField(default=False)
@@ -169,6 +167,7 @@ class ProjectClause(BaseModel):
 
     title=models.CharField(max_length=255, null=True,blank=True)
     description=models.TextField(null=True,blank=True)
+    completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     
 
 class TenantPolicy(BaseModel):
@@ -183,10 +182,11 @@ class ProjectControl(BaseModel):
 
     title=models.CharField(max_length=255, null=True,blank=True)
     description=models.TextField(null=True,blank=True)
+    completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     
     def average_completion(self):
         avg_completion=ProjectSubControl.objects.filter(project_control=self).aggregate(models.Avg('completion'))
-        return avg_completion['completion__avg'] or 0
+        return avg_completion['completion__avg'] or self.completion
 
 class ProjectSubControl(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)

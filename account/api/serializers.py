@@ -4,7 +4,10 @@ from account.models import (
     Account
 )
 
-
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required=True)
+    password = serializers.CharField(required=True)
+    
 class RegisterSerializer(serializers.ModelSerializer):
 
     class Meta:
