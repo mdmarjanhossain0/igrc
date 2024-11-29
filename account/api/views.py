@@ -200,5 +200,6 @@ class TenantAccountListApiView(ListAPIView):
 
 	def get_queryset(self):
 		tenant_id = self.kwargs.get('tenant_id')
+		print(tenant_id)
 		return Account.objects.filter(tenant_id=tenant_id)
 	
