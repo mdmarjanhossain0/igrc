@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import MaxValueValidator
 from account.models import (
     Account,
     Audit
@@ -15,14 +15,18 @@ from app.models import (
     Tenant,
     Framework,
 )
-from django.core.validators import MaxValueValidator
 
-# class RiskProject(BaseModel):
-#     name = models.CharField(max_length=255,null=False, blank=False)
-#     project_lead = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
-#     framework = models.ForeignKey(Framework, on_delete=models.SET_NULL, null=True, blank=True)
-#     start_date = models.DateTimeField()
-#     end_date = models.DateTimeField()
+from grc_config.models import (
+    BaseModel,
+    StatusDB,
+    RiskSource,
+    LikelyHood,
+    Impact,
+    PlanningStrategy,
+    MitigationEffort,
+    NextStep,
+    DataClassifiation
+)
 
 class RiskMapping(BaseModel):
     name = models.CharField(max_length=255)
@@ -89,8 +93,6 @@ class RiskRegister(BaseModel):
         (MAJOR, MAJOR),
         (EXTREME, EXTREME)
     )
-
-    
 
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     subject = models.CharField(max_length=100, null=False, blank=False)

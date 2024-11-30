@@ -9,6 +9,7 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(required=True)
     
 class RegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(required=True, write_only=True)
 
     class Meta:
         model = Account
@@ -17,6 +18,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             "username",
             "profile_picture",
             "role",
+            "password",
         ]
 
 class AccountSerializer(serializers.ModelSerializer):
