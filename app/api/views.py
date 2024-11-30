@@ -1,3 +1,4 @@
+import django.contrib.auth
 from rest_framework import viewsets, status
 from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Policy, Project,
     ProjectClause, ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task,
@@ -125,7 +126,7 @@ class ClausesByProjectView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         project_id = self.kwargs.get('project_id')
-        project = Project.objects.get(id=project_id)
+        project = Project.objects.get(id=project_id) 
         serializer.save(project=project)
 
     def perform_update(self, serializer):
@@ -137,11 +138,64 @@ class ClausesByProjectView(viewsets.ModelViewSet):
         instance.delete()
     
 
-class ControlsByProjectView(APIView):
-    def get(self, request, project_id):
-        controls=Control.objects.filter(projectcontrol__project_id=project_id)
-        serializer=ControlSerializer(controls, many=True,)
-        return Response(serializer.data)
+class ControlsByProjectView(viewsets.ModelViewSet):
+    serializer_class = ProjectControlSerializer
+    def get_permissions(self):
+        if self.action in ['list','retrieve']:
+            return [IsAuthenticated()]
+        return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        return ProjectControl.objects.filter(project_id=project_id)
+
+    def perform_create(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+    
+    def perform_update(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+    
+    def perform_destroy(self, instance):
+        instance.delete()
+    
+
+class SubControlsByProjectView(viewsets.ModelViewSet):
+    serializer_class = ProjectSubControlSerializer
+    def get_permissions(self):
+        if self.action in ['list','retrieve']:
+            return [IsAuthenticated()]
+        return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        control_id = self.kwargs.get('control_id')
+        return ProjectSubControl.objects.filter(
+            project_id=project_id, 
+            project_control_id=control_id
+        )
+    def perform_create(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        control_id = self.kwargs.get('control_id')
+        project = Project.objects.get(id=project_id)
+        control = ProjectControl.objects.get(id=control_id)
+        serializer.save(project=project, project_control=control)
+
+    def perform_update(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        control_id = self.kwargs.get('control_id')
+        project = Project.objects.get(id=project_id)
+        control = Control.objects.get(id=control_id)
+        serializer.save(project=project, control=control)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+    
+
+
 
 class ControlWithSubControlsByProjectView(APIView):
     def get(self, request, project_id):
@@ -149,13 +203,30 @@ class ControlWithSubControlsByProjectView(APIView):
         serializer=ProjectControlWithSubControlSerializer(controls, many=True,)
         return Response(serializer.data)
     
-class TasksByProjectView(APIView):
-    def get(self, request, project_id):
-        print(project_id)
-        tasks=ProjectTask.objects.filter(project_id=project_id)
-        print(tasks)
-        serializer=ProjectTaskSerializer(tasks, many=True)
-        return Response(serializer.data)
+class TasksByProjectView(viewsets.ModelViewSet):
+    serializer_class = ProjectTaskSerializer
+
+    def get_permissions(self):
+        if self.action in ['list','retrieve']:
+            return [IsAuthenticated()]
+        return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+    
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        return ProjectTask.objects.filter(project_id=project_id)
+
+    def perform_create(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+
+    def perform_update(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+
+    def perform_destroy(self, instance):
+        instance.delete()
     
 
 class ProjectMembersByProject(APIView):

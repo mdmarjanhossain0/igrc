@@ -5,8 +5,8 @@ from .views import (ClauseModelViewSet, ClausesByProjectView, ControlModelViewSe
     FrameworkModelViewSet, PolicyModelViewSet, ProjectClauseModelViewSet,
     ProjectControlModelViewSet, ProjectMemberByProject, ProjectMemberModelViewSet,
     ProjectMembersByProject, ProjectModelViewSet, ProjectSubControlModelViewSet,
-    ProjectTaskModelViewSet, SubControlModelViewSet, TaskModelViewSet, TasksByProjectView,
-    TenantModelViewSet, TenantPolicyModelViewSet)
+    ProjectTaskModelViewSet, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
+    TasksByProjectView, TenantModelViewSet, TenantPolicyModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -31,6 +31,10 @@ router.register(r'project-controls', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
 router.register(r'evidence', EvidenceModelViewSet)
 router.register(r'project/(?P<project_id>\d+)/clauses',ClausesByProjectView, basename='project-clauses')
+router.register(r'project/(?P<project_id>\d+)/controls',ControlsByProjectView, basename='project-controls')
+router.register(r'project/(?P<project_id>\d+)/controls/(?P<control_id>\d+)/subcontrols', SubControlsByProjectView, basename='project-subcontrols')
+router.register(r'project/(?P<project_id>\d+)/tasks', TasksByProjectView, basename='project-tasks')
+
 
 
 schema_view=get_schema_view(
@@ -53,9 +57,9 @@ urlpatterns = [
     path("swagger", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
     path('redoc', schema_view.with_ui('redoc', cache_timeout=0), name='redoc-ui'),
     # path("project/<int:project_id>/clauses/", ClausesByProjectView.as_view(), name="project-clauses-by-project"),
-    path("project/<int:project_id>/controls/", ControlsByProjectView.as_view(), name="project-controls-by-project"),
+    # path("project/<int:project_id>/controls/", ControlsByProjectView.as_view(), name="project-controls-by-project"),
     path("project/<int:project_id>/controls-with-subcontrols/", ControlWithSubControlsByProjectView.as_view(), name="project-controls-with-subcontrols-by-project"),
-    path("project/<int:project_id>/tasks/", TasksByProjectView.as_view(), name="project-tasks-by-project"),
+    # path("project/<int:project_id>/tasks/", TasksByProjectView.as_view(), name="project-tasks-by-project"),
 
 
     path("project/<int:project_id>/members/", ProjectMembersByProject.as_view(), name="project-members-by-project"),
