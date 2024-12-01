@@ -49,12 +49,13 @@ class Login(APIView):
 		if user is not None:
 			refresh = RefreshToken.for_user(user)
 			serializer = AccountSerializer(user)
-			data = serializer.data | {
+			data = serializer.data
+			data.update({
 				"response": SUCCSS,
 				"msg": "Successfully login.",
 				"refresh": str(refresh),
 				"access": str(refresh.access_token),
-			}
+			})
 			return Response(data, status=200)
 		else:
 			return Response({
@@ -110,12 +111,13 @@ def register_view(request):
 		# obj.save()
 		data = AccountSerializer(obj).data
 		refresh = RefreshToken.for_user(obj)
-		data = data | {
+		data = data
+		data.update({
 				"response": SUCCSS,
 				"msg": "Successfully register.",
 				"refresh": str(refresh),
 				"access": str(refresh.access_token),
-			}
+			})
 		return Response(data=data)
 	else:
 		return Response(serializer.errors, status=400)
@@ -180,6 +182,14 @@ def forget_password_view(request):
 				"refresh": str(refresh),
 				"access": str(refresh.access_token),
 			}
+			return Response(data=data)
+		else:
+			return Response(
+                data={
+                    "response": ERROR,
+                    "msg": "Invalid OTP"
+                }
+            )
 	except:
 		return Response(
 			data={
