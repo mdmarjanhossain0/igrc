@@ -17,6 +17,11 @@ class RiskSource(BaseModel):
     name = models.CharField(max_length=32)
     description = models.TextField(null=True, blank=True)
 
+
+class ReviewStatus(BaseModel):
+    name = models.CharField(max_length=32)
+    description = models.TextField(null=True, blank=True)
+
 class LikelyHood(BaseModel):
     name = models.CharField(max_length=32)
     description = models.TextField(null=True, blank=True)

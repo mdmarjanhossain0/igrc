@@ -25,7 +25,9 @@ from grc_config.models import (
     PlanningStrategy,
     MitigationEffort,
     NextStep,
-    DataClassifiation
+    DataClassifiation,
+    ReviewStatus,
+    ReviewStatus
 )
 
 class RiskMapping(BaseModel):
@@ -168,8 +170,8 @@ class RiskMitigation(BaseModel):
     risk = models.OneToOneField(RiskRegister, on_delete=models.CASCADE)
     submittion_date = models.DateTimeField()
     planned_mitigation_date = models.DateTimeField()
-    planning_strategy = models.CharField(max_length=255, choices=PLANNING_STRATEGIES, null=True, blank=True)
-    mitigation_effort = models.CharField(max_length=255, choices=MITIGATION_EFFORTS, null=True, blank=True)
+    planning_strategy = models.ForeignKey(PlanningStrategy, on_delete=models.SET_NULL, null=True, blank=True)
+    mitigation_effort = models.ForeignKey(MitigationEffort, on_delete=models.SET_NULL, null=True, blank=True)
     mitigation_cost = models.CharField(max_length=255, null=True, blank=True)
     mitigation_owner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True, related_name="mitigation_owner")
     migitation_team = models.ManyToManyField(Team, blank=True)
@@ -179,7 +181,7 @@ class RiskMitigation(BaseModel):
     security_requirements = models.TextField(null=True, blank=True)
     security_recommendations = models.TextField(null=True, blank=True)
     supporting_documentation = models.TextField(null=True, blank=True)
-    status = models.CharField(max_length=32, default=NEW, choices=STATUSSES)
+    status = models.ForeignKey(StatusDB, on_delete=models.SET_NULL, null=True, blank=True)
 
 class Review(BaseModel):
     APPROVE_RISK = "Approve Risk"
@@ -200,8 +202,8 @@ class Review(BaseModel):
     mitigation = models.ForeignKey(RiskMitigation, on_delete=models.CASCADE)
     review_date = models.DateTimeField()
     reviewer = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
-    review = models.CharField(max_length=32, choices=REVIEWS, null=True, blank=True)
-    next_step = models.CharField(max_length=255, choices=NEXT_STEPS, null=True, blank=True)
+    review = models.ForeignKey(ReviewStatus, on_delete=models.SET_NULL, null=True, blank=True)
+    next_step = models.ForeignKey(NextStep, on_delete=models.SET_NULL, null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
     next_date = models.DateField(null=True, blank=True)
     is_different_instend = models.BooleanField(default=False)
@@ -225,10 +227,11 @@ class PlanProject(BaseModel):
     due = models.DateField(null=True, blank=True)
     consultant = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True, related_name="consultant")
     business_owner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True, related_name="business_owner")
-    data_classification = models.CharField(max_length=255, choices=DATA_CLASSIFICATIONS, null=True, blank=True)
+    data_classification = models.ForeignKey(DataClassifiation, on_delete=models.SET_NULL, null=True, blank=True)
 
 class ReviewProject(BaseModel):
     name = models.CharField(max_length=255, null=False, blank=False)
+    description = models.TextField(null=True, blank=True)
     status = models.IntegerField(default=0, validators=[MaxValueValidator(100)])
 
 class Comment(BaseModel):
