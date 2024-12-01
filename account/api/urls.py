@@ -7,10 +7,12 @@ from account.api.views import (
     AccountListApiView,
     TenantAccountListApiView
 )
+from rest_framework_simplejwt.views import TokenRefreshView
 app_name = 'account_api'
 
 urlpatterns = [
     path("login", Login.as_view()),
+    path('refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path("send_otp/<mobile>", send_otp_view),
     path("register", register_view),
     path("user_list", AccountListApiView.as_view()),
