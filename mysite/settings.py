@@ -99,13 +99,14 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": config("DJ_DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME": config("DJ_DB_NAME", default=BASE_DIR / "db.sqlite3"),
-        "USER": config("DJ_DB_USER", default=""),
-        "PASSWORD": config("DJ_DB_PASSWORD", default=""),
-        "HOST": config("DJ_DB_HOST", default="localhost"),
-        "PORT": config("DJ_DB_PORT", default="3306"),
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': config("DATABASE_NAME"),
+        'USER': config("DATABASE_USER"),
+        'PASSWORD': config("PASSWORD"),
+        'HOST': config("HOST"),
+        'PORT': '3306'
+
     }
 }
 

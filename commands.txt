@@ -8,3 +8,4 @@ python manage.py createsuperuser
 
 
 **** create fake data
+python manage.py create_part1.py
