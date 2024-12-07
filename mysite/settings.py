@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'corsheaders',
     'rest_framework',
-    'django_ckeditor_5',    
+    'django_ckeditor_5',
     'drf_yasg',
 
     "account",
@@ -44,7 +44,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 AUTH_USER_MODEL = 'account.Account'
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True 
+CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -99,14 +99,13 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config("DATABASE_NAME"),
-        'USER': config("DATABASE_USER"),
-        'PASSWORD': config("PASSWORD"),
-        'HOST': config("HOST"),
-        'PORT': '3306'
-        
+    "default": {
+        "ENGINE": config("DJ_DB_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME": config("DJ_DB_NAME", default=BASE_DIR / "db.sqlite3"),
+        "USER": config("DJ_DB_USER", default=""),
+        "PASSWORD": config("DJ_DB_PASSWORD", default=""),
+        "HOST": config("DJ_DB_HOST", default="localhost"),
+        "PORT": config("DJ_DB_PORT", default="3306"),
     }
 }
 
