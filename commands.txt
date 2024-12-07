@@ -1,0 +1,11 @@
+python manage.py makemigrations account
+python manage.py makemigrations app
+python manage.py makemigrations riskapp
+python manage.py makemigrations grc_config
+python manage.py migrate
+python manage.py createsuperuser
+
+
+
+**** create fake data
+python manage.py create_part1.py

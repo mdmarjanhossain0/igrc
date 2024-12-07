@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'corsheaders',
     'rest_framework',
-    'django_ckeditor_5',    
+    'django_ckeditor_5',
     'drf_yasg',
 
     "account",
@@ -44,7 +44,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 AUTH_USER_MODEL = 'account.Account'
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True 
+CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -106,7 +106,7 @@ DATABASES = {
         'PASSWORD': config("PASSWORD"),
         'HOST': config("HOST"),
         'PORT': '3306'
-        
+
     }
 }
 
