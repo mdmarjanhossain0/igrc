@@ -244,45 +244,48 @@ class AuditorFeedback(BaseModel):
 @receiver(post_save, sender=Project)
 def created_project_receiver(sender, instance=None, created=False, **kwargs):
     if created:
-        instance.framework_name = instance.framework.name
-        instance.framework_description = instance.framework.description
-        for item in instance.framework.task_set.all():
-            ProjectTask.objects.create(
-                project=instance,
-                task=item,
-                title=item.title,
-                description=item.description
-            )
-        for item in instance.framework.clause_set.all():
-            ProjectClause.objects.create(
-                project=instance,
-                clause=item,
-                title=item.title,
-                description=item.description
-            )
-        for item in instance.framework.policy_set.all():
-            tp = TenantPolicy(
-                title=item.title,
-                description=item.description,
-                content=item.content
-            )
-            tp.save()
-            tp.project.set([item.pk])
-            tp.save()
-
-
-        for item in instance.framework.control_set.all():
-            ProjectControl.objects.create(
-                project=instance,
-                control=item
+        # instance.framework_name = instance.framework.name
+        # instance.framework_description = instance.framework.description
+        if instance.framework:
+            for item in instance.framework.task_set.all():
+                ProjectTask.objects.create(
+                    project=instance,
+                    task=item,
+                    title=item.title,
+                    description=item.description
+                )
+            for item in instance.framework.clause_set.all():
+                ProjectClause.objects.create(
+                    project=instance,
+                    clause=item,
+                    title=item.title,
+                    description=item.description
+                )
+            # for item in instance.framework.policy_set.all():
+                # tp = TenantPolicy(
+                #     title=item.title,
+                #     description=item.description,
+                #     content=item.content
+                # )
+                # tp.save()
                 
-            )
+                # tp.project.set([item.pk])
+                # tp.save()
+                # pass
 
-        for item in instance.framework.subcontrol_set.all():
-            ProjectSubControl.objects.create(
-                project=instance,
-                sub_control=item,
-                project_control=item.control.projectcontrol_set.first(),
-                title=item.title,
-                description=item.description
-            )
+
+            for item in instance.framework.control_set.all():
+                ProjectControl.objects.create(
+                    project=instance,
+                    control=item
+                    
+                )
+
+            for item in instance.framework.subcontrol_set.all():
+                ProjectSubControl.objects.create(
+                    project=instance,
+                    sub_control=item,
+                    project_control=item.control.projectcontrol_set.first(),
+                    title=item.title,
+                    description=item.description
+                )

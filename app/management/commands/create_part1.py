@@ -111,94 +111,94 @@ def generate_fake_data(
             )
             tenants.append(tenant)
 
-        #     for _ in range(num_projects_per_tenant):
-        #         project = Project.objects.create(
-        #             tenant=tenant,
-        #             title=fake.company() + " Project",
-        #             description=fake.text(),
-        #             owner=tenant.owner,
-        #             status=StatusDB.objects.order_by("?").first()
-        #         )
-        #         # Add Project Members
-        #         for _ in range(num_project_members_per_project):
-        #             ProjectMember.objects.create(
-        #                 project=project,
-        #                 member=Account.objects.order_by("?").first(),  # Random member
-        #                 role=random.choice(["Viewer", "Editor", "Admin"])
-        #             )
-        # print("Tenant and Project data created.")
+            for _ in range(num_projects_per_tenant):
+                project = Project.objects.create(
+                    tenant=tenant,
+                    title=fake.company() + " Project",
+                    description=fake.text(),
+                    owner=tenant.owner,
+                    status=StatusDB.objects.order_by("?").first()
+                )
+                # Add Project Members
+                for _ in range(num_project_members_per_project):
+                    ProjectMember.objects.create(
+                        project=project,
+                        member=Account.objects.order_by("?").first(),  # Random member
+                        role=random.choice(["Viewer", "Editor", "Admin"])
+                    )
+        print("Tenant and Project data created.")
 
-        # # Create ProjectTasks
-        # for project in Project.objects.all():
-        #     for _ in range(num_tasks_per_project):
-        #         ProjectTask.objects.create(
-        #             project=project,
-        #             task=Task.objects.order_by("?").first(),
-        #             title=fake.sentence(nb_words=4),
-        #             description=fake.text(),
-        #             status=StatusDB.objects.order_by("?").first(),
-        #             is_completed=random.choice([True, False]),
-        #             deadline=fake.date_time_this_year(),
-        #             completed_at=fake.date_time_this_year() if random.choice([True, False]) else None
-        #         )
-        # print("ProjectTask data created.")
-
-
-        # # Create ProjectClauses
-        # for project in Project.objects.all():
-        #     for _ in range(num_clauses_per_project):
-        #         ProjectClause.objects.create(
-        #             project=project,
-        #             clause=Clause.objects.order_by("?").first(),
-        #             title=fake.sentence(nb_words=4),
-        #             description=fake.text(),
-        #             completion=random.randint(0, 100)
-        #         )
-        # print("ProjectClause data created.")
-
-        # # Create TenantPolicies
-        # for tenant in tenants:
-        #     for _ in range(num_tenant_policies):
-        #         TenantPolicy.objects.create(
-        #             title=fake.sentence(nb_words=4),
-        #             description=fake.text(),
-        #             content=fake.text(),
-        #             project=Project.objects.filter(tenant=tenant).order_by("?")[:random.randint(1, num_projects_per_tenant)]
-        #         )
-        # print("TenantPolicy data created.")
+        # Create ProjectTasks
+        for project in Project.objects.all():
+            for _ in range(num_tasks_per_project):
+                ProjectTask.objects.create(
+                    project=project,
+                    task=Task.objects.order_by("?").first(),
+                    title=fake.sentence(nb_words=4),
+                    description=fake.text(),
+                    status=StatusDB.objects.order_by("?").first(),
+                    is_completed=random.choice([True, False]),
+                    deadline=fake.date_time_this_year(),
+                    completed_at=fake.date_time_this_year() if random.choice([True, False]) else None
+                )
+        print("ProjectTask data created.")
 
 
-        # # Create ProjectControls
-        # for project in Project.objects.all():
-        #     for _ in range(num_controls_per_project):
-        #         ProjectControl.objects.create(
-        #             project=project,
-        #             control=Control.objects.order_by("?").first(),
-        #             title=fake.sentence(nb_words=4),
-        #             description=fake.text(),
-        #             completion=random.randint(0, 100)
-        #         )
-        # print("ProjectControl data created.")
+        # Create ProjectClauses
+        for project in Project.objects.all():
+            for _ in range(num_clauses_per_project):
+                ProjectClause.objects.create(
+                    project=project,
+                    clause=Clause.objects.order_by("?").first(),
+                    title=fake.sentence(nb_words=4),
+                    description=fake.text(),
+                    completion=random.randint(0, 100)
+                )
+        print("ProjectClause data created.")
+
+        # Create TenantPolicies
+        for tenant in tenants:
+            for _ in range(num_tenant_policies):
+                TenantPolicy.objects.create(
+                    title=fake.sentence(nb_words=4),
+                    description=fake.text(),
+                    content=fake.text(),
+                    # project=Project.objects.filter(tenant=tenant).order_by("?")[:random.randint(1, num_projects_per_tenant)]
+                )
+        print("TenantPolicy data created.")
 
 
-        # # Create ProjectSubControls
-        # for project in Project.objects.all():
-        #     for _ in range(num_controls_per_project):
-        #         project_control = ProjectControl.objects.filter(project=project).order_by("?").first()
-        #         if project_control:
-        #             for _ in range(num_subcontrols_per_control):
-        #                 ProjectSubControl.objects.create(
-        #                     project=project,
-        #                     sub_control=SubControl.objects.order_by("?").first(),
-        #                     project_control=project_control,
-        #                     title=fake.sentence(nb_words=4),
-        #                     description=fake.text(),
-        #                     completion=random.randint(0, 100)
-        #                 )
-        # print("ProjectSubControl data created.")
+        # Create ProjectControls
+        for project in Project.objects.all():
+            for _ in range(num_controls_per_project):
+                ProjectControl.objects.create(
+                    project=project,
+                    control=Control.objects.order_by("?").first(),
+                    title=fake.sentence(nb_words=4),
+                    description=fake.text(),
+                    completion=random.randint(0, 100)
+                )
+        print("ProjectControl data created.")
 
 
-        # # Create Evidence and EvidenceFiles
+        # Create ProjectSubControls
+        for project in Project.objects.all():
+            for _ in range(num_controls_per_project):
+                project_control = ProjectControl.objects.filter(project=project).order_by("?").first()
+                if project_control:
+                    for _ in range(num_subcontrols_per_control):
+                        ProjectSubControl.objects.create(
+                            project=project,
+                            sub_control=SubControl.objects.order_by("?").first(),
+                            project_control=project_control,
+                            title=fake.sentence(nb_words=4),
+                            description=fake.text(),
+                            completion=random.randint(0, 100)
+                        )
+        print("ProjectSubControl data created.")
+
+
+        # Create Evidence and EvidenceFiles
         # for tenant in tenants:
         #     for _ in range(num_evidences_per_project):
         #         evidence = Evidence.objects.create(
@@ -212,28 +212,50 @@ def generate_fake_data(
         #             EvidenceFile.objects.create(file=fake.file_path())
         # print("Evidence and EvidenceFile data created.")
 
-        # # Create Comments, Notes, and AuditorFeedback
-        # policies = Policy.objects.all()
-        # for policy in policies:
-        #     for _ in range(num_comments_per_policy):
-        #         Comment.objects.create(
-        #             policy=policy,
-        #             content=fake.text(),
-        #             created_by=Account.objects.order_by("?").first()
-        #         )
-        #     for _ in range(num_notes_per_policy):
-        #         Note.objects.create(
-        #             policy=policy,
-        #             content=fake.text(),
-        #             created_by=Account.objects.order_by("?").first()
-        #         )
-        #     for _ in range(num_auditor_feedbacks_per_policy):
-        #         AuditorFeedback.objects.create(
-        #             policy=policy,
-        #             content=fake.text(),
-        #             created_by=Account.objects.order_by("?").first()
-        #         )
-        # print("Comment, Note, and AuditorFeedback data created.")
+        from django.core.files.uploadedfile import SimpleUploadedFile
+
+        for tenant in tenants:
+            for _ in range(num_evidences_per_project):
+                evidence = Evidence.objects.create(
+                    tenant=tenant,
+                    project=Project.objects.filter(tenant=tenant).order_by("?").first(),
+                    title=fake.sentence(nb_words=4),
+                    description=fake.text(),
+                    content=fake.text()
+                )
+                for _ in range(num_evidence_files_per_evidence):
+                    evidence_file = EvidenceFile.objects.create(
+                        file=SimpleUploadedFile(
+                            name=f"{fake.word()}.txt",
+                            content=fake.text().encode('utf-8'),
+                            content_type='text/plain'
+                        )
+                    )
+            print("Evidence and EvidenceFile data created.")
+
+
+        # Create Comments, Notes, and AuditorFeedback
+        policies = TenantPolicy.objects.all()
+        for policy in policies:
+            # for _ in range(num_comments_per_policy):
+            #     Comment.objects.create(
+            #         policy=policy,
+            #         content=fake.text(),
+            #         created_by=Account.objects.order_by("?").first()
+            #     )
+            for _ in range(num_notes_per_policy):
+                Note.objects.create(
+                    policy=policy,
+                    content=fake.text(),
+                    created_by=Account.objects.order_by("?").first()
+                )
+            for _ in range(num_auditor_feedbacks_per_policy):
+                AuditorFeedback.objects.create(
+                    policy=policy,
+                    content=fake.text(),
+                    created_by=Account.objects.order_by("?").first()
+                )
+        print("Comment, Note, and AuditorFeedback data created.")
 
         print("All fake data generation completed.")
 
