@@ -159,6 +159,8 @@ class ProjectTask(BaseModel):
 
     deadline = models.DateTimeField(null=True, blank=True)
     completed_at = models.DateTimeField(null=True, blank=True)
+    start = models.DateTimeField(null=True, blank=True)
+    end = models.DateTimeField(null=True, blank=True)
 
 
 class ProjectClause(BaseModel):
