@@ -59,7 +59,7 @@ class Login(APIView):
 			return Response(data, status=200)
 		else:
 			return Response({
-				"response": SUCCSS,
+				"response": ERROR,
 				"msg": "Invalid credentials."}, status=200)
 
 
