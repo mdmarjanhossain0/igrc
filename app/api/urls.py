@@ -34,6 +34,7 @@ router.register(r'project/(?P<project_id>\d+)/clauses',ClausesByProjectView, bas
 router.register(r'project/(?P<project_id>\d+)/controls',ControlsByProjectView, basename='project-controls')
 router.register(r'project/(?P<project_id>\d+)/controls/(?P<control_id>\d+)/subcontrols', SubControlsByProjectView, basename='project-subcontrols')
 router.register(r'project/(?P<project_id>\d+)/tasks', TasksByProjectView, basename='project-tasks')
+router.register(r'project/(?P<project_id>\d+)/controls-with-subcontrols', ControlWithSubControlsByProjectView, basename='project-controls-with-subcontrols')
 
 
 
@@ -58,7 +59,7 @@ urlpatterns = [
     path('redoc', schema_view.with_ui('redoc', cache_timeout=0), name='redoc-ui'),
     # path("project/<int:project_id>/clauses/", ClausesByProjectView.as_view(), name="project-clauses-by-project"),
     # path("project/<int:project_id>/controls/", ControlsByProjectView.as_view(), name="project-controls-by-project"),
-    path("project/<int:project_id>/controls-with-subcontrols/", ControlWithSubControlsByProjectView.as_view(), name="project-controls-with-subcontrols-by-project"),
+    # path("project/<int:project_id>/controls-with-subcontrols/", ControlWithSubControlsByProjectView.as_view(), name="project-controls-with-subcontrols-by-project"),
     # path("project/<int:project_id>/tasks/", TasksByProjectView.as_view(), name="project-tasks-by-project"),
 
 

@@ -111,6 +111,12 @@ class EvidenceModelViewSet(viewsets.ModelViewSet):
             evidence_file = EvidenceFile.objects.create(file=file)
             evidence.files.add(evidence_file)
 
+class EvidenceByProjectView(viewsets.ModelViewSet):
+    serializer_class = EvidenceSerializer
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        return Evidence.objects.filter(project_id=project_id)
+    
 
 
 class ClausesByProjectView(viewsets.ModelViewSet):
@@ -197,12 +203,38 @@ class SubControlsByProjectView(viewsets.ModelViewSet):
 
 
 
-class ControlWithSubControlsByProjectView(APIView):
-    def get(self, request, project_id):
-        controls=ProjectControl.objects.filter(project_id=project_id)
-        serializer=ProjectControlWithSubControlSerializer(controls, many=True,)
-        return Response(serializer.data)
+class ControlWithSubControlsByProjectView(viewsets.ModelViewSet):
+    # def get(self, request, project_id):
+    #     controls=ProjectControl.objects.filter(project_id=project_id)
+    #     serializer=ProjectControlWithSubControlSerializer(controls, many=True,)
+    #     return Response(serializer.data)
+    serializer_class = ProjectControlWithSubControlSerializer
+
+    def get_permissions(self):
+        if self.action in ['list', 'retrieve']:
+            return [IsAuthenticated()]
+        return [IsAuthenticated(), Or(IsGrcAdmin, IsProjectAdmin, IsProjectManager)]
     
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        return ProjectControl.objects.filter(project_id=project_id)
+
+
+    def perform_create(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+
+    def perform_update(self, serializer):
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        serializer.save(project=project)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+
+
 class TasksByProjectView(viewsets.ModelViewSet):
     serializer_class = ProjectTaskSerializer
 
