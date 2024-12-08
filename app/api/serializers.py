@@ -93,7 +93,7 @@ class ProjectSerializer(serializers.ModelSerializer):
         objs = obj.evidence_set.all()
         sum = 0
         for item in objs:
-            sum += 1 if obj.is_complete else 0
+            sum += 1 if item.is_complete else 0
         return sum / len(objs) if len(objs) > 0 else 1
 
 class ProjectMemberSerializer(serializers.ModelSerializer):
