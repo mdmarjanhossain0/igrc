@@ -4,9 +4,10 @@ from .views import (ClauseModelViewSet, ClausesByProjectView, ControlModelViewSe
     ControlsByProjectView, ControlWithSubControlsByProjectView, EvidenceModelViewSet,
     FrameworkModelViewSet, PolicyModelViewSet, ProjectClauseModelViewSet,
     ProjectControlModelViewSet, ProjectMemberByProject, ProjectMemberModelViewSet,
-    ProjectMembersByProject, ProjectModelViewSet, ProjectSubControlModelViewSet,
-    ProjectTaskModelViewSet, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
-    TasksByProjectView, TenantModelViewSet, TenantPolicyModelViewSet)
+    ProjectMembersByProject, ProjectModelViewSet, ProjectPoicyModelViewSet,
+    ProjectSubControlModelViewSet, ProjectTaskModelViewSet, SubControlModelViewSet,
+    SubControlsByProjectView, TaskModelViewSet, TasksByProjectView, TenantModelViewSet,
+    TenantPolicyModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -31,6 +32,7 @@ router.register(r'project-controls', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
 router.register(r'evidence', EvidenceModelViewSet)
 router.register(r'project/(?P<project_id>\d+)/clauses',ClausesByProjectView, basename='project-clauses')
+router.register(r'project/(?P<project_id>\d+)/policies',ProjectPoicyModelViewSet, basename='project-policy')
 router.register(r'project/(?P<project_id>\d+)/controls',ControlsByProjectView, basename='project-controls')
 router.register(r'project/(?P<project_id>\d+)/controls/(?P<control_id>\d+)/subcontrols', SubControlsByProjectView, basename='project-subcontrols')
 router.register(r'project/(?P<project_id>\d+)/tasks', TasksByProjectView, basename='project-tasks')

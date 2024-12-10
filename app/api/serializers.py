@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Policy, Project,
-    ProjectClause, ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task, Comment, Note,
-    Tenant, TenantPolicy)
+from app.models import (AuditorFeedback, Clause, Comment, Control, Evidence, EvidenceFile,
+    Framework, Note, Policy, Project, ProjectClause, ProjectControl, ProjectMember,
+    ProjectSubControl, ProjectTask, SubControl, Task, Tenant, TenantPolicy)
 from django.db.models import Sum, Avg
-
+from riskapp.api.serializers import RiskMitigationSerializer
+from riskapp.models import RiskMitigation
 class FrameworkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Framework
@@ -120,12 +121,21 @@ class ProjectControlSerializer(serializers.ModelSerializer):
     completion=serializers.SerializerMethodField()
     evidences = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
+    notes=serializers.SerializerMethodField()
+    auditor_feedback=serializers.SerializerMethodField()
     class Meta:
         model = ProjectControl
         fields = '__all__'
     
     def get_completion(self, obj):
         return obj.average_completion()
+
+    def get_notes(self,obj):
+        return NoteSerializer(obj.note_set.all(), many=True).data
+    
+    def get_auditor_feedback(self,obj):
+        return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
+    
     def get_evidences(self, obj):
         return EvidenceSerializer(obj.evidence_set.all(), many=True).data
     def get_comments(self, obj):
@@ -135,12 +145,28 @@ class ProjectSubControlSerializer(serializers.ModelSerializer):
     evidences = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     notes = serializers.SerializerMethodField()
+    auditor_feedback = serializers.SerializerMethodField()
+
+    mitigations=serializers.SerializerMethodField()
     class Meta:
         model = ProjectSubControl
         fields = '__all__'
     
+    def get_mitigations(self,obj):
+        control=obj.project_control
+        print(control)
+        risks=control.riskregister_set.all()
+        mitigations = RiskMitigation.objects.filter(risk__in=risks)
+        print(risks)
+        print(mitigations)
+        return RiskMitigationSerializer(mitigations, many=True).data
+    
     def get_evidences(self, obj):
         return EvidenceSerializer(obj.evidence_set.all(), many=True).data
+    def get_auditor_feedback(self, obj):
+        print(obj.auditorfeedback_set.all())
+        return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
+    
     def get_comments(self, obj):
         return CommentSerializer(obj.comment_set.all(), many=True).data
     def get_notes(self, obj):
@@ -152,7 +178,7 @@ class EvidenceFileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EvidenceSerializer(serializers.ModelSerializer):
-    files = EvidenceFileSerializer(many=True, read_only=True)
+    files = EvidenceFileSerializer(many=True, read_only=False)
 
     class Meta:
         model = Evidence
@@ -211,6 +237,10 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
     def get_notes(self, obj):
         return NoteSerializer(obj.note_set.all(), many=True).data
 
+class AuditorFeedbackSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuditorFeedback
+        fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
 

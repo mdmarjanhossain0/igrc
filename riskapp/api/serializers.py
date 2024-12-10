@@ -68,7 +68,7 @@ class MitigationControlSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class RiskMitigationSerializer(serializers.ModelSerializer):
-
+    
     class Meta:
         model = RiskMitigation
         fields = "__all__"

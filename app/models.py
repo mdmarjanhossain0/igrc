@@ -54,6 +54,7 @@ class Control(BaseModel):
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
 
+    refcode=models.CharField(max_length=32, null=False, blank=False)
 
     def __str__(self):
         return self.title
@@ -66,6 +67,7 @@ class SubControl(BaseModel):
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
 
+    refcode=models.CharField(max_length=32, null=False, blank=False)
 
     def __str__(self):
         return self.title
@@ -89,11 +91,17 @@ class Project(BaseModel):
     framework_name = models.CharField(max_length=255, null=True,blank=True)
     framework_description=models.TextField(null=True,blank=True)
 
+
     owner = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
     status = models.ForeignKey(StatusDB, on_delete=models.SET_NULL, null=True, blank=True)
     title = models.CharField(max_length=255, null=False, blank=False)
     description=models.TextField(null=True,blank=True)
     is_auditable = models.BooleanField(default=False)
+
+    can_read_scratchpad=models.BooleanField(default=True)
+    can_write_scratchpad=models.BooleanField(default=True)
+    can_read_comments=models.BooleanField(default=True)
+    can_write_comments=models.BooleanField(default=True)
     
     def save(self, *args, **kwargs):
         if not self.framework_name and self.framework:
@@ -177,29 +185,57 @@ class TenantPolicy(BaseModel):
     title = models.CharField(max_length=255)
     description = models.TextField()
     content = models.TextField()
+    label = models.CharField(max_length=255, null=True, blank=True)
+    refcode=models.CharField(max_length=32, null=False, blank=False)
+
 
 class ProjectControl(BaseModel):
+    status_choices=[
+        ("not started","not started"),
+        ("completed","completed")
+    ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
 
     title=models.CharField(max_length=255, null=True,blank=True)
     description=models.TextField(null=True,blank=True)
     completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    
+    status = models.CharField(max_length=255, default="not started", choices=status_choices)
+    refcode=models.CharField(max_length=32, null=False, blank=False)
+    implementation_context=models.TextField(null=True, blank=True)
+
     def average_completion(self):
         avg_completion=ProjectSubControl.objects.filter(project_control=self).aggregate(models.Avg('completion'))
         return avg_completion['completion__avg'] or self.completion
 
 class ProjectSubControl(BaseModel):
+    
+    status_choices=[
+        ("not implemented","not implemented"),
+        ("partially implemented","partially implemented"),
+        ("fully implemented","fully implemented"),
+    ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     sub_control = models.ForeignKey(SubControl, on_delete=models.SET_NULL, null=True, blank=True)
     project_control = models.ForeignKey(ProjectControl, on_delete=models.CASCADE)
+    owner=models.ForeignKey(Account, on_delete=models.SET_NULL,null=True, blank=True, related_name="subcontrol_owner")
+    operator=models.ForeignKey(Account, on_delete=models.SET_NULL,null=True, blank=True, related_name="subcontrol_operator")
 
     title=models.CharField(max_length=255, null=True,blank=True)
     description=models.TextField(null=True,blank=True)
-    
-    completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    applicable = models.BooleanField(default=True)
+    refcode=models.CharField(max_length=32, null=False, blank=False)
+    implementation_context=models.TextField(null=True, blank=True)
 
+    completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    has_evidence= models.BooleanField(default=False)
+
+    status= models.CharField(max_length=255, default="not implemented", choices=status_choices)
+    
+    #review
+    #todo
+    #category
+    #subcategory
 
 class EvidenceFile(BaseModel):
     file = models.FileField(upload_to='evidence/', null=True, blank=True)
@@ -236,10 +272,27 @@ class Note(BaseModel):
     created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
 
 class AuditorFeedback(BaseModel):
+    status_choices=[
+        ("not started","not started"),
+        ("infosec: in progress","infosec: in progress"),
+        ("infosec: ready for auditor","infosec: ready for auditor"),
+        ("action required","action required"),
+        ("completed", "completed")
+    ]
     policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
     control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
     sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
     content = models.TextField(null=True, blank=True)
+
+    status=models.CharField(max_length=255, choices=status_choices)
+    auditor_note=models.TextField(null=True, blank=True)
+    title=models.CharField(max_length=255)
+    auditor_feedback = models.TextField(null=True, blank=True)
+    infosec_feedback = models.TextField(null=True, blank=True)
+
+    infosec_completed=models.BooleanField(default=False)
+    auditor_completed=models.BooleanField(default=False)
+
     created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
 
 
@@ -279,7 +332,8 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
             for item in instance.framework.control_set.all():
                 ProjectControl.objects.create(
                     project=instance,
-                    control=item
+                    control=item,
+                    refcode=item.refcode,
                     
                 )
 
@@ -289,5 +343,6 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
                     sub_control=item,
                     project_control=item.control.projectcontrol_set.first(),
                     title=item.title,
-                    description=item.description
+                    description=item.description,
+                    refcode=item.refcode
                 )

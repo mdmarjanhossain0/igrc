@@ -57,7 +57,7 @@ class TenantModelViewSet(viewsets.ModelViewSet):
 class ProjectModelViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-
+    
     def get_permissions(self):
         if self.action == 'create':
             self.permission_classes=[IsGrcAdmin]
@@ -90,6 +90,12 @@ class ProjectClauseModelViewSet(viewsets.ModelViewSet):
 class TenantPolicyModelViewSet(viewsets.ModelViewSet):
     queryset = TenantPolicy.objects.all()
     serializer_class = TenantPolicySerializer
+
+class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
+    queryset = TenantPolicy.objects.all()
+    serializer_class = TenantPolicySerializer
+    def get_queryset(self):
+        return TenantPolicy.objects.filter(project__in=[self.kwargs.get('project_id')])
 
 class ProjectControlModelViewSet(viewsets.ModelViewSet):
     queryset = ProjectControl.objects.all()
