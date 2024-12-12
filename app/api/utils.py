@@ -17,5 +17,5 @@ class EvidenceFilterSet(django_filters.FilterSet):
 			"task",
 			"clause",
 			"control",
-			"subcontrol"
+			"sub_control"
 		]
