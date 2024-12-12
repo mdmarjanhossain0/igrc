@@ -200,10 +200,14 @@ class ControlWithSubControlSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     notes=serializers.SerializerMethodField()
     auditor_feedback=serializers.SerializerMethodField()
+    review_count = serializers.SerializerMethodField()
     class Meta:
         model = ProjectControl
         fields = '__all__'
     
+
+    def get_review_count(self, obj):
+        return obj.auditorfeedback_set.filter(status="completed").count()
     def get_completion(self, obj):
         return obj.average_completion()
 
