@@ -16,6 +16,13 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from app.api.utils import (
+    EvidenceFilterSet
+)
+
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+
 class FrameworkModelViewSet(viewsets.ModelViewSet):
     queryset = Framework.objects.all()
     serializer_class = FrameworkSerializer
@@ -350,3 +357,14 @@ class ProjectMemberByProject(APIView):
 
 
 
+class TenantEvidenceModelViewSet(viewsets.ModelViewSet):
+    queryset = Evidence.objects.all()
+    serializer_class = EvidenceSerializer
+    filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
+
+    filterset_class = EvidenceFilterSet
+
+    def get_queryset(self):
+        return Evidence.objects.filter(
+            tenant_id=self.kwargs.get('tenant_id')
+        )
