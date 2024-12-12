@@ -195,9 +195,23 @@ class ControlWithSubControlSerializer(serializers.ModelSerializer):
     evidences = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     notes = serializers.SerializerMethodField()
+    completion=serializers.SerializerMethodField()
+    evidences = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+    notes=serializers.SerializerMethodField()
+    auditor_feedback=serializers.SerializerMethodField()
     class Meta:
-        model = Control
+        model = ProjectControl
         fields = '__all__'
+    
+    def get_completion(self, obj):
+        return obj.average_completion()
+
+    def get_notes(self,obj):
+        return NoteSerializer(obj.note_set.all(), many=True).data
+    
+    def get_auditor_feedback(self,obj):
+        return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
     
     def get_subcontrols(self,obj):
         subcontrols=SubControl.objects.filter(control=obj)
