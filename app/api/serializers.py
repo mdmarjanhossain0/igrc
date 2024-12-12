@@ -201,10 +201,21 @@ class ControlWithSubControlSerializer(serializers.ModelSerializer):
     notes=serializers.SerializerMethodField()
     auditor_feedback=serializers.SerializerMethodField()
     review_count = serializers.SerializerMethodField()
+    evidence_progress = serializers.SerializerMethodField()
     class Meta:
         model = ProjectControl
         fields = '__all__'
     
+    def get_evidence_progress(self, obj):
+        try:
+            progress = 0
+            total_evidences = obj.evidence_set.all().count()
+            completed_evidences = obj.evidence_set.filter(is_complete=True).count()
+            if total_evidences > 0:
+                progress = completed_evidences / total_evidences * 100
+            return progress
+        except:
+            return 0
 
     def get_review_count(self, obj):
         return obj.auditorfeedback_set.filter(status="completed").count()
