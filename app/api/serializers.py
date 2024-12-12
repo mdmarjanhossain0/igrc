@@ -198,7 +198,6 @@ class ControlWithSubControlSerializer(serializers.ModelSerializer):
     completion=serializers.SerializerMethodField()
     evidences = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
-    notes=serializers.SerializerMethodField()
     auditor_feedback=serializers.SerializerMethodField()
     review_count = serializers.SerializerMethodField()
     evidence_progress = serializers.SerializerMethodField()
