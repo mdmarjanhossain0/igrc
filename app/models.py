@@ -39,6 +39,13 @@ class Clause(BaseModel):
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
 
+class SubClause(BaseModel):
+    framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
+
+    title=models.CharField(max_length=255, null=False,blank=False)
+    description=models.TextField(null=True,blank=True)
+
 class Policy(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
@@ -174,6 +181,15 @@ class ProjectTask(BaseModel):
 class ProjectClause(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
+
+    title=models.CharField(max_length=255, null=True,blank=True)
+    description=models.TextField(null=True,blank=True)
+    completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    
+class ProjectSubClause(BaseModel):
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+    sub_clause = models.ForeignKey(SubClause, on_delete=models.SET_NULL, null=True, blank=True)
+    project_clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
 
     title=models.CharField(max_length=255, null=True,blank=True)
     description=models.TextField(null=True,blank=True)
@@ -324,12 +340,29 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
                     description=item.description
                 )
             for item in instance.framework.clause_set.all():
-                ProjectClause.objects.create(
+                clause = ProjectClause.objects.create(
                     project=instance,
                     clause=item,
                     title=item.title,
                     description=item.description
                 )
+                sub_clause = item.subclause_set.all()
+                try:
+                    sub_clause = sub_clause[0]
+                    ProjectSubClause.objects.create(
+                        project=instance,
+                        project_clause=clause,
+                        subclause=sub_clause,
+                        title=sub_clause.title,
+                        description=sub_clause.description
+                    )
+                except:
+                    sub_clause = None
+                    ProjectSubClause.objects.create(
+                        project=instance,
+                        project_clause=clause
+                    )
+                
             # for item in instance.framework.policy_set.all():
                 # tp = TenantPolicy(
                 #     title=item.title,
