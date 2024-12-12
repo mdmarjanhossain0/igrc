@@ -5,7 +5,7 @@ from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Poli
     Tenant, TenantPolicy)
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import IsGrcAdmin, IsProjectAdmin, IsProjectManager, Or
-from .serializers import (ClauseSerializer, ControlSerializer, ControlWithSubControlSerializer,
+from .serializers import (ClauseSerializer, ControlSerializer,
     EvidenceSerializer, FrameworkSerializer, PolicySerializer, ProjectClauseSerializer,
     ProjectControlSerializer, ProjectMemberSerializer, ProjectSerializer,
     ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,

@@ -190,7 +190,62 @@ class EvidenceSerializer(serializers.ModelSerializer):
 #         model = Clause
 #         fields = '__all__'
 
-class ControlWithSubControlSerializer(serializers.ModelSerializer):
+# class ControlWithSubControlSerializer(serializers.ModelSerializer):
+#     subcontrols=serializers.SerializerMethodField()
+#     evidences = serializers.SerializerMethodField()
+#     comments = serializers.SerializerMethodField()
+#     notes = serializers.SerializerMethodField()
+#     completion=serializers.SerializerMethodField()
+#     evidences = serializers.SerializerMethodField()
+#     comments = serializers.SerializerMethodField()
+#     auditor_feedback=serializers.SerializerMethodField()
+#     review_count = serializers.SerializerMethodField()
+#     evidence_progress = serializers.SerializerMethodField()
+#     class Meta:
+#         model = ProjectControl
+#         fields = '__all__'
+    
+#     def get_evidence_progress(self, obj):
+#         try:
+#             progress = 0
+#             total_evidences = Evidence.objects.filter(control=obj, sub_control__control=obj).count()
+#             completed_evidences = Evidence.objects.filter(control=obj, sub_control__control=obj, is_complete=True).count()
+#             if total_evidences > 0:
+#                 progress = completed_evidences / total_evidences * 100
+#             return progress
+#         except:
+#             return 0
+
+#     def get_review_count(self, obj):
+#         return obj.auditorfeedback_set.filter(status="completed").count()
+#     def get_completion(self, obj):
+#         return obj.average_completion()
+
+#     def get_notes(self,obj):
+#         return NoteSerializer(obj.note_set.all(), many=True).data
+    
+#     def get_auditor_feedback(self,obj):
+#         return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
+    
+#     def get_subcontrols(self,obj):
+#         subcontrols=SubControl.objects.filter(control=obj)
+
+#         subcontrols_data = SubControlSerializer(subcontrols, many=True).data
+#         for subcontrol in subcontrols_data:
+#             subcontrol_obj = SubControl.objects.get(id=subcontrol['id'])
+#             evidences = Evidence.objects.filter(sub_control__sub_control=subcontrol_obj)
+#             subcontrol['evidences'] = EvidenceSerializer(evidences, many=True).data
+#         return subcontrols_data
+    
+#     def get_evidences(self, obj):
+#         return EvidenceSerializer(obj.evidence_set.all(), many=True).data
+#     def get_comments(self, obj):
+#         return CommentSerializer(obj.comment_set.all(), many=True).data
+#     def get_notes(self, obj):
+#         return NoteSerializer(obj.note_set.all(), many=True).data
+    
+
+class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
     subcontrols=serializers.SerializerMethodField()
     evidences = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
@@ -208,8 +263,8 @@ class ControlWithSubControlSerializer(serializers.ModelSerializer):
     def get_evidence_progress(self, obj):
         try:
             progress = 0
-            total_evidences = obj.evidence_set.all().count()
-            completed_evidences = obj.evidence_set.filter(is_complete=True).count()
+            total_evidences = Evidence.objects.filter(control=obj, sub_control__control=obj).count()
+            completed_evidences = Evidence.objects.filter(control=obj, sub_control__control=obj, is_complete=True).count()
             if total_evidences > 0:
                 progress = completed_evidences / total_evidences * 100
             return progress
@@ -236,27 +291,6 @@ class ControlWithSubControlSerializer(serializers.ModelSerializer):
             evidences = Evidence.objects.filter(sub_control__sub_control=subcontrol_obj)
             subcontrol['evidences'] = EvidenceSerializer(evidences, many=True).data
         return subcontrols_data
-    
-    def get_evidences(self, obj):
-        return EvidenceSerializer(obj.evidence_set.all(), many=True).data
-    def get_comments(self, obj):
-        return CommentSerializer(obj.comment_set.all(), many=True).data
-    def get_notes(self, obj):
-        return NoteSerializer(obj.note_set.all(), many=True).data
-    
-
-class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
-    subcontrols=serializers.SerializerMethodField()
-    evidences = serializers.SerializerMethodField()
-    comments = serializers.SerializerMethodField()
-    notes = serializers.SerializerMethodField()
-    class Meta:
-        model = ProjectControl
-        fields = '__all__'
-    
-    def get_subcontrols(self,obj):
-        subcontrols=ProjectSubControl.objects.filter(project_control=obj)
-        return ProjectSubControlSerializer(subcontrols, many=True).data
     
     def get_evidences(self, obj):
         return EvidenceSerializer(obj.evidence_set.all(), many=True).data
