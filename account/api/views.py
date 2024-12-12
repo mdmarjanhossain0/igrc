@@ -60,7 +60,7 @@ class Login(APIView):
 		else:
 			return Response({
 				"response": ERROR,
-				"msg": "Invalid credentials."}, status=200)
+				"msg": "Invalid credentials."}, status=401)
 
 
 @api_view(["POST"])
