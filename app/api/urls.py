@@ -38,7 +38,7 @@ router.register(r'project/(?P<project_id>\d+)/controls',ControlsByProjectView, b
 router.register(r'project/(?P<project_id>\d+)/controls/(?P<control_id>\d+)/subcontrols', SubControlsByProjectView, basename='project-subcontrols')
 router.register(r'project/(?P<project_id>\d+)/tasks', TasksByProjectView, basename='project-tasks')
 router.register(r'project/(?P<project_id>\d+)/controls-with-subcontrols', ControlWithSubControlsByProjectView, basename='project-controls-with-subcontrols')
-router.register(r'evidence_set/(?P<tenant_id>\d+)/', TenantEvidenceModelViewSet, basename='evidence_set')
+router.register(r'evidence_set/(?P<tenant_id>\d+)', TenantEvidenceModelViewSet, basename='evidence_set')
 
 
 
