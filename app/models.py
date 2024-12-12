@@ -194,6 +194,14 @@ class ProjectControl(BaseModel):
         ("not started","not started"),
         ("completed","completed")
     ]
+    EASY = "Easy"
+    MODARATE = "Moderate"
+    HARD = "Hard"
+    DIFFICULTIES = [
+        (EASY, EASY),
+        (MODARATE, MODARATE),
+        (HARD, HARD),
+    ]
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -203,6 +211,11 @@ class ProjectControl(BaseModel):
     status = models.CharField(max_length=255, default="not started", choices=status_choices)
     refcode=models.CharField(max_length=32, null=False, blank=False)
     implementation_context=models.TextField(null=True, blank=True)
+    category = models.TextField(null=True, blank=True)
+    sub_category =  models.TextField(null=True, blank=True)
+    system_level = models.BooleanField(default=True)
+    implementation_difficulty = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
+    collaboration_difficulty = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
 
     def average_completion(self):
         avg_completion=ProjectSubControl.objects.filter(project_control=self).aggregate(models.Avg('completion'))
@@ -226,6 +239,7 @@ class ProjectSubControl(BaseModel):
     applicable = models.BooleanField(default=True)
     refcode=models.CharField(max_length=32, null=False, blank=False)
     implementation_context=models.TextField(null=True, blank=True)
+    mitigation = models.TextField(null=True, blank=True)
 
     completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     has_evidence= models.BooleanField(default=False)
