@@ -343,12 +343,11 @@ class NormativeReferencesSerializer(serializers.ModelSerializer):
             task_sub_clauses = ProjectTask.objects.filter(subclauses=item)
             # task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
             task_data.append({
-                "id":
-                item.id,
-                "name":
-                item.title,
-                "task_sub_clauses":
-                TaskSerializer(task_sub_clauses, many=True).data,
+                "id": item.id,
+                "name": item.title,
+                'ref_id':item.ref_id,
+                "task_sub_clauses": TaskSerializer(task_sub_clauses, many=True).data,
+
                 # "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
             })
         return task_data

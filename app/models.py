@@ -507,7 +507,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 							control=item,
 							ref_id=item.ref_id,
 							project_sub_clause=psc,
-							visibility=item.visibility,
+							visible=item.visible,
 							zreferences=item.zreferences,
 							mapping = item.mapping,
 							level=item.level,
@@ -517,11 +517,12 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 					break
 
 			for item in instance.framework.subcontrol_set.all():
-				ProjectSubControl.objects.create(
-					project=instance,
-					sub_control=item,
-					project_control=item.control.projectcontrol_set.first(),
-					title=item.title,
-					description=item.description,
-					ref_id=item.ref_id
-				)
+				for project_control in item.control.projectcontrol_set.all():
+					ProjectSubControl.objects.create(
+						project=instance,
+						sub_control=item,
+						project_control=project_control,
+						title=item.title,
+						description=item.description,
+						ref_id=item.ref_id
+					)
