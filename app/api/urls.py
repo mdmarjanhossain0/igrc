@@ -8,7 +8,7 @@ from .views import (ClauseModelViewSet, ClausesByProjectView, ControlModelViewSe
     ProjectSubControlModelViewSet, ProjectTaskModelViewSet, SubControlModelViewSet,
     SubControlsByProjectView, TaskModelViewSet, TasksByProjectView, TenantModelViewSet,
     TenantPolicyModelViewSet,
-    TenantEvidenceModelViewSet)
+    TenantEvidenceModelViewSet, normative_reference_view)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -69,5 +69,7 @@ urlpatterns = [
 
     path("project/<int:project_id>/members/", ProjectMembersByProject.as_view(), name="project-members-by-project"),
     path("project/<int:project_id>/members/<int:member_id>/", ProjectMemberByProject.as_view(), name="project-member-by-project"),
+
+    path("normative_reference/<int:project_id>", normative_reference_view, name="normative_reference_view")
 
 ]

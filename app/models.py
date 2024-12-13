@@ -268,7 +268,6 @@ class ProjectSubClause(BaseModel):
 				self.ref_id = self.sub_clause.ref_id 
 		super(ProjectSubClause, self).save(*args, **kwargs)
 	
-
 class TenantPolicy(BaseModel):
 	project = models.ManyToManyField(Project, blank=True)
 	title = models.CharField(max_length=255)
@@ -276,7 +275,6 @@ class TenantPolicy(BaseModel):
 	content = models.TextField()
 	label = models.CharField(max_length=255, null=True, blank=True)
 	refcode=models.CharField(max_length=32, null=False, blank=False)
-
 
 class ProjectControl(BaseModel):
 	status_choices=[
