@@ -465,12 +465,14 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 
 
 			for item in instance.framework.control_set.all():
-				ProjectControl.objects.create(
-					project=instance,
-					control=item,
-					ref_id=item.ref_id,
-					
-				)
+				project_sub_clauses = instance.framework.control_set.all()
+				for project_sub_clause in project_sub_clauses:
+					ProjectControl.objects.create(
+						project=instance,
+						control=item,
+						ref_id=item.ref_id,
+						project_sub_clause=project_sub_clause			
+					)
 
 			for item in instance.framework.subcontrol_set.all():
 				ProjectSubControl.objects.create(
