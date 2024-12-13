@@ -224,7 +224,7 @@ class ProjectClause(BaseModel):
 		(CONTROL, CONTROL)
 	)
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
-	clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
+	clause = models.ForeignKey(Clause, on_delete=models.CASCADE, null=True, blank=True)
 
 	title=models.CharField(max_length=255, null=False,blank=True)
 	description=models.TextField(null=True,blank=True)
@@ -465,13 +465,13 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 
 
 			for item in instance.framework.control_set.all():
-				project_sub_clauses = instance.projectsubclause_set.all()
-				for project_sub_clause in project_sub_clauses:
+				# project_sub_clauses = instance.projectsubclause_set.all()
+				# for project_sub_clause in project_sub_clauses:
 					ProjectControl.objects.create(
 						project=instance,
 						control=item,
 						ref_id=item.ref_id,
-						project_sub_clause=project_sub_clause			
+						project_sub_clause=item.sub_clause			
 					)
 
 			for item in instance.framework.subcontrol_set.all():
