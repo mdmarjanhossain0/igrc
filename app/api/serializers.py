@@ -356,7 +356,7 @@ class NormativeReferencesSerializer(serializers.ModelSerializer):
         #     })
         
     def get_sub_controls(self,obj):
-        subcontrols=obj.projectsubcontrols_set.all()
+        subcontrols=obj.projectsubcontrol_set.all()
         task_data = []
         for item in subcontrols:
             task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
