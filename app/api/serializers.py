@@ -327,14 +327,14 @@ class NoteSerializer(serializers.ModelSerializer):
         model = Note
 
 class NormativeReferencesSerializer(serializers.ModelSerializer):
-    sub_clasess = serializers.SerializerMethodField("get_sub_clasess")
+    sub_clauses = serializers.SerializerMethodField("get_sub_clauses")
 
     class Meta:
         model = ProjectClause
         fields = "__all__"
     
-    def get_sub_clasess(self, obj):
-        subclauses = obj.subclaus_set.all()
+    def get_sub_clauses(self, obj):
+        subclauses = obj.subclause_set.all()
         task_data = []
         for item in subclauses:
             task_sub_clauses = ProjectTask.objects.filter(subclauses=item)
