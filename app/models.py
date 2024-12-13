@@ -36,12 +36,19 @@ class Task(BaseModel):
 		return self.title
 	
 class Clause(BaseModel):
+	CORE = "core"
+	CONTROL = "control"
+	TYPES =  (
+		(CORE, CORE),
+		(CONTROL, CONTROL)
+	)
 	framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
 	task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
 	ref_id = models.CharField(max_length=8, null=False)
+	type = models.CharField(max_length=32, choices=TYPES, default=CORE)
 
 	class Meta:
 		unique_together = ('framework', 'ref_id')
