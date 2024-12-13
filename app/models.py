@@ -29,6 +29,9 @@ class Task(BaseModel):
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
 
+    subclauses = models.ManyToManyField('SubClause', blank=True, related_name='subclauses')
+    subcontrols = models.ManyToManyField('SubControl', blank=True, related_name='subcontrols')
+
     def __str__(self):
         return self.title
     
@@ -38,6 +41,10 @@ class Clause(BaseModel):
 
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
+    ref_id = models.CharField(max_length=8, null=False)
+
+    class Meta:
+        unique_together = ('framework', 'ref_id')
 
 class SubClause(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
@@ -45,6 +52,12 @@ class SubClause(BaseModel):
 
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
+    clause = models.ForeignKey(Clause, on_delete=models.CASCADE)
+    ref_id = models.CharField(max_length=8, null=False)
+    ref_sub_id = models.CharField(max_length=8, null=False)
+
+    class Meta:
+        unique_together = ('clause', 'ref_sub_id')
 
 class Policy(BaseModel):
     framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
@@ -177,6 +190,10 @@ class ProjectTask(BaseModel):
     start = models.DateTimeField(null=True, blank=True)
     end = models.DateTimeField(null=True, blank=True)
 
+    # clause = models.ManyToManyField(Clause, blank=True)
+    subclauses = models.ManyToManyField('ProjectSubClause', blank=True, related_name='project_subclauses')
+    subcontrols = models.ManyToManyField('ProjectSubControl', blank=True, related_name='project_subcontrols')
+
 
 class ProjectClause(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
@@ -185,6 +202,17 @@ class ProjectClause(BaseModel):
     title=models.CharField(max_length=255, null=True,blank=True)
     description=models.TextField(null=True,blank=True)
     completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+
+    ref_id = models.CharField(max_length=8, null=False, blank=True)
+
+    class Meta:
+        unique_together = ('project', 'ref_id')
+    
+    def save(self, *args, **kwargs):
+        if not self.ref_id:
+            if  not self.clause:
+                self.ref_id = self.clause.ref_id
+        super(ProjectClause, self).save(*args, **kwargs)
     
 class ProjectSubClause(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
@@ -194,6 +222,23 @@ class ProjectSubClause(BaseModel):
     title=models.CharField(max_length=255, null=True,blank=True)
     description=models.TextField(null=True,blank=True)
     completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+
+    ref_id = models.CharField(max_length=8, null=False, blank=True)
+    ref_sub_id = models.CharField(max_length=8, null=False, blank=True)
+
+    class Meta:
+        unique_together = ('project', 'project_clause', 'ref_sub_id')
+    
+    def save(self, *args, **kwargs):
+        if not self.ref_id:
+            if  not self.sub_clause:
+                self.ref_id = self.sub_clause.ref_id
+        if not self.ref_sub_id:
+            if  not self.sub_clause:
+                self.ref_id = self.sub_clause.ref_sub_id
+        super(ProjectSubClause, self).save(*args, **kwargs)
+    
+    
     
 
 class TenantPolicy(BaseModel):
