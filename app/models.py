@@ -218,7 +218,7 @@ class ProjectClause(BaseModel):
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
 	clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
 
-	title=models.CharField(max_length=255, null=True,blank=True)
+	title=models.CharField(max_length=255, null=False,blank=True)
 	description=models.TextField(null=True,blank=True)
 	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 

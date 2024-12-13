@@ -369,3 +369,8 @@ class TenantEvidenceModelViewSet(viewsets.ModelViewSet):
         return Evidence.objects.filter(
             tenant_id=self.kwargs.get('tenant_id')
         )
+
+# @api_view(
+#         ["GET"]
+# )
+# def normative_reference_view(request):
