@@ -92,7 +92,7 @@ class Control(BaseModel):
 	description=models.TextField(null=True,blank=True)
 	sub_clause = models.ForeignKey(SubClause, on_delete=models.CASCADE)
 
-	refcode=models.CharField(max_length=32, null=False, blank=False)
+	ref_id=models.CharField(max_length=32, null=False, blank=False)
 
 	def __str__(self):
 		return self.title
@@ -105,7 +105,7 @@ class SubControl(BaseModel):
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
 
-	refcode=models.CharField(max_length=32, null=False, blank=False)
+	ref_id=models.CharField(max_length=32, null=False, blank=False)
 
 	def __str__(self):
 		return self.title
@@ -297,13 +297,15 @@ class ProjectControl(BaseModel):
 	description=models.TextField(null=True,blank=True)
 	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 	status = models.CharField(max_length=255, default="not started", choices=status_choices)
-	refcode=models.CharField(max_length=32, null=False, blank=False)
+	# refcode=models.CharField(max_length=32, null=False, blank=False)
 	implementation_context=models.TextField(null=True, blank=True)
 	category = models.TextField(null=True, blank=True)
 	sub_category =  models.TextField(null=True, blank=True)
 	system_level = models.BooleanField(default=True)
 	implementation_difficulty = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
 	collaboration_difficulty = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
+	
+	ref_id=models.CharField(max_length=32, null=False, blank=False)
 
 	def average_completion(self):
 		avg_completion=ProjectSubControl.objects.filter(project_control=self).aggregate(models.Avg('completion'))
@@ -326,14 +328,15 @@ class ProjectSubControl(BaseModel):
 	title=models.CharField(max_length=255, null=True,blank=True)
 	description=models.TextField(null=True,blank=True)
 	applicable = models.BooleanField(default=True)
-	refcode=models.CharField(max_length=32, null=False, blank=False)
+	# refcode=models.CharField(max_length=32, null=False, blank=False)
 	implementation_context=models.TextField(null=True, blank=True)
 	mitigation = models.TextField(null=True, blank=True)
 
 	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 	has_evidence= models.BooleanField(default=False)
-
+	
 	status= models.CharField(max_length=255, default="not implemented", choices=status_choices)
+	ref_id=models.CharField(max_length=32, null=False, blank=False)
 	
 	#review
 	#todo
@@ -418,24 +421,35 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 					project=instance,
 					clause=item,
 					title=item.title,
-					description=item.description
+					description=item.description,
+					ref_id=item.ref_id
 				)
-				sub_clause = item.subclause_set.all()
-				try:
-					sub_clause = sub_clause[0]
+				sub_clauses = item.subclause_set.all()
+				for sub_clause in sub_clauses:
 					ProjectSubClause.objects.create(
 						project=instance,
 						project_clause=clause,
 						subclause=sub_clause,
 						title=sub_clause.title,
-						description=sub_clause.description
+						description=sub_clause.description,
+						ref_id=item.ref_id
 					)
-				except:
-					sub_clause = None
-					ProjectSubClause.objects.create(
-						project=instance,
-						project_clause=clause
-					)
+				# try:
+				# 	sub_clause = sub_clause[0]
+				# 	ProjectSubClause.objects.create(
+				# 		project=instance,
+				# 		project_clause=clause,
+				# 		subclause=sub_clause,
+				# 		title=sub_clause.title,
+				# 		description=sub_clause.description,
+				# 		ref_id=item.ref_id
+				# 	)
+				# except:
+				# 	sub_clause = None
+				# 	ProjectSubClause.objects.create(
+				# 		project=instance,
+				# 		project_clause=clause
+				# 	)
 				
 			# for item in instance.framework.policy_set.all():
 				# tp = TenantPolicy(
@@ -454,7 +468,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 				ProjectControl.objects.create(
 					project=instance,
 					control=item,
-					refcode=item.refcode,
+					ref_id=item.ref_id,
 					
 				)
 
@@ -465,5 +479,5 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 					project_control=item.control.projectcontrol_set.first(),
 					title=item.title,
 					description=item.description,
-					refcode=item.refcode
+					ref_id=item.ref_id
 				)
