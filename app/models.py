@@ -432,7 +432,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 						sub_clause=sub_clause,
 						title=sub_clause.title,
 						description=sub_clause.description,
-						ref_id=item.ref_id
+						ref_id=sub_clause.ref_id
 					)
 				# try:
 				# 	sub_clause = sub_clause[0]
