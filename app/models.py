@@ -29,6 +29,10 @@ class Task(BaseModel):
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
 	type = models.CharField(max_length=32)
+	duration = models.IntegerField(null=True, blank=True)
+	start = models.DateField(null=True, blank=True)
+	end = models.DateField(null=True, blank=True)
+	assignee = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
 
 	# subclauses = models.ManyToManyField('SubClause', blank=True, related_name='subclauses')
 	# subcontrols = models.ManyToManyField('SubControl', blank=True, related_name='subcontrols')
@@ -202,8 +206,10 @@ class ProjectTask(BaseModel):
 
 	deadline = models.DateTimeField(null=True, blank=True)
 	completed_at = models.DateTimeField(null=True, blank=True)
-	start = models.DateTimeField(null=True, blank=True)
-	end = models.DateTimeField(null=True, blank=True)
+	duration = models.IntegerField(null=True, blank=True)
+	start = models.DateField(null=True, blank=True)
+	end = models.DateField(null=True, blank=True)
+	assignee = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
 
 	# clause = models.ManyToManyField(Clause, blank=True)
 	subclauses = models.ManyToManyField('ProjectSubClause', blank=True, related_name='project_subclauses')
