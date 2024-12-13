@@ -109,6 +109,7 @@ class RiskRegister(BaseModel):
     control_regulation = models.ForeignKey(ControlRegister, on_delete=models.SET_NULL, null=True, blank=True)
     current_impact = models.CharField(max_length=32, choices=IMPACTS, null=False, blank=False)
     control = models.ManyToManyField(ProjectControl, blank=True)
+    project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     affected_assets = models.CharField(max_length=100, null=False, blank=False)
     risk_assessment = models.TextField(null=True, blank=True)
     additional_notes = models.TextField(null=True, blank=True)
