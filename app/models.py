@@ -251,8 +251,6 @@ class ProjectSubClause(BaseModel):
 		super(ProjectSubClause, self).save(*args, **kwargs)
 	
 	
-	
-
 class TenantPolicy(BaseModel):
 	project = models.ManyToManyField(Project, blank=True)
 	title = models.CharField(max_length=255)
@@ -277,6 +275,7 @@ class ProjectControl(BaseModel):
 	]
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
+	project_sub_clause = models.ForeignKey(ProjectSubClause, on_delete=models.CASCADE)
 
 	title=models.CharField(max_length=255, null=True,blank=True)
 	description=models.TextField(null=True,blank=True)
@@ -304,6 +303,7 @@ class ProjectSubControl(BaseModel):
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	sub_control = models.ForeignKey(SubControl, on_delete=models.SET_NULL, null=True, blank=True)
 	project_control = models.ForeignKey(ProjectControl, on_delete=models.CASCADE)
+	# project_sub_clause = models.ForeignKey(ProjectSubClause, on_delete=models.CASCADE)
 	owner=models.ForeignKey(Account, on_delete=models.SET_NULL,null=True, blank=True, related_name="subcontrol_owner")
 	operator=models.ForeignKey(Account, on_delete=models.SET_NULL,null=True, blank=True, related_name="subcontrol_operator")
 
