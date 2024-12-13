@@ -295,13 +295,14 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
         return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
     
     def get_subcontrols(self,obj):
-        subcontrols=ProjectSubControl.objects.filter(control=obj)
+        subcontrols=ProjectSubControl.objects.filter(project_control=obj)
+        print(subcontrols)
 
         subcontrols_data = ProjectSubControlSerializer(subcontrols, many=True).data
-        for subcontrol in subcontrols_data:
-            subcontrol_obj = ProjectSubControl.objects.get(id=subcontrol['id'])
-            evidences = Evidence.objects.filter(sub_control__sub_control=subcontrol_obj)
-            subcontrol['evidences'] = EvidenceSerializer(evidences, many=True).data
+        # for subcontrol in subcontrols_data:
+        #     subcontrol_obj = ProjectSubControl.objects.get(id=subcontrol['id'])
+        #     evidences = Evidence.objects.filter(sub_control__sub_control=subcontrol_obj)
+        #     subcontrol['evidences'] = EvidenceSerializer(evidences, many=True).data
         return subcontrols_data
     
     def get_evidences(self, obj):
