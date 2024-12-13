@@ -2,12 +2,9 @@ from django.core.management.base import BaseCommand
 import random
 from faker import Faker
 from django.db import transaction
-from app.models import (
-    Framework, Task, Clause, Policy, Control, SubControl,
-    Tenant, Project, ProjectMember, ProjectTask, ProjectClause,
-    TenantPolicy, ProjectControl, ProjectSubControl, Account, StatusDB,
-    Evidence, EvidenceFile, Comment, Note, AuditorFeedback
-)
+from app.models import (Account, AuditorFeedback, Clause, Comment, Control, Evidence, EvidenceFile,
+    Framework, Note, Policy, Project, ProjectClause, ProjectControl, ProjectMember,
+    ProjectSubControl, ProjectTask, StatusDB, SubClause, SubControl, Task, Tenant, TenantPolicy)
 
 fake = Faker()
 
@@ -51,7 +48,8 @@ def generate_fake_data(
                     task = Task.objects.create(
                         framework=framework,
                         title=fake.sentence(nb_words=4),
-                        description=fake.text()
+                        description=fake.text(),
+                        type=fake.word(),
                     )
                 except Exception as e:
                     print(f"Error creating task: {e}")
@@ -64,9 +62,29 @@ def generate_fake_data(
                 Clause.objects.create(
                     framework=framework,
                     title=fake.sentence(nb_words=4),
-                    description=fake.text()
+                    description=fake.text(),
+                    ref_id=fake.bothify(text='??####'),
+                    type=random.choice([Clause.CORE, Clause.CONTROL])  # Randomly select a valid choice
+
                 )
         print("Clause data created.")
+        
+        # Create SubClauses
+        for framework in frameworks:
+            for _ in range(num_subclauses_per_framework):
+                try:
+                    sub_clause = SubClause.objects.create(
+                        framework=framework,
+                        task=Task.objects.order_by("?").first(),  # Assign a random Task instance
+                        title=fake.sentence(nb_words=4),
+                        description=fake.text(),
+                        clause=Clause.objects.order_by("?").first(),  # Assign a random Clause instance
+                        ref_id=fake.bothify(text='??####')
+                    )
+                except Exception as e:
+                    print(f"Error creating sub_clause: {e}")
+        
+        print("SubClause data created.")
 
         # Create Policies
         for framework in frameworks:
@@ -86,7 +104,10 @@ def generate_fake_data(
                 control = Control.objects.create(
                     framework=framework,
                     title=fake.sentence(nb_words=4),
-                    description=fake.text()
+                    description=fake.text(),
+                    sub_clause=SubClause.objects.order_by("?").first(),  # Assign a random SubClause instance
+                    ref_id=fake.bothify(text='??####')
+
                 )
                 controls.append(control)
 
@@ -96,7 +117,8 @@ def generate_fake_data(
                         framework=control.framework,
                         control=control,
                         title=fake.sentence(nb_words=4),
-                        description=fake.text()
+                        description=fake.text(),
+                        ref_id=fake.bothify(text='??####')
                     )
         print("Control and SubControl data created.")
 
@@ -108,6 +130,7 @@ def generate_fake_data(
                 description=fake.text(),
                 contact_email=fake.email(),
                 owner=Account.objects.order_by("?").first()  # Random owner
+
             )
             tenants.append(tenant)
 
@@ -117,7 +140,8 @@ def generate_fake_data(
                     title=fake.company() + " Project",
                     description=fake.text(),
                     owner=tenant.owner,
-                    status=StatusDB.objects.order_by("?").first()
+                    status=StatusDB.objects.order_by("?").first(),
+                    
                 )
                 # Add Project Members
                 for _ in range(num_project_members_per_project):
