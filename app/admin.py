@@ -3,6 +3,7 @@ from app.models import(
     Framework,
     Task,
     Clause,
+    SubClause,
     Policy,
     Control,
     SubControl,
@@ -13,6 +14,7 @@ from app.models import(
     ProjectMember,
     ProjectTask,
     ProjectClause,
+    ProjectSubClause,
     TenantPolicy,
     ProjectControl,
     ProjectSubControl,
@@ -21,10 +23,18 @@ from app.models import(
     AuditorFeedback
 )
 
-# Register your models here.
+
+
+
 admin.site.register(Framework)
 admin.site.register(Task)
-admin.site.register(Clause)
+
+class SubClauseAdmin(admin.TabularInline):
+    model = SubClause
+
+class ClauseAdmin(admin.ModelAdmin):
+    inlines = [SubClauseAdmin]
+admin.site.register(Clause, ClauseAdmin)
 admin.site.register(Policy)
 admin.site.register(Control)
 
@@ -36,7 +46,15 @@ admin.site.register(Tenant)
 admin.site.register(Project)
 admin.site.register(ProjectMember)
 admin.site.register(ProjectTask)
-admin.site.register(ProjectClause)
+
+
+class ProjectSubClauseAdmin(admin.TabularInline):
+    model = ProjectSubClause
+
+class ProjectClauseAdmin(admin.ModelAdmin):
+    inlines = [ProjectSubClauseAdmin]
+admin.site.register(ProjectClause, ProjectClauseAdmin)
+
 admin.site.register(TenantPolicy)
 admin.site.register(ProjectControl)
 admin.site.register(SubControl)

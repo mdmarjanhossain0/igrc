@@ -217,7 +217,7 @@ class ProjectClause(BaseModel):
 class ProjectSubClause(BaseModel):
     project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
     sub_clause = models.ForeignKey(SubClause, on_delete=models.SET_NULL, null=True, blank=True)
-    project_clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
+    project_clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
 
     title=models.CharField(max_length=255, null=True,blank=True)
     description=models.TextField(null=True,blank=True)
