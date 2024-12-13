@@ -60,7 +60,7 @@ class SubClause(BaseModel):
 	ref_sub_id = models.CharField(max_length=8, null=False)
 
 	class Meta:
-		unique_together = ('clause', 'ref_sub_id')
+		unique_together = ('clause', 'ref_id', 'ref_sub_id')
 	
 	def __str__(self):
 		return self.title
