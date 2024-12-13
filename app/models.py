@@ -86,6 +86,7 @@ class Control(BaseModel):
 	
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
+	sub_clause = models.ForeignKey(SubClause, on_delete=models.CASCADE)
 
 	refcode=models.CharField(max_length=32, null=False, blank=False)
 
@@ -264,7 +265,7 @@ class ProjectSubClause(BaseModel):
 				self.ref_id = self.sub_clause.ref_sub_id
 		super(ProjectSubClause, self).save(*args, **kwargs)
 	
-	
+
 class TenantPolicy(BaseModel):
 	project = models.ManyToManyField(Project, blank=True)
 	title = models.CharField(max_length=255)
