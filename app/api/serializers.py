@@ -65,27 +65,27 @@ class ProjectSerializer(serializers.ModelSerializer):
             return obj.owner.username
         except:
             return None
-        
+
     def get_status(self, obj):
         try:
             return obj.status.name
         except:
             return "In Progress"
-    
+
     def get_total_clauses(self, obj):
         return obj.projectclause_set.all().count()
-    
+
     def get_total_policies(self, obj):
         return obj.tenantpolicy_set.all().count()
-    
+
     def get_total_controls(self, obj):
         return obj.projectcontrol_set.all().count()
-    
+
     def get_completion(self, obj):
         avg_completion=ProjectClause.objects.filter(project=obj).aggregate(Avg('completion'))
         print(avg_completion)
         return avg_completion['completion__avg'] or 0
-    
+
     def get_implementation(self, obj):
         controls = obj.projectcontrol_set.all()
         if len(controls) == 0:
@@ -95,7 +95,7 @@ class ProjectSerializer(serializers.ModelSerializer):
             for item in controls:
                 sum += item.average_completion()
             return sum / len(controls)
-        
+
     def get_total_evidences(self, obj):
         objs = obj.evidence_set.all()
         sum = 0
@@ -140,16 +140,16 @@ class ProjectControlSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectControl
         fields = '__all__'
-    
+
     def get_completion(self, obj):
         return obj.average_completion()
 
     def get_notes(self,obj):
         return NoteSerializer(obj.note_set.all(), many=True).data
-    
+
     def get_auditor_feedback(self,obj):
         return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
-    
+
     def get_evidences(self, obj):
         return EvidenceSerializer(obj.evidence_set.all(), many=True).data
     def get_comments(self, obj):
@@ -165,7 +165,7 @@ class ProjectSubControlSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectSubControl
         fields = '__all__'
-    
+
     def get_mitigations(self,obj):
         control=obj.project_control
         print(control)
@@ -174,13 +174,13 @@ class ProjectSubControlSerializer(serializers.ModelSerializer):
         print(risks)
         print(mitigations)
         return RiskMitigationSerializer(mitigations, many=True).data
-    
+
     def get_evidences(self, obj):
         return EvidenceSerializer(obj.evidence_set.all(), many=True).data
     def get_auditor_feedback(self, obj):
         print(obj.auditorfeedback_set.all())
         return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
-    
+
     def get_comments(self, obj):
         return CommentSerializer(obj.comment_set.all(), many=True).data
     def get_notes(self, obj):
@@ -218,7 +218,7 @@ class EvidenceSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = ProjectControl
 #         fields = '__all__'
-    
+
 #     def get_evidence_progress(self, obj):
 #         try:
 #             progress = 0
@@ -237,10 +237,10 @@ class EvidenceSerializer(serializers.ModelSerializer):
 
 #     def get_notes(self,obj):
 #         return NoteSerializer(obj.note_set.all(), many=True).data
-    
+
 #     def get_auditor_feedback(self,obj):
 #         return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
-    
+
 #     def get_subcontrols(self,obj):
 #         subcontrols=SubControl.objects.filter(control=obj)
 
@@ -250,14 +250,14 @@ class EvidenceSerializer(serializers.ModelSerializer):
 #             evidences = Evidence.objects.filter(sub_control__sub_control=subcontrol_obj)
 #             subcontrol['evidences'] = EvidenceSerializer(evidences, many=True).data
 #         return subcontrols_data
-    
+
 #     def get_evidences(self, obj):
 #         return EvidenceSerializer(obj.evidence_set.all(), many=True).data
 #     def get_comments(self, obj):
 #         return CommentSerializer(obj.comment_set.all(), many=True).data
 #     def get_notes(self, obj):
 #         return NoteSerializer(obj.note_set.all(), many=True).data
-    
+
 
 class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
     subcontrols=serializers.SerializerMethodField()
@@ -271,7 +271,7 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectControl
         fields = '__all__'
-    
+
     def get_evidence_progress(self, obj):
         try:
             progress = 0
@@ -290,10 +290,10 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
 
     def get_notes(self,obj):
         return NoteSerializer(obj.note_set.all(), many=True).data
-    
+
     def get_auditor_feedback(self,obj):
         return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
-    
+
     def get_subcontrols(self,obj):
         subcontrols=ProjectSubControl.objects.filter(project_control=obj)
         print(subcontrols)
@@ -304,7 +304,7 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
         #     evidences = Evidence.objects.filter(sub_control__sub_control=subcontrol_obj)
         #     subcontrol['evidences'] = EvidenceSerializer(evidences, many=True).data
         return subcontrols_data
-    
+
     def get_evidences(self, obj):
         return EvidenceSerializer(obj.evidence_set.all(), many=True).data
     def get_comments(self, obj):
@@ -326,13 +326,15 @@ class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
 
+
 class NormativeReferencesSerializer(serializers.ModelSerializer):
     sub_clauses = serializers.SerializerMethodField("get_sub_clauses")
+
     # sub_controls= serializers.SerializerMethodField("get_sub_controls")
     class Meta:
         model = ProjectClause
         fields = "__all__"
-    
+
     def get_sub_clauses(self, obj):
         subclauses = obj.projectsubclause_set.all()
         print(subclauses)
@@ -341,11 +343,15 @@ class NormativeReferencesSerializer(serializers.ModelSerializer):
             task_sub_clauses = ProjectTask.objects.filter(subclauses=item)
             # task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
             task_data.append({
-                "id": item.id,
-                "name": item.title,
-                "task_sub_clauses": TaskSerializer(task_sub_clauses, many=True).data,
+                "id":
+                item.id,
+                "name":
+                item.title,
+                "task_sub_clauses":
+                TaskSerializer(task_sub_clauses, many=True).data,
                 # "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
             })
+            return task_data
         # subcontrols=obj.projectsubcontrols_set.all()
         # for item in subcontrols:
         #     task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
@@ -354,7 +360,7 @@ class NormativeReferencesSerializer(serializers.ModelSerializer):
         #         "name": item.title,
         #         "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
         #     })
-        
+
     # def get_sub_controls(self,obj):
     #     subcontrols=obj.projectsubcontrol_set.all()
     #     task_data = []
