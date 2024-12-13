@@ -209,6 +209,12 @@ class ProjectTask(BaseModel):
 
 
 class ProjectClause(BaseModel):
+	CORE = "core"
+	CONTROL = "control"
+	TYPES =  (
+		(CORE, CORE),
+		(CONTROL, CONTROL)
+	)
 	project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
 	clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -217,6 +223,7 @@ class ProjectClause(BaseModel):
 	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
 	ref_id = models.CharField(max_length=8, null=False, blank=True)
+	type = models.CharField(max_length=32, choices=TYPES, default=CORE)
 
 	class Meta:
 		unique_together = ('project', 'ref_id')
