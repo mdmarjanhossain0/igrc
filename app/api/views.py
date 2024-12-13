@@ -35,6 +35,7 @@ class ClauseModelViewSet(viewsets.ModelViewSet):
     queryset = Clause.objects.all()
     serializer_class = ClauseSerializer
 
+
 class PolicyModelViewSet(viewsets.ModelViewSet):
     queryset = Policy.objects.all()
     serializer_class = PolicySerializer

@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from app.models import (AuditorFeedback, Clause, Comment, Control, Evidence, EvidenceFile,
     Framework, Note, Policy, Project, ProjectClause, ProjectControl, ProjectMember,
-    ProjectSubControl, ProjectTask, SubControl, Task, Tenant, TenantPolicy)
+    ProjectSubClause, ProjectSubControl, ProjectTask, SubClause, SubControl, Task, Tenant,
+    TenantPolicy)
 from django.db.models import Sum, Avg
 from riskapp.api.serializers import RiskMitigationSerializer
 from riskapp.models import RiskMitigation
@@ -19,6 +20,11 @@ class ClauseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clause
         fields = '__all__'
+
+class SubClauseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubClause
+        fields= '__all__'
 
 class PolicySerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,9 +114,17 @@ class ProjectTaskSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProjectClauseSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ProjectClause
         fields = '__all__'
+
+class ProjectSubClauseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectSubClause
+        fields = '__all__'
+
+
 
 class TenantPolicySerializer(serializers.ModelSerializer):
     class Meta:
@@ -251,8 +265,6 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     notes = serializers.SerializerMethodField()
     completion=serializers.SerializerMethodField()
-    evidences = serializers.SerializerMethodField()
-    comments = serializers.SerializerMethodField()
     auditor_feedback=serializers.SerializerMethodField()
     review_count = serializers.SerializerMethodField()
     evidence_progress = serializers.SerializerMethodField()
@@ -283,11 +295,11 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
         return AuditorFeedbackSerializer(obj.auditorfeedback_set.all(), many=True).data
     
     def get_subcontrols(self,obj):
-        subcontrols=SubControl.objects.filter(control=obj)
+        subcontrols=ProjectSubControl.objects.filter(control=obj)
 
-        subcontrols_data = SubControlSerializer(subcontrols, many=True).data
+        subcontrols_data = ProjectSubControlSerializer(subcontrols, many=True).data
         for subcontrol in subcontrols_data:
-            subcontrol_obj = SubControl.objects.get(id=subcontrol['id'])
+            subcontrol_obj = ProjectSubControl.objects.get(id=subcontrol['id'])
             evidences = Evidence.objects.filter(sub_control__sub_control=subcontrol_obj)
             subcontrol['evidences'] = EvidenceSerializer(evidences, many=True).data
         return subcontrols_data
