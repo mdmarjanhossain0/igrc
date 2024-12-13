@@ -465,7 +465,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 
 
 			for item in instance.framework.control_set.all():
-				project_sub_clauses = instance.framework.control_set.all()
+				project_sub_clauses = instance.projectsubclause_set.all()
 				for project_sub_clause in project_sub_clauses:
 					ProjectControl.objects.create(
 						project=instance,
