@@ -264,7 +264,7 @@ class ProjectSubClause(BaseModel):
 	
 	def save(self, *args, **kwargs):
 		if not self.ref_id:
-			if  not self.sub_clause:
+			if self.sub_clause:
 				self.ref_id = self.sub_clause.ref_id 
 		super(ProjectSubClause, self).save(*args, **kwargs)
 	
