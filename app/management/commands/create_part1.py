@@ -12,6 +12,7 @@ def generate_fake_data(
     num_frameworks=10,
     num_tasks_per_framework=10,
     num_clauses_per_framework=10,
+    num_subclauses_per_framework=10,
     num_policies_per_framework=10,
     num_controls_per_framework=10,
     num_subcontrols_per_control=10,
