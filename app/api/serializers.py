@@ -351,7 +351,7 @@ class NormativeReferencesSerializer(serializers.ModelSerializer):
                 TaskSerializer(task_sub_clauses, many=True).data,
                 # "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
             })
-            return task_data
+        return task_data
         # subcontrols=obj.projectsubcontrols_set.all()
         # for item in subcontrols:
         #     task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
