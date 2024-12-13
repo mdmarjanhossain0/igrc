@@ -335,14 +335,15 @@ class NormativeReferencesSerializer(serializers.ModelSerializer):
     
     def get_sub_clauses(self, obj):
         subclauses = obj.projectsubclause_set.all()
+        print(subclauses)
         task_data = []
         for item in subclauses:
             task_sub_clauses = ProjectTask.objects.filter(subclauses=item)
-            task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
+            # task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
             task_data.append({
                 "id": item.id,
                 "name": item.name,
                 "task_sub_clauses": TaskSerializer(task_sub_clauses, many=True).data,
-                "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
+                # "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
             })
             
