@@ -145,28 +145,28 @@ def generate_fake_data(
                     
                 )
                 # Add Project Members
-                for _ in range(num_project_members_per_project):
-                    ProjectMember.objects.create(
-                        project=project,
-                        member=Account.objects.order_by("?").first(),  # Random member
-                        role=random.choice(["Viewer", "Editor", "Admin"])
-                    )
+                # for _ in range(num_project_members_per_project):
+                #     ProjectMember.objects.create(
+                #         project=project,
+                #         member=Account.objects.order_by("?").first(),  # Random member
+                #         role=random.choice(["Viewer", "Editor", "Admin"])
+                #     )
         print("Tenant and Project data created.")
 
         # Create ProjectTasks
-        for project in Project.objects.all():
-            for _ in range(num_tasks_per_project):
-                ProjectTask.objects.create(
-                    project=project,
-                    task=Task.objects.order_by("?").first(),
-                    title=fake.sentence(nb_words=4),
-                    description=fake.text(),
-                    status=StatusDB.objects.order_by("?").first(),
-                    is_completed=random.choice([True, False]),
-                    deadline=fake.date_time_this_year(),
-                    completed_at=fake.date_time_this_year() if random.choice([True, False]) else None
-                )
-        print("ProjectTask data created.")
+        # for project in Project.objects.all():
+        #     for _ in range(num_tasks_per_project):
+        #         ProjectTask.objects.create(
+        #             project=project,
+        #             task=Task.objects.order_by("?").first(),
+        #             title=fake.sentence(nb_words=4),
+        #             description=fake.text(),
+        #             status=StatusDB.objects.order_by("?").first(),
+        #             is_completed=random.choice([True, False]),
+        #             # deadline=fake.date_time_this_year(),
+        #             # completed_at=fake.date_time_this_year() if random.choice([True, False]) else None
+        #         )
+        # print("ProjectTask data created.")
 
 
         # Create ProjectClauses
