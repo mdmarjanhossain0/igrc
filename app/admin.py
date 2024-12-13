@@ -36,7 +36,13 @@ class ClauseAdmin(admin.ModelAdmin):
     inlines = [SubClauseAdmin]
 admin.site.register(Clause, ClauseAdmin)
 admin.site.register(Policy)
-admin.site.register(Control)
+
+class SubControlAdmin(admin.TabularInline):
+    model = SubControl
+
+class ControlAdmin(admin.ModelAdmin):
+    inlines = [SubControlAdmin]
+admin.site.register(Control, ControlAdmin)
 
 
 
@@ -57,7 +63,6 @@ admin.site.register(ProjectClause, ProjectClauseAdmin)
 
 admin.site.register(TenantPolicy)
 admin.site.register(ProjectControl)
-admin.site.register(SubControl)
 admin.site.register(ProjectSubControl)
 
 admin.site.register(Comment)
