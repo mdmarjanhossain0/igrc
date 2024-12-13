@@ -28,6 +28,7 @@ class Task(BaseModel):
 	id=models.AutoField(primary_key=True,)
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
+	type = models.CharField(max_length=32)
 
 	# subclauses = models.ManyToManyField('SubClause', blank=True, related_name='subclauses')
 	# subcontrols = models.ManyToManyField('SubControl', blank=True, related_name='subcontrols')
@@ -194,6 +195,7 @@ class ProjectTask(BaseModel):
 	title=models.CharField(max_length=255, null=True,blank=True)
 	description=models.TextField(null=True, blank=True)
 	status = models.ForeignKey(StatusDB, on_delete=models.SET_NULL, null=True, blank=True)
+	type = models.CharField(max_length=32)
 	
 	# assigned_member = models.ForeignKey(Account, on_delete=models.DO_NOTHING, null=True, blank=True)
 	is_completed = models.BooleanField(default=False)
@@ -404,7 +406,8 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 					project=instance,
 					task=item,
 					title=item.title,
-					description=item.description
+					description=item.description,
+					type=item.type
 				)
 			for item in instance.framework.clause_set.all():
 				clause = ProjectClause.objects.create(
