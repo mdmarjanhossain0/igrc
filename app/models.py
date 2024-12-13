@@ -223,8 +223,8 @@ class ProjectClause(BaseModel):
 		(CORE, CORE),
 		(CONTROL, CONTROL)
 	)
-	project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
-	clause = models.ForeignKey(Clause, on_delete=models.CASCADE, null=True, blank=True)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+	clause = models.ForeignKey(Clause, on_delete=models.SET_NULL, null=True, blank=True)
 
 	title=models.CharField(max_length=255, null=False,blank=True)
 	description=models.TextField(null=True,blank=True)
@@ -246,7 +246,7 @@ class ProjectClause(BaseModel):
 		super(ProjectClause, self).save(*args, **kwargs)
 	
 class ProjectSubClause(BaseModel):
-	project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
 	sub_clause = models.ForeignKey(SubClause, on_delete=models.SET_NULL, null=True, blank=True)
 	project_clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
 
