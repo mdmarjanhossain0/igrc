@@ -422,7 +422,8 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 					clause=item,
 					title=item.title,
 					description=item.description,
-					ref_id=item.ref_id
+					ref_id=item.ref_id,
+					type=item.type
 				)
 				sub_clauses = item.subclause_set.all()
 				for sub_clause in sub_clauses:
