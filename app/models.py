@@ -18,6 +18,8 @@ class Framework(BaseModel):
 	name=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=False,blank=False)
 	reference_link=models.CharField(max_length=255, null=True,blank=True)
+	guidance = models.TextField(null=True, blank=True)
+	feature_evidence = models.BooleanField(default=True)
 
 	def __str__(self):
 		return self.name
@@ -85,12 +87,35 @@ class Policy(BaseModel):
 	content=models.TextField(null=False,blank=False)
 
 class Control(BaseModel):
+	status_choices=[
+		("not started","not started"),
+		("completed","completed")
+	]
+	EASY = "Easy"
+	MODARATE = "Moderate"
+	HARD = "Hard"
+	DIFFICULTIES = [
+		(EASY, EASY),
+		(MODARATE, MODARATE),
+		(HARD, HARD),
+	]
 	framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
 	task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 	
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
 	sub_clause = models.ForeignKey(SubClause, on_delete=models.CASCADE)
+	visible = models.BooleanField(default=True)
+	system_level = models.BooleanField(default=True)
+	category = models.CharField(max_length=32, null=True, blank=True)
+	sub_category = models.CharField(max_length=32, null=True, blank=True)
+	guidance = models.TextField(null=True, blank=True)
+	zreferences = models.CharField(max_length=255, null=True, blank=True)
+	mapping = models.TextField(null=True, blank=True)
+	level = models.IntegerField(null=True, blank=True)
+	operational_capability = models.CharField(max_length=255, choices=DIFFICULTIES, null=True, blank=True)
+	control_type = models.CharField(max_length=32, null=True, blank=True)
+
 
 	ref_id=models.CharField(max_length=32, null=False, blank=False)
 
@@ -301,9 +326,16 @@ class ProjectControl(BaseModel):
 	implementation_context=models.TextField(null=True, blank=True)
 	category = models.TextField(null=True, blank=True)
 	sub_category =  models.TextField(null=True, blank=True)
-	system_level = models.BooleanField(default=True)
 	implementation_difficulty = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
 	collaboration_difficulty = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
+
+	visible = models.BooleanField(default=True)
+	guidance = models.TextField(null=True, blank=True)
+	zreferences = models.CharField(max_length=255, null=True, blank=True)
+	mapping = models.TextField(null=True, blank=True)
+	level = models.IntegerField(null=True, blank=True)
+	operational_capability = models.CharField(max_length=255, null=True, blank=True)
+	control_type = models.CharField(max_length=32, null=True, blank=True)
 	
 	ref_id=models.CharField(max_length=32, null=False, blank=False)
 
@@ -474,7 +506,13 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 							project=instance,
 							control=item,
 							ref_id=item.ref_id,
-							project_sub_clause=psc			
+							project_sub_clause=psc,
+							visibility=item.visibility,
+							zreferences=item.zreferences,
+							mapping = item.mapping,
+							level=item.level,
+							operational_capability=item.operational_capability,
+							control_type=item.control_type
 						)
 					break
 
