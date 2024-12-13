@@ -96,6 +96,11 @@ class RiskRegister(BaseModel):
         (EXTREME, EXTREME)
     )
 
+    title= models.CharField(max_length=255, null=False, blank=False)
+    #status = models.ForeignKey(StatusDB, on_delete=models.SET_NULL, null=True, blank=True)
+    risk_number= models.IntegerField(null=False, blank=False)
+    priority = models.IntegerField(null=False, blank=False)
+
     tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
     subject = models.CharField(max_length=100, null=False, blank=False)
     risk_mapping = models.ManyToManyField(RiskMapping)
