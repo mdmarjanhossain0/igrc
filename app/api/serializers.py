@@ -328,7 +328,7 @@ class NoteSerializer(serializers.ModelSerializer):
 
 class NormativeReferencesSerializer(serializers.ModelSerializer):
     sub_clauses = serializers.SerializerMethodField("get_sub_clauses")
-    sub_controls= serializers.SerializerMethodField("get_sub_controls")
+    # sub_controls= serializers.SerializerMethodField("get_sub_controls")
     class Meta:
         model = ProjectClause
         fields = "__all__"
@@ -355,14 +355,14 @@ class NormativeReferencesSerializer(serializers.ModelSerializer):
         #         "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
         #     })
         
-    def get_sub_controls(self,obj):
-        subcontrols=obj.projectsubcontrol_set.all()
-        task_data = []
-        for item in subcontrols:
-            task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
-            task_data.append({
-                "id": item.id,
-                "name": item.title,
-                "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
-            })
-        return task_data
+    # def get_sub_controls(self,obj):
+    #     subcontrols=obj.projectsubcontrol_set.all()
+    #     task_data = []
+    #     for item in subcontrols:
+    #         task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
+    #         task_data.append({
+    #             "id": item.id,
+    #             "name": item.title,
+    #             "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
+    #         })
+    #     return task_data
