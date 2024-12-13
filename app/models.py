@@ -429,7 +429,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 					ProjectSubClause.objects.create(
 						project=instance,
 						project_clause=clause,
-						subclause=sub_clause,
+						sub_clause=sub_clause,
 						title=sub_clause.title,
 						description=sub_clause.description,
 						ref_id=item.ref_id
