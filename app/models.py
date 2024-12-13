@@ -29,8 +29,8 @@ class Task(BaseModel):
     title=models.CharField(max_length=255, null=False,blank=False)
     description=models.TextField(null=True,blank=True)
 
-    subclauses = models.ManyToManyField('SubClause', blank=True, related_name='subclauses')
-    subcontrols = models.ManyToManyField('SubControl', blank=True, related_name='subcontrols')
+    # subclauses = models.ManyToManyField('SubClause', blank=True, related_name='subclauses')
+    # subcontrols = models.ManyToManyField('SubControl', blank=True, related_name='subcontrols')
 
     def __str__(self):
         return self.title
