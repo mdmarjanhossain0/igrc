@@ -467,22 +467,6 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 						description=sub_clause.description,
 						ref_id=sub_clause.ref_id
 					)
-				# try:
-				# 	sub_clause = sub_clause[0]
-				# 	ProjectSubClause.objects.create(
-				# 		project=instance,
-				# 		project_clause=clause,
-				# 		subclause=sub_clause,
-				# 		title=sub_clause.title,
-				# 		description=sub_clause.description,
-				# 		ref_id=item.ref_id
-				# 	)
-				# except:
-				# 	sub_clause = None
-				# 	ProjectSubClause.objects.create(
-				# 		project=instance,
-				# 		project_clause=clause
-				# 	)
 				
 			# for item in instance.framework.policy_set.all():
 				# tp = TenantPolicy(
