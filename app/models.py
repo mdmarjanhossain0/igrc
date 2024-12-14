@@ -176,6 +176,11 @@ class Project(BaseModel):
 
 		super(Project, self).save(*args, **kwargs)
 
+class ProjectScratchpad(BaseModel):
+	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	content = models.TextField(null=True, blank=True)
+
+
 class ProjectMember(BaseModel):
 
 	ROLE_CHOICES = [

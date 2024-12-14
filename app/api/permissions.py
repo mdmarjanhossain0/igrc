@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from app.models import ProjectMember
+from app.models import Project, ProjectMember
 from account.models import Account
 
 
@@ -48,7 +48,7 @@ class IsProjectViewer(BasePermission):
             return False
         
         project_id = view.kwargs.get('project_id')
-        
+    
         return ProjectMember.objects.filter(
             project_id=project_id,
             member=request.user,
@@ -58,5 +58,3 @@ class IsProjectViewer(BasePermission):
 class IsGrcAdmin(BasePermission):
     def has_permission(self, request, view):
         return request.user.is_authenticated and request.user.role== Account.ADMIN
-
-

@@ -1,14 +1,14 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
 from .views import (ClauseModelViewSet, ClausesByProjectView, ControlModelViewSet,
     ControlsByProjectView, ControlWithSubControlsByProjectView, EvidenceModelViewSet,
-    FrameworkModelViewSet, PolicyModelViewSet, ProjectClauseModelViewSet,
+    FrameworkModelViewSet, normative_reference_view, PolicyModelViewSet, ProjectClauseModelViewSet,
     ProjectControlModelViewSet, ProjectMemberByProject, ProjectMemberModelViewSet,
     ProjectMembersByProject, ProjectModelViewSet, ProjectPoicyModelViewSet,
-    ProjectSubControlModelViewSet, ProjectTaskModelViewSet, SubControlModelViewSet,
-    SubControlsByProjectView, TaskModelViewSet, TasksByProjectView, TenantModelViewSet,
-    TenantPolicyModelViewSet,
-    TenantEvidenceModelViewSet, normative_reference_view)
+    ProjectScratchpadModelViewSet, ProjectSubControlModelViewSet, ProjectTaskModelViewSet,
+    SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet, TasksByProjectView,
+    TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -33,11 +33,14 @@ router.register(r'project-controls', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
 router.register(r'evidence', EvidenceModelViewSet)
 router.register(r'project/(?P<project_id>\d+)/clauses',ClausesByProjectView, basename='project-clauses')
+
+router.register(r'project/(?P<project_id>\d+)/scratchpad',ProjectScratchpadModelViewSet, basename='project-scratchpad')
 router.register(r'project/(?P<project_id>\d+)/policies',ProjectPoicyModelViewSet, basename='project-policy')
 router.register(r'project/(?P<project_id>\d+)/controls',ControlsByProjectView, basename='project-controls')
 router.register(r'project/(?P<project_id>\d+)/controls/(?P<control_id>\d+)/subcontrols', SubControlsByProjectView, basename='project-subcontrols')
 router.register(r'project/(?P<project_id>\d+)/tasks', TasksByProjectView, basename='project-tasks')
 router.register(r'project/(?P<project_id>\d+)/controls-with-subcontrols', ControlWithSubControlsByProjectView, basename='project-controls-with-subcontrols')
+router.register(r'project/(?P<project_id>\d+)/members', ProjectMembersByProject, basename='project-members')
 router.register(r'evidence_set/(?P<tenant_id>\d+)', TenantEvidenceModelViewSet, basename='evidence_set')
 
 
@@ -67,9 +70,10 @@ urlpatterns = [
     # path("project/<int:project_id>/tasks/", TasksByProjectView.as_view(), name="project-tasks-by-project"),
 
 
-    path("project/<int:project_id>/members/", ProjectMembersByProject.as_view(), name="project-members-by-project"),
-    path("project/<int:project_id>/members/<int:member_id>/", ProjectMemberByProject.as_view(), name="project-member-by-project"),
+    # path("project/<int:project_id>/members/", ProjectMembersByProject.as_view(), name="project-members-by-project"),
+    # path("project/<int:project_id>/members/<int:member_id>/", ProjectMemberByProject.as_view(), name="project-member-by-project"),
 
-    path("normative_reference/<int:project_id>", normative_reference_view, name="normative_reference_view")
+    path("project/<int:project_id>/normative_reference/", normative_reference_view, name="normative_reference_view"),
+    path("normative_reference/<int:project_id>/", normative_reference_view, name="normative_reference_view")
 
 ]
