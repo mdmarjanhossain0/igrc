@@ -1,5 +1,7 @@
 import django.contrib.auth
 from rest_framework import viewsets, status
+
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import (
 	api_view,
 	authentication_classes,
@@ -7,15 +9,17 @@ from rest_framework.decorators import (
 )
 
 from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Policy, Project,
-	ProjectClause, ProjectControl, ProjectMember, ProjectSubControl, ProjectTask, SubControl, Task,
-	Tenant, TenantPolicy)
+	ProjectClause, ProjectControl, ProjectMember, ProjectScratchpad, ProjectSubControl, ProjectTask,
+	SubControl, Task, Tenant, TenantPolicy)
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from app.api.permissions import IsGrcAdmin, IsProjectAdmin, IsProjectManager, Or
-from .serializers import (ClauseSerializer, ControlSerializer,
-	EvidenceSerializer, FrameworkSerializer, PolicySerializer, ProjectClauseSerializer,
-	ProjectControlSerializer, ProjectMemberSerializer, ProjectSerializer,
-	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
-	TenantPolicySerializer, TenantSerializer, ProjectControlWithSubControlSerializer, NormativeReferencesSerializer)
+from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
+	IsProjectManager, Or)
+from .serializers import (ClauseSerializer, ControlSerializer, EvidenceSerializer,
+	FrameworkSerializer, NormativeReferencesSerializer, PolicySerializer, ProjectClauseSerializer,
+	ProjectControlSerializer, ProjectControlWithSubControlSerializer, ProjectMemberSerializer,
+	ProjectScratchpadSerializer, ProjectSerializer, ProjectSubControlSerializer,
+	ProjectTaskSerializer, SubControlSerializer, TaskSerializer, TenantPolicySerializer,
+	TenantSerializer)
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -73,12 +77,15 @@ class ProjectModelViewSet(viewsets.ModelViewSet):
 	serializer_class = ProjectSerializer
 	
 	def get_permissions(self):
+
+		if self.action in ['list','retrieve']:
+			return [IsAuthenticated()]
 		if self.action == 'create':
-			self.permission_classes=[IsGrcAdmin]
+			return [Or(IsGrcAdmin,IsProjectAdmin)]
 		if self.action in ['update', 'partial_update', 'destroy']:
-			self.permission_classes = [IsProjectAdmin]
+			return [IsGrcAdmin()]
+		return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
 		
-		return super(ProjectModelViewSet, self).get_permissions()
 
 
 class ProjectMemberModelViewSet(viewsets.ModelViewSet):
@@ -169,7 +176,7 @@ class ControlsByProjectView(viewsets.ModelViewSet):
 	def get_permissions(self):
 		if self.action in ['list','retrieve']:
 			return [IsAuthenticated()]
-		return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+		return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager,IsAdminUser())]
 	
 	def get_queryset(self):
 		project_id = self.kwargs.get('project_id')
@@ -281,42 +288,53 @@ class TasksByProjectView(viewsets.ModelViewSet):
 		instance.delete()
 	
 
-class ProjectMembersByProject(APIView):
-
+class ProjectMembersByProject(viewsets.ModelViewSet):
+	serializer_class = ProjectMemberSerializer
 	def get_permissions(self):
-		if self.request.method == 'GET':
+		if self.action in ['list','retrieve']:
 			return  [IsAuthenticated()]
-		return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+		return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager,IsAdminUser())]
 
+	def get_queryset(self):
+		project_id = self.kwargs.get('project_id')
+		return ProjectMember.objects.filter(project_id=project_id)
+
+	def perform_create(self, serializer):
+		project_id = self.kwargs.get('project_id')
+		project = Project.objects.get(id=project_id)
+		serializer.save(project=project)
 	
-	def get(self, request, project_id):
-		project_members=ProjectMember.objects.filter(project_id=project_id)
-		serializer=ProjectMemberSerializer(project_members, many=True,)
-		print(str(IsProjectAdmin()))
-		return Response(serializer.data)
+	def perform_update(self, serializer):
+		project_id = self.kwargs.get('project_id')
+		project = Project.objects.get(id=project_id)
+		serializer.save(project=project)
 
-	@swagger_auto_schema(
-		operation_description="Add a new member to a project",
-		request_body=ProjectMemberSerializer,
-		responses={
-			201: ProjectMemberSerializer,
-			400: openapi.Response(description="Bad Request", examples={
-				'application/json': {'detail': 'Invalid data'}
-			})
-		},
-		tags=["Project Members"],
-		operation_summary="Add Project Member"
-	)
-	def post(self, request, project_id):
-		data = request.data.copy()
-		data['project'] = project_id
-		serializer = ProjectMemberSerializer(data=data)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	def perform_destroy(self, instance):
+			instance.delete()
+			
+	# @swagger_auto_schema(
+	# 	operation_description="Add a new member to a project",
+	# 	request_body=ProjectMemberSerializer,
+	# 	responses={
+	# 		201: ProjectMemberSerializer,
+	# 		400: openapi.Response(description="Bad Request", examples={
+	# 			'application/json': {'detail': 'Invalid data'}
+	# 		})
+	# 	},
+	# 	tags=["Project Members"],
+	# 	operation_summary="Add Project Member"
+	# )
+	# def post(self, request, project_id):
+	# 	data = request.data.copy()
+	# 	data['project'] = project_id
+	# 	serializer = ProjectMemberSerializer(data=data)
+	# 	if serializer.is_valid():
+	# 		serializer.save()
+	# 		return Response(serializer.data, status=status.HTTP_201_CREATED)
+	# 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-	
+
+
 class ProjectMemberByProject(APIView):
 
 	def get_permissions(self):
@@ -384,3 +402,46 @@ def normative_reference_view(request, project_id):
 	clauses = ProjectClause.objects.filter(project_id=project_id)
 	serializer = NormativeReferencesSerializer(clauses, many=True)
 	return Response(serializer.data)
+
+
+
+class ProjectScratchpadModelViewSet(viewsets.ModelViewSet):
+	serializer_class = ProjectScratchpadSerializer
+
+	
+	def get_queryset(self):
+		project_id = self.kwargs.get('project_id')
+		return ProjectScratchpad.objects.filter(project_id=project_id)
+	
+	def list(self, request, *args, **kwargs):
+			project_id = self.kwargs.get('project_id')
+			project = Project.objects.get(id=project_id)
+			if not project.can_read_scratchpad:
+					raise PermissionDenied("Cannot read scratchpad.")
+			return super().list(request, *args, **kwargs)
+
+
+	def retrieve(self, request, *args, **kwargs):
+			project_id = self.kwargs.get('project_id')
+			project = Project.objects.get(id=project_id)
+			if not project.can_read_scratchpad:
+					raise PermissionDenied("Cannot read scratchpad.")
+			return super().retrieve(request, *args, **kwargs)
+
+	# def create(self, serializer):
+	# 	return Response({"detail": "Cannot create new scratchpad."}, status=status.HTTP_403_FORBIDDEN)
+
+	def perform_update(self, serializer):
+		project_id = self.kwargs.get('project_id')
+		project = Project.objects.get(id=project_id)
+		if not project.can_write_scratchpad:
+			raise PermissionDenied("Cannot write scratchpad.")
+		# project_scratchpad = ProjectScratchpad.objects.get(project_id=project_id)
+		serializer.save()
+
+	def perform_partial_update(self, serializer):
+			project_id = self.kwargs.get('project_id')
+			project = Project.objects.get(id=project_id)
+			if not project.can_write_scratchpad:
+					raise PermissionDenied("Cannot write scratchpad.")
+			serializer.save()

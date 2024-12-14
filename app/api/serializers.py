@@ -1,15 +1,19 @@
 from rest_framework import serializers
 from app.models import (AuditorFeedback, Clause, Comment, Control, Evidence, EvidenceFile,
     Framework, Note, Policy, Project, ProjectClause, ProjectControl, ProjectMember,
-    ProjectSubClause, ProjectSubControl, ProjectTask, SubClause, SubControl, Task, Tenant,
-    TenantPolicy)
+    ProjectScratchpad, ProjectSubClause, ProjectSubControl, ProjectTask, SubClause, SubControl,
+    Task, Tenant, TenantPolicy)
 from django.db.models import Sum, Avg
 from riskapp.api.serializers import RiskMitigationSerializer
 from riskapp.models import RiskMitigation
 class FrameworkSerializer(serializers.ModelSerializer):
+    total_controls=serializers.SerializerMethodField()
     class Meta:
         model = Framework
         fields = '__all__'
+    
+    def get_total_controls(self,obj):
+        return Control.objects.filter(framework=obj).count()
 
 class TaskSerializer(serializers.ModelSerializer):
     class Meta:
@@ -343,12 +347,11 @@ class NormativeReferencesSerializer(serializers.ModelSerializer):
             task_sub_clauses = ProjectTask.objects.filter(subclauses=item)
             # task_sub_controls = ProjectTask.objects.filter(subcontrols=item)
             task_data.append({
-                "id":
-                item.id,
-                "name":
-                item.title,
-                "task_sub_clauses":
-                TaskSerializer(task_sub_clauses, many=True).data,
+                "id": item.id,
+                "name": item.title,
+                'ref_id':item.ref_id,
+                "task_sub_clauses": TaskSerializer(task_sub_clauses, many=True).data,
+
                 # "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
             })
         return task_data
@@ -372,3 +375,17 @@ class NormativeReferencesSerializer(serializers.ModelSerializer):
     #             "task_sub_controls": TaskSerializer(task_sub_controls, many=True).data
     #         })
     #     return task_data
+
+
+class ProjectScratchpadSerializer(serializers.ModelSerializer):
+    can_read=serializers.SerializerMethodField()
+    can_write=serializers.SerializerMethodField()
+    class Meta:
+        model = ProjectScratchpad
+        fields = '__all__'
+    
+    def get_can_read(self,obj):
+        return obj.project.can_read_scratchpad
+    
+    def get_can_write(self,obj):
+        return obj.project.can_write_scratchpad
