@@ -272,10 +272,14 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
     auditor_feedback=serializers.SerializerMethodField()
     review_count = serializers.SerializerMethodField()
     evidence_progress = serializers.SerializerMethodField()
+    framework_name = serializers.SerializerMethodField()
     class Meta:
         model = ProjectControl
         fields = '__all__'
 
+
+    def get_framework_name(self, obj):
+        return obj.project.framework.name
     def get_evidence_progress(self, obj):
         try:
             progress = 0
