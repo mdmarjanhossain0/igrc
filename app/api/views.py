@@ -8,18 +8,18 @@ from rest_framework.decorators import (
 	permission_classes,
 )
 
-from app.models import (Clause, Control, Evidence, EvidenceFile, Framework, Policy, Project,
-	ProjectClause, ProjectControl, ProjectMember, ProjectScratchpad, ProjectSubControl, ProjectTask,
-	SubControl, Task, Tenant, TenantPolicy)
+from app.models import (Clause, Comment, Control, Evidence, EvidenceFile, Framework, Policy,
+	Project, ProjectClause, ProjectControl, ProjectMember, ProjectScratchpad, ProjectSubControl,
+	ProjectTask, SubControl, Task, Tenant, TenantPolicy)
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
 	IsProjectManager, Or)
-from .serializers import (ClauseSerializer, ControlSerializer, EvidenceSerializer,
-	FrameworkSerializer, NormativeReferencesSerializer, PolicySerializer, ProjectClauseSerializer,
-	ProjectControlSerializer, ProjectControlWithSubControlSerializer, ProjectMemberSerializer,
-	ProjectScratchpadSerializer, ProjectSerializer, ProjectSubControlSerializer,
-	ProjectTaskSerializer, SubControlSerializer, TaskSerializer, TenantPolicySerializer,
-	TenantSerializer)
+from .serializers import (ClauseSerializer, CommentSerializer, ControlSerializer,
+	EvidenceSerializer, FrameworkSerializer, NormativeReferencesSerializer, PolicySerializer,
+	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
+	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer,
+	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
+	TenantPolicySerializer, TenantSerializer)
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -403,7 +403,26 @@ def normative_reference_view(request, project_id):
 	serializer = NormativeReferencesSerializer(clauses, many=True)
 	return Response(serializer.data)
 
+class CommentByProjectModelViewSet(viewsets.ModelViewSet):
+	queryset = Comment.objects.all()
+	serializer_class = CommentSerializer
 
+	def get_queryset(self):
+		project_id = self.kwargs.get('project_id')
+		return Comment.objects.filter(project_id=project_id)
+
+	def perform_create(self, serializer):
+		project_id = self.kwargs.get('project_id')
+		project = Project.objects.get(id=project_id)
+		serializer.save(project=project)
+
+	def perform_update(self, serializer):
+		project_id = self.kwargs.get('project_id')
+		project = Project.objects.get(id=project_id)
+		serializer.save(project=project)
+
+	def perform_destroy(self, instance):
+		instance.delete()
 
 class ProjectScratchpadModelViewSet(viewsets.ModelViewSet):
 	serializer_class = ProjectScratchpadSerializer

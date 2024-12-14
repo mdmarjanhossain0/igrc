@@ -322,9 +322,10 @@ class AuditorFeedbackSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Comment
+        fields = '__all__'
+        
 class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:

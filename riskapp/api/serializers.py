@@ -91,7 +91,7 @@ class ReviewProjectSerializer(serializers.ModelSerializer):
         model = ReviewProject
         fields = "__all__"
 
-class CommentSerializer(serializers.ModelSerializer):
+class RiskCommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
