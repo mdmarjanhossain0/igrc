@@ -240,7 +240,8 @@ class ProjectTask(BaseModel):
 	start = models.DateField(null=True, blank=True)
 	end = models.DateField(null=True, blank=True)
 	assignee = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
-
+	ref_id = models.CharField(max_length=8, null=False, blank=True)
+	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 	# clause = models.ManyToManyField(Clause, blank=True)
 	subclauses = models.ManyToManyField('ProjectSubClause', blank=True, related_name='project_subclauses')
 	subcontrols = models.ManyToManyField('ProjectSubControl', blank=True, related_name='project_subcontrols')
@@ -402,6 +403,7 @@ class Comment(BaseModel):
 	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
 	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
 	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
+	project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
 	content = models.TextField(null=True, blank=True)
 	audit = models.ForeignKey(Audit, on_delete=models.SET_NULL, null=True, blank=True)
 	created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)

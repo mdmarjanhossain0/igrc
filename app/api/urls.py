@@ -1,14 +1,14 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import (ClauseModelViewSet, ClausesByProjectView, ControlModelViewSet,
-    ControlsByProjectView, ControlWithSubControlsByProjectView, EvidenceModelViewSet,
-    FrameworkModelViewSet, normative_reference_view, PolicyModelViewSet, ProjectClauseModelViewSet,
-    ProjectControlModelViewSet, ProjectMemberByProject, ProjectMemberModelViewSet,
-    ProjectMembersByProject, ProjectModelViewSet, ProjectPoicyModelViewSet,
-    ProjectScratchpadModelViewSet, ProjectSubControlModelViewSet, ProjectTaskModelViewSet,
-    SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet, TasksByProjectView,
-    TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet)
+from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectModelViewSet,
+    ControlModelViewSet, ControlsByProjectView, ControlWithSubControlsByProjectView,
+    EvidenceModelViewSet, FrameworkModelViewSet, normative_reference_view, PolicyModelViewSet,
+    ProjectClauseModelViewSet, ProjectControlModelViewSet, ProjectMemberByProject,
+    ProjectMemberModelViewSet, ProjectMembersByProject, ProjectModelViewSet,
+    ProjectPoicyModelViewSet, ProjectScratchpadModelViewSet, ProjectSubControlModelViewSet,
+    ProjectTaskModelViewSet, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
+    TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -41,6 +41,7 @@ router.register(r'project/(?P<project_id>\d+)/controls/(?P<control_id>\d+)/subco
 router.register(r'project/(?P<project_id>\d+)/tasks', TasksByProjectView, basename='project-tasks')
 router.register(r'project/(?P<project_id>\d+)/controls-with-subcontrols', ControlWithSubControlsByProjectView, basename='project-controls-with-subcontrols')
 router.register(r'project/(?P<project_id>\d+)/members', ProjectMembersByProject, basename='project-members')
+router.register(r'project/(?P<project_id>\d+)/comments', CommentByProjectModelViewSet, basename='project-comments'),
 router.register(r'evidence_set/(?P<tenant_id>\d+)', TenantEvidenceModelViewSet, basename='evidence_set')
 
 

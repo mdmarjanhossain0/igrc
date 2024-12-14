@@ -50,21 +50,10 @@ from riskapp.models import (
     ReviewProject,
     Comment
 )
-from riskapp.api.serializers import (
-	RiskMappingSerializer,
-    ThreatMappingSerializer,
-    RiskCategorySerializer,
-    RiskScoringMethodSerializer,
-    ControlRegisterSerializer,
-    TeamSerializer,
-    RiskRegisterSerializer,
-    MitigationControlSerializer,
-    RiskMitigationSerializer,
-    ReviewSerializer,
-    PlanProjectSerializer,
-    ReviewProjectSerializer,
-    CommentSerializer
-)
+from riskapp.api.serializers import ( ControlRegisterSerializer,
+    MitigationControlSerializer, PlanProjectSerializer, ReviewProjectSerializer, ReviewSerializer,
+    RiskCategorySerializer, RiskCommentSerializer, RiskMappingSerializer, RiskMitigationSerializer,
+    RiskRegisterSerializer, RiskScoringMethodSerializer, TeamSerializer, ThreatMappingSerializer)
 
 class ProjectRiskListApiView(ListAPIView):
 	serializer_class = RiskRegisterSerializer
@@ -129,4 +118,4 @@ class ReviewProjectModelViewSet(viewsets.ModelViewSet):
 
 class CommentModelViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+    serializer_class = RiskCommentSerializer

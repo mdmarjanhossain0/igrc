@@ -113,9 +113,16 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProjectTaskSerializer(serializers.ModelSerializer):
+    assignee_name = serializers.SerializerMethodField()
     class Meta:
         model = ProjectTask
         fields = '__all__'
+    
+    def get_assignee_name(self,obj):
+        try:
+            return obj.assignee.username
+        except:
+            return None
 
 class ProjectClauseSerializer(serializers.ModelSerializer):
 
@@ -326,9 +333,10 @@ class AuditorFeedbackSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Comment
+        fields = '__all__'
+        
 class NoteSerializer(serializers.ModelSerializer):
 
     class Meta:
