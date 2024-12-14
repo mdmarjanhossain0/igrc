@@ -113,9 +113,16 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ProjectTaskSerializer(serializers.ModelSerializer):
+    assignee_name = serializers.SerializerMethodField()
     class Meta:
         model = ProjectTask
         fields = '__all__'
+    
+    def get_assignee_name(self,obj):
+        try:
+            return obj.assignee.username
+        except:
+            return None
 
 class ProjectClauseSerializer(serializers.ModelSerializer):
 
