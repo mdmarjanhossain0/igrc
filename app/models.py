@@ -368,7 +368,8 @@ class ProjectControl(BaseModel):
 	level = models.IntegerField(null=True, blank=True)
 	operational_capability = models.CharField(max_length=255, null=True, blank=True)
 	control_type = models.CharField(max_length=32, null=True, blank=True)
-	
+	applicable = models.BooleanField(default=True)
+
 	ref_id=models.CharField(max_length=32, null=False, blank=False)
 
 	def average_completion(self):
