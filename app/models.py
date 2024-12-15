@@ -111,6 +111,7 @@ class Policy(BaseModel):
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
 	content=models.TextField(null=False,blank=False)
+	ref_id = models.CharField(max_length=8, null=False)
 
 class Control(BaseModel):
 	status_choices=[
@@ -326,12 +327,23 @@ class ProjectSubClause(BaseModel):
 		super(ProjectSubClause, self).save(*args, **kwargs)
 	
 class TenantPolicy(BaseModel):
-	project = models.ManyToManyField(Project, blank=True)
-	title = models.CharField(max_length=255)
-	description = models.TextField()
-	content = models.TextField()
+	project = models.ManyToManyField(Project)
+	policy = models.ForeignKey(Policy, on_delete=models.SET_NULL, null=True, blank=True)
+	title = models.CharField(max_length=255, blank=True)
+	description = models.TextField(blank=True)
+	content = models.TextField(blank=True)
 	label = models.CharField(max_length=255, null=True, blank=True)
-	refcode=models.CharField(max_length=32, null=False, blank=False)
+	ref_id=models.CharField(max_length=32, null=True, blank=True)
+
+
+@receiver(post_save, sender=TenantPolicy)
+def copy_policy_fields(sender, instance, created, **kwargs):
+    if created and instance.policy:
+        instance.title = instance.policy.title
+        instance.description = instance.policy.description
+        instance.content = instance.policy.content
+        instance.ref_id = instance.policy.ref_id
+        instance.save()
 
 class ProjectControl(BaseModel):
 	status_choices=[
