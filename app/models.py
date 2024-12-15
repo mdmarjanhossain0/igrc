@@ -12,6 +12,7 @@ from grc_config.models import (
 	BaseModel,
 	StatusDB
 )
+import os
 
 class Framework(BaseModel):
 	id=models.AutoField(primary_key=True)
@@ -26,7 +27,6 @@ class Framework(BaseModel):
 
 class Task(BaseModel):
 	framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
-	
 	id=models.AutoField(primary_key=True,)
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
@@ -35,6 +35,7 @@ class Task(BaseModel):
 	start = models.DateField(null=True, blank=True)
 	end = models.DateField(null=True, blank=True)
 	assignee = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
+	files = models.ManyToManyField('TemplateFile', blank=True)
 
 	# subclauses = models.ManyToManyField('SubClause', blank=True, related_name='subclauses')
 	# subcontrols = models.ManyToManyField('SubControl', blank=True, related_name='subcontrols')
@@ -42,6 +43,31 @@ class Task(BaseModel):
 	def __str__(self):
 		return self.title
 	
+
+
+def upload_to_template(instance, filename):
+    return instance.get_upload_path(filename)
+
+class TemplateFile(BaseModel):
+	title=models.CharField(max_length=255, null=False,blank=False)
+	description = models.TextField(null=True, blank=True)
+	file=models.FileField(upload_to=upload_to_template, null=True, blank=True)
+
+	def get_upload_path(self, filename):
+			# Get the first associated task's framework name
+			task = self.task_set.first()
+			if task and task.framework:
+					framework_name = task.framework.name
+			else:
+					framework_name = 'default'
+			return os.path.join('templates', framework_name, filename)
+
+	def save(self, *args, **kwargs):
+			# Override the save method to set the upload path dynamically
+			if self.file:
+					self.file.upload_to = upload_to_template
+			super().save(*args, **kwargs)
+
 class Clause(BaseModel):
 	CORE = "core"
 	CONTROL = "control"
@@ -182,7 +208,6 @@ class ProjectScratchpad(BaseModel):
 
 
 class ProjectMember(BaseModel):
-
 	ROLE_CHOICES = [
 		('viewer', 'Viewer'),
 		('Editor', 'Editor'),
@@ -225,6 +250,7 @@ def assign_all_related_fields(sender, instance, created, **kwargs):
 class ProjectTask(BaseModel):
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
+	files = models.ManyToManyField('TemplateFile', blank=True)
 
 	title=models.CharField(max_length=255, null=True,blank=True)
 	description=models.TextField(null=True, blank=True)
@@ -334,7 +360,7 @@ class ProjectControl(BaseModel):
 	sub_category =  models.TextField(null=True, blank=True)
 	implementation_difficulty = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
 	collaboration_difficulty = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
-
+	
 	visible = models.BooleanField(default=True)
 	guidance = models.TextField(null=True, blank=True)
 	zreferences = models.CharField(max_length=255, null=True, blank=True)
@@ -448,13 +474,16 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 		# instance.framework_description = instance.framework.description
 		if instance.framework:
 			for item in instance.framework.task_set.all():
-				ProjectTask.objects.create(
+				project_task=ProjectTask.objects.create(
 					project=instance,
 					task=item,
 					title=item.title,
 					description=item.description,
-					type=item.type
+					type=item.type,
+
 				)
+				project_task.files.set(item.files.all())
+
 			for item in instance.framework.clause_set.all():
 				clause = ProjectClause.objects.create(
 					project=instance,
