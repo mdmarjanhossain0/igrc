@@ -2,7 +2,7 @@ from rest_framework import serializers
 from app.models import (AuditorFeedback, Clause, Comment, Control, Evidence, EvidenceFile,
     Framework, Note, Policy, Project, ProjectClause, ProjectControl, ProjectMember,
     ProjectScratchpad, ProjectSubClause, ProjectSubControl, ProjectTask, SubClause, SubControl,
-    Task, Tenant, TenantPolicy)
+    Task, TemplateFile, Tenant, TenantPolicy)
 from django.db.models import Sum, Avg
 from riskapp.api.serializers import RiskMitigationSerializer
 from riskapp.models import RiskMitigation
@@ -15,7 +15,14 @@ class FrameworkSerializer(serializers.ModelSerializer):
     def get_total_controls(self,obj):
         return Control.objects.filter(framework=obj).count()
 
+class TemplateFileSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model=TemplateFile
+        fields='__all__'
+
+
 class TaskSerializer(serializers.ModelSerializer):
+    files= TemplateFileSerializer(many=True, read_only=False)
     class Meta:
         model = Task
         fields = '__all__'
@@ -114,6 +121,7 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
 
 class ProjectTaskSerializer(serializers.ModelSerializer):
     assignee_name = serializers.SerializerMethodField()
+
     class Meta:
         model = ProjectTask
         fields = '__all__'
