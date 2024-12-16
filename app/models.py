@@ -312,6 +312,7 @@ class ProjectSubClause(BaseModel):
 	title=models.CharField(max_length=255, null=True,blank=True)
 	description=models.TextField(null=True,blank=True)
 	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+	context = models.TextField(null=True, blank=True)
 
 	ref_id = models.CharField(max_length=8, null=False, blank=True)
 
