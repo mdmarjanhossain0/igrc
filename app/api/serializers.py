@@ -117,9 +117,13 @@ class ProjectSerializer(serializers.ModelSerializer):
         return sum / len(objs) if len(objs) > 0 else 1
 
 class ProjectMemberSerializer(serializers.ModelSerializer):
+    email = serializers.SerializerMethodField()
     class Meta:
         model = ProjectMember
         fields = '__all__'
+    
+    def get_email(self, obj):
+        return obj.member.email
 
 class ProjectTaskSerializer(serializers.ModelSerializer):
     assignee_name = serializers.SerializerMethodField()
