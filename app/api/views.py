@@ -404,7 +404,7 @@ def normative_reference_view(request, project_id):
 	return Response(serializer.data)
 
 class CommentByProjectModelViewSet(viewsets.ModelViewSet):
-	queryset = Comment.objects.all()
+	queryset = Comment.objects.all().order_by("-pk")
 	serializer_class = CommentSerializer
 
 	def get_queryset(self):
