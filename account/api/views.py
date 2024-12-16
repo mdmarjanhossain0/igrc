@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import UpdateAPIView
 from django.contrib.auth import authenticate
@@ -203,6 +204,8 @@ def forget_password_view(request):
 class AccountListApiView(ListAPIView):
 	queryset = Account.objects.all()
 	serializer_class = AccountSerializer
+	filter_backends = (SearchFilter, OrderingFilter)
+	search_fields = ("username", "email",)
 
 class TenantAccountListApiView(ListAPIView):
 	serializer_class = AccountSerializer
