@@ -359,12 +359,24 @@ class NoteSerializer(serializers.ModelSerializer):
 
 class NormativeReferencesSerializer(serializers.ModelSerializer):
     sub_clauses = serializers.SerializerMethodField("get_sub_clauses")
+    progress = serializers.SerializerMethodField()
 
     # sub_controls= serializers.SerializerMethodField("get_sub_controls")
     class Meta:
         model = ProjectClause
         fields = "__all__"
 
+    def get_progress(self, obj):
+        try:
+            total_tasks = ProjectTask.objects.filter(subclauses=obj.projectsubclause_set.all()).aggregate(progress=Avg("completion"))
+            return total_tasks
+            # if total_tasks > 0:
+            #     progress = completed_tasks / total_tasks * 100
+            # else:
+            #     progress = 0
+            # return progress
+        except:
+            return 0
     def get_sub_clauses(self, obj):
         subclauses = obj.projectsubclause_set.all()
         print(subclauses)
