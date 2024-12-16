@@ -13,7 +13,7 @@ from app.models import (Clause, Comment, Control, Evidence, EvidenceFile, Framew
 	ProjectTask, SubControl, Task, Tenant, TenantPolicy, Note, AuditorFeedback, Comment)
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
-	IsProjectManager)
+	IsProjectManager, Or)
 from .serializers import (ClauseSerializer, CommentSerializer, ControlSerializer,
 	EvidenceSerializer, FrameworkSerializer, NormativeReferencesSerializer, PolicySerializer,
 	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
@@ -126,8 +126,15 @@ class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
 	queryset = TenantPolicy.objects.all()
 	serializer_class = TenantPolicySerializer
+	http_method_names = ['get', 'post', 'patch', 'put', 'delete'] 
 	def get_queryset(self):
 		return TenantPolicy.objects.filter(project__in=[self.kwargs.get('project_id')])
+	def partial_update(self, request, *args, **kwargs):
+		instance = self.get_object()
+		serializer = self.get_serializer(instance, data=request.data, partial=True)
+		serializer.is_valid(raise_exception=True)
+		self.perform_update(serializer)
+		return Response(serializer.data, status=status.HTTP_200_OK)
 
 class ProjectControlModelViewSet(viewsets.ModelViewSet):
 	queryset = ProjectControl.objects.all()
@@ -184,6 +191,7 @@ class ClausesByProjectView(viewsets.ModelViewSet):
 
 class ControlsByProjectView(viewsets.ModelViewSet):
 	serializer_class = ProjectControlSerializer
+	http_method_names = ['get', 'post', 'patch', 'put', 'delete'] 
 	def get_permissions(self):
 		if self.action in ['list','retrieve']:
 			return [IsAuthenticated()]
