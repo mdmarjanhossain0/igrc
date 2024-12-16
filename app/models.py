@@ -43,8 +43,6 @@ class Task(BaseModel):
 	def __str__(self):
 		return self.title
 	
-
-
 def upload_to_template(instance, filename):
     return instance.get_upload_path(filename)
 
@@ -251,6 +249,8 @@ class ProjectTask(BaseModel):
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 	files = models.ManyToManyField('TemplateFile', blank=True)
+	user_files = models.ManyToManyField('TemplateFile', blank=True, related_name="user_files")
+	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
 	title=models.CharField(max_length=255, null=True,blank=True)
 	description=models.TextField(null=True, blank=True)
