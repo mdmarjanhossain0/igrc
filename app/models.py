@@ -374,7 +374,7 @@ class ProjectControl(BaseModel):
 	]
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
-	project_sub_clause = models.ForeignKey(ProjectSubClause, on_delete=models.CASCADE)
+	project_sub_clause = models.ForeignKey(ProjectSubClause, on_delete=models.CASCADE, null=True, blank=True)
 
 	title=models.CharField(max_length=255, null=True,blank=True)
 	description=models.TextField(null=True,blank=True)
@@ -557,23 +557,36 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 
 
 			for item in instance.framework.control_set.all():
+				print(item)
 				# project_sub_clauses = instance.projectsubclause_set.all()
 				# for project_sub_clause in project_sub_clauses:
 				project_sub_clauses = ProjectSubClause.objects.filter(sub_clause=item.sub_clause, project=instance)
-				for psc in project_sub_clauses:
+				if project_sub_clauses:
+					for psc in project_sub_clauses:
+						ProjectControl.objects.create(
+								project=instance,
+								control=item,
+								ref_id=item.ref_id,
+								project_sub_clause=psc,
+								visible=item.visible,
+								zreferences=item.zreferences,
+								mapping = item.mapping,
+								level=item.level,
+								operational_capability=item.operational_capability,
+								control_type=item.control_type
+							)
+				else:
 					ProjectControl.objects.create(
-							project=instance,
-							control=item,
-							ref_id=item.ref_id,
-							project_sub_clause=psc,
-							visible=item.visible,
-							zreferences=item.zreferences,
-							mapping = item.mapping,
-							level=item.level,
-							operational_capability=item.operational_capability,
-							control_type=item.control_type
-						)
-					break
+								project=instance,
+								control=item,
+								ref_id=item.ref_id,
+								visible=item.visible,
+								zreferences=item.zreferences,
+								mapping = item.mapping,
+								level=item.level,
+								operational_capability=item.operational_capability,
+								control_type=item.control_type
+							)
 
 			for item in instance.framework.subcontrol_set.all():
 				for project_control in item.control.projectcontrol_set.all():
