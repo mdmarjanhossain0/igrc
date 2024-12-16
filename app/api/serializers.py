@@ -121,6 +121,8 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
 
 class ProjectTaskSerializer(serializers.ModelSerializer):
     assignee_name = serializers.SerializerMethodField()
+    files = serializers.SerializerMethodField()
+    user_files = serializers.SerializerMethodField()
 
     class Meta:
         model = ProjectTask
@@ -131,6 +133,12 @@ class ProjectTaskSerializer(serializers.ModelSerializer):
             return obj.assignee.username
         except:
             return None
+    
+    def get_files(self, obj):
+        return TemplateFileSerializer(obj.templatefile_set.all(), many=True).data
+
+    def get_my_files(self, obj):
+        return TemplateFileSerializer(obj.user_files.all(), many=True).data
 
 class ProjectClauseSerializer(serializers.ModelSerializer):
 
@@ -142,8 +150,6 @@ class ProjectSubClauseSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProjectSubClause
         fields = '__all__'
-
-
 
 class TenantPolicySerializer(serializers.ModelSerializer):
     class Meta:

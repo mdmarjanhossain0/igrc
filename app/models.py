@@ -36,6 +36,7 @@ class Task(BaseModel):
 	end = models.DateField(null=True, blank=True)
 	assignee = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
 	files = models.ManyToManyField('TemplateFile', blank=True)
+	deliverable = models.TextField(null=True, blank=True)
 
 	# subclauses = models.ManyToManyField('SubClause', blank=True, related_name='subclauses')
 	# subcontrols = models.ManyToManyField('SubControl', blank=True, related_name='subcontrols')
@@ -252,6 +253,7 @@ class ProjectTask(BaseModel):
 	files = models.ManyToManyField('TemplateFile', blank=True)
 	user_files = models.ManyToManyField('TemplateFile', blank=True, related_name="user_files")
 	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+	deliverable = models.TextField(null=True, blank=True)
 
 	title=models.CharField(max_length=255, null=True,blank=True)
 	description=models.TextField(null=True, blank=True)
@@ -268,7 +270,6 @@ class ProjectTask(BaseModel):
 	end = models.DateField(null=True, blank=True)
 	assignee = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
 	ref_id = models.CharField(max_length=8, null=False, blank=True)
-	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 	# clause = models.ManyToManyField(Clause, blank=True)
 	subclauses = models.ManyToManyField('ProjectSubClause', blank=True, related_name='project_subclauses')
 	subcontrols = models.ManyToManyField('ProjectSubControl', blank=True, related_name='project_subcontrols')
