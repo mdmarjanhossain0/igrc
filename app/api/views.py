@@ -126,9 +126,13 @@ class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
 	queryset = TenantPolicy.objects.all()
 	serializer_class = TenantPolicySerializer
-	http_method_names = ['get', 'post', 'patch', 'put', 'delete'] 
 	def get_queryset(self):
+		# Check if the request method is PUT or PATCH
+		if self.request.method in ['PUT', 'PATCH']:
+			return TenantPolicy.objects.all()
+		# Default behavior for other methods
 		return TenantPolicy.objects.filter(project__in=[self.kwargs.get('project_id')])
+	
 	def partial_update(self, request, *args, **kwargs):
 		instance = self.get_object()
 		serializer = self.get_serializer(instance, data=request.data, partial=True)
