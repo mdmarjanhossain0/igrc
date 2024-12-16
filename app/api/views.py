@@ -73,9 +73,12 @@ class TenantModelViewSet(viewsets.ModelViewSet):
 class NoteViewSet(viewsets.ModelViewSet):
 	queryset = Note.objects.all()
 	serializer_class = NoteSerializer
+
+
 class CommentViewSet(viewsets.ModelViewSet):
 	queryset = Comment.objects.all()
 	serializer_class = CommentSerializer
+	
 class AditorFeedBackViewSet(viewsets.ModelViewSet):
 	queryset = AuditorFeedback.objects.all()
 	serializer_class = AuditorFeedbackSerializer
