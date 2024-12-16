@@ -10,16 +10,16 @@ from rest_framework.decorators import (
 
 from app.models import (Clause, Comment, Control, Evidence, EvidenceFile, Framework, Policy,
 	Project, ProjectClause, ProjectControl, ProjectMember, ProjectScratchpad, ProjectSubControl,
-	ProjectTask, SubControl, Task, Tenant, TenantPolicy)
+	ProjectTask, SubControl, Task, Tenant, TenantPolicy, Note, AuditorFeedback, Comment)
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
-	IsProjectManager, Or)
+	IsProjectManager)
 from .serializers import (ClauseSerializer, CommentSerializer, ControlSerializer,
 	EvidenceSerializer, FrameworkSerializer, NormativeReferencesSerializer, PolicySerializer,
 	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
 	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer,
 	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
-	TenantPolicySerializer, TenantSerializer)
+	TenantPolicySerializer, TenantSerializer, NoteSerializer, AuditorFeedbackSerializer)
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -70,7 +70,15 @@ class TenantModelViewSet(viewsets.ModelViewSet):
 
 
 
-
+class NoteViewSet(viewsets.ModelViewSet):
+	queryset = Note.objects.all()
+	serializer_class = NoteSerializer
+class CommentViewSet(viewsets.ModelViewSet):
+	queryset = Comment.objects.all()
+	serializer_class = CommentSerializer
+class AditorFeedBackViewSet(viewsets.ModelViewSet):
+	queryset = AuditorFeedback.objects.all()
+	serializer_class = AuditorFeedbackSerializer
 
 class ProjectModelViewSet(viewsets.ModelViewSet):
 	queryset = Project.objects.all().order_by("-pk")

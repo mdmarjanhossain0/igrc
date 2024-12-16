@@ -8,7 +8,7 @@ from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectMo
     ProjectMemberModelViewSet, ProjectMembersByProject, ProjectModelViewSet,
     ProjectPoicyModelViewSet, ProjectScratchpadModelViewSet, ProjectSubControlModelViewSet,
     ProjectTaskModelViewSet, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
-    TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet)
+    TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, NoteViewSet, CommentViewSet, AditorFeedBackViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -32,6 +32,11 @@ router.register(r'tenant-policies', TenantPolicyModelViewSet)
 router.register(r'project-controls', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
 router.register(r'evidence', EvidenceModelViewSet)
+router.register(r'note', NoteViewSet)
+router.register(r'comment', CommentViewSet)
+router.register(r'aditorfeedback', AditorFeedBackViewSet)
+
+
 router.register(r'project/(?P<project_id>\d+)/clauses',ClausesByProjectView, basename='project-clauses')
 
 router.register(r'project/(?P<project_id>\d+)/scratchpad',ProjectScratchpadModelViewSet, basename='project-scratchpad')

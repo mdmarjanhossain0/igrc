@@ -6,6 +6,7 @@ from app.models import (AuditorFeedback, Clause, Comment, Control, Evidence, Evi
 from django.db.models import Sum, Avg
 from riskapp.api.serializers import RiskMitigationSerializer
 from riskapp.models import RiskMitigation
+
 class FrameworkSerializer(serializers.ModelSerializer):
     total_controls=serializers.SerializerMethodField()
     class Meta:
@@ -56,6 +57,7 @@ class TenantSerializer(serializers.ModelSerializer):
     class Meta:
         model= Tenant
         fields = '__all__'
+
 
 
 class ProjectSerializer(serializers.ModelSerializer):
