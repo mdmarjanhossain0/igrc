@@ -140,7 +140,7 @@ class Control(BaseModel):
 	mapping = models.TextField(null=True, blank=True)
 	level = models.IntegerField(null=True, blank=True)
 	operational_capability = models.CharField(max_length=255, choices=DIFFICULTIES, null=True, blank=True)
-	control_type = models.CharField(max_length=32, null=True, blank=True)
+	control_type = models.CharField(max_length=255, null=True, blank=True)
 
 
 	ref_id=models.CharField(max_length=32, null=False, blank=False)
@@ -393,7 +393,7 @@ class ProjectControl(BaseModel):
 	mapping = models.TextField(null=True, blank=True)
 	level = models.IntegerField(null=True, blank=True)
 	operational_capability = models.CharField(max_length=255, null=True, blank=True)
-	control_type = models.CharField(max_length=32, null=True, blank=True)
+	control_type = models.CharField(max_length=255, null=True, blank=True)
 	applicable = models.BooleanField(default=True)
 
 	ref_id=models.CharField(max_length=32, null=False, blank=False)
