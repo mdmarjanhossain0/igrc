@@ -130,7 +130,7 @@ class Control(BaseModel):
 	
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
-	sub_clause = models.ForeignKey(SubClause, on_delete=models.CASCADE)
+	sub_clause = models.ForeignKey(SubClause, on_delete=models.CASCADE, null=True, blank=True)
 	visible = models.BooleanField(default=True)
 	system_level = models.BooleanField(default=True)
 	category = models.CharField(max_length=32, null=True, blank=True)
@@ -144,11 +144,21 @@ class Control(BaseModel):
 
 
 	ref_id=models.CharField(max_length=32, null=False, blank=False)
+	dtc = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
+	dtc = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
 
 	def __str__(self):
 		return self.title
 	
 class SubControl(BaseModel):
+	EASY = "Easy"
+	MODARATE = "Moderate"
+	HARD = "Hard"
+	DIFFICULTIES = [
+		(EASY, EASY),
+		(MODARATE, MODARATE),
+		(HARD, HARD),
+	]
 	framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
 	task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
 	control = models.ForeignKey(Control, related_name="subcontrols",on_delete=models.CASCADE)
@@ -157,6 +167,8 @@ class SubControl(BaseModel):
 	description=models.TextField(null=True,blank=True)
 
 	ref_id=models.CharField(max_length=32, null=False, blank=False)
+	dtc = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
+	dtc = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
 
 	def __str__(self):
 		return self.title
@@ -385,6 +397,8 @@ class ProjectControl(BaseModel):
 	applicable = models.BooleanField(default=True)
 
 	ref_id=models.CharField(max_length=32, null=False, blank=False)
+	dtc = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
+	dtc = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
 
 	def average_completion(self):
 		avg_completion=ProjectSubControl.objects.filter(project_control=self).aggregate(models.Avg('completion'))
@@ -396,6 +410,14 @@ class ProjectSubControl(BaseModel):
 		("not implemented","not implemented"),
 		("partially implemented","partially implemented"),
 		("fully implemented","fully implemented"),
+	]
+	EASY = "Easy"
+	MODARATE = "Moderate"
+	HARD = "Hard"
+	DIFFICULTIES = [
+		(EASY, EASY),
+		(MODARATE, MODARATE),
+		(HARD, HARD),
 	]
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	sub_control = models.ForeignKey(SubControl, on_delete=models.SET_NULL, null=True, blank=True)
@@ -416,6 +438,8 @@ class ProjectSubControl(BaseModel):
 	
 	status= models.CharField(max_length=255, default="not implemented", choices=status_choices)
 	ref_id=models.CharField(max_length=32, null=False, blank=False)
+	dtc = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
+	dtc = models.CharField(max_length=32, choices=DIFFICULTIES, default=EASY)
 	
 	#review
 	#todo
