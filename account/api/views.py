@@ -209,6 +209,9 @@ class AccountListApiView(ListAPIView):
 
 class TenantAccountListApiView(ListAPIView):
 	serializer_class = AccountSerializer
+	serializer_class = AccountSerializer
+	filter_backends = (SearchFilter, OrderingFilter)
+	search_fields = ("username", "email",)
 
 
 	def get_queryset(self):
