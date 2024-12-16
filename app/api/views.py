@@ -73,7 +73,7 @@ class TenantModelViewSet(viewsets.ModelViewSet):
 
 
 class ProjectModelViewSet(viewsets.ModelViewSet):
-	queryset = Project.objects.all()
+	queryset = Project.objects.all().order_by("-pk")
 	serializer_class = ProjectSerializer
 	
 	def get_permissions(self):
