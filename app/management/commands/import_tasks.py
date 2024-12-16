@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.core.management.base import BaseCommand, CommandError
-from your_app.models import Task, Framework, Account
+from app.models import Task, Framework, Account
 
 class Command(BaseCommand):
     help = 'Populate the database with predefined tasks'
