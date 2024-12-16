@@ -1,0 +1,426 @@
+{
+  "clauses": [
+	{
+	  "id": "4",
+	  "title": "Context of the organization",
+	  "sub_clauses": [
+		{
+		  "id": "4.1 ¶1",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Understanding the organization and its context"
+		},
+		{
+		  "id": "4.2 a)",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Understanding the needs and expectations of interested parties"
+		},
+		{
+		  "id": "4.2 b)",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Understanding the needs and expectations of interested parties"
+		},
+		{
+		  "id": "4.2 c)",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Understanding the needs and expectations of interested parties"
+		},
+		{
+		  "id": "4.3 ¶1",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Determining the scope of the information security management system"
+		},
+		{
+		  "id": "4.3 a)",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Determining the scope of the information security management system"
+		},
+		{
+		  "id": "4.3 b)",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Determining the scope of the information security management system"
+		},
+		{
+		  "id": "4.3 c)",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Determining the scope of the information security management system"
+		},
+		{
+		  "id": "4.3 ¶2",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Determining the scope of the information security management system"
+		},
+		{
+		  "id": "4.4 ¶1",
+		  "type": "Core Topic",
+		  "parent_clause": "4",
+		  "description": "Information security management system"
+		}
+	  ]
+	},
+	{
+	  "id": "5",
+	  "title": "Leadership",
+	  "sub_clauses": [
+		{
+		  "id": "5.1 a)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Leadership and commitment"
+		},
+		{
+		  "id": "5.1 b)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Leadership and commitment"
+		},
+		{
+		  "id": "5.1 c)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Leadership and commitment"
+		},
+		{
+		  "id": "5.1 d)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Leadership and commitment"
+		},
+		{
+		  "id": "5.1 e)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Leadership and commitment"
+		},
+		{
+		  "id": "5.1 f)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Leadership and commitment"
+		},
+		{
+		  "id": "5.1 g)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Leadership and commitment"
+		},
+		{
+		  "id": "5.1 h)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Leadership and commitment"
+		},
+		{
+		  "id": "5.2 a)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Policy"
+		},
+		{
+		  "id": "5.2 b)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Policy"
+		},
+		{
+		  "id": "5.2 c)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Policy"
+		},
+		{
+		  "id": "5.2 d)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Policy"
+		},
+		{
+		  "id": "5.2 e)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Policy"
+		},
+		{
+		  "id": "5.2 f)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Policy"
+		},
+		{
+		  "id": "5.2 g)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Policy"
+		},
+		{
+		  "id": "5.3 ¶1",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Organizational roles, responsibilities and authorities"
+		},
+		{
+		  "id": "5.3 a)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Organizational roles, responsibilities and authorities"
+		},
+		{
+		  "id": "5.3 b)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Organizational roles, responsibilities and authorities"
+		},
+		{
+		  "id": "5.3 c)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Organizational roles, responsibilities and authorities"
+		},
+		{
+		  "id": "5.3 d)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Organizational roles, responsibilities and authorities"
+		},
+		{
+		  "id": "5.3 e)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Organizational roles, responsibilities and authorities"
+		},
+		{
+		  "id": "5.3 f)",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Organizational roles, responsibilities and authorities"
+		},
+		{
+		  "id": "5.4 ¶1",
+		  "type": "Core Topic",
+		  "parent_clause": "5",
+		  "description": "Actions to address risks and opportunities"
+		}
+	  ]
+	},
+	{
+	  "id": "6",
+	  "title": "Planning",
+	  "sub_clauses": [
+		{
+		  "id": "6.1 a)",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Actions to address risks and opportunities"
+		},
+		{
+		  "id": "6.1 b)",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Actions to address risks and opportunities"
+		},
+		{
+		  "id": "6.1 c)",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Actions to address risks and opportunities"
+		},
+		{
+		  "id": "6.2 ¶1",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Information security objectives and planning to achieve them"
+		},
+		{
+		  "id": "6.2 a)",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Information security objectives and planning to achieve them"
+		},
+		{
+		  "id": "6.2 b)",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Information security objectives and planning to achieve them"
+		},
+		{
+		  "id": "6.2 c)",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Information security objectives and planning to achieve them"
+		},
+		{
+		  "id": "6.3 ¶1",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Planning of actions to address risks and opportunities"
+		},
+		{
+		  "id": "6.3 a)",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Planning of actions to address risks and opportunities"
+		},
+		{
+		  "id": "6.3 b)",
+		  "type": "Core Topic",
+		  "parent_clause": "6",
+		  "description": "Planning of actions to address risks and opportunities"
+		}
+	  ]
+	},
+	{
+		"id": "7",
+		"title": "Support",
+		"sub_clauses": [
+		  {
+			"id": "7.1",
+			"type": "Core Topic",
+			"parent_clause": "7",
+			"description": "Resources"
+		  },
+		  {
+			"id": "7.2",
+			"type": "Core Topic",
+			"parent_clause": "7",
+			"description": "Competence"
+		  },
+		  {
+			"id": "7.2 a)",
+			"type": "Control Topic",
+			"parent_clause": "7.2",
+			"description": "Personnel competence"
+		  },
+		  {
+			"id": "7.2 b)",
+			"type": "Core Topic",
+			"parent_clause": "7",
+			"description": "Competence"
+		  },
+		  {
+			"id": "7.3",
+			"type": "Core Topic",
+			"parent_clause": "7",
+			"description": "Awareness"
+		  },
+		  {
+			"id": "7.4",
+			"type": "Core Topic",
+			"parent_clause": "7",
+			"description": "Communication"
+		  },
+		  {
+			"id": "7.5",
+			"type": "Core Topic",
+			"parent_clause": "7",
+			"description": "Documented information"
+		  }
+		]
+	  },
+	  {
+		"id": "8",
+		"title": "Operation",
+		"sub_clauses": [
+		  {
+			"id": "8.1",
+			"type": "Core Topic",
+			"parent_clause": "8",
+			"description": "Operational planning and control"
+		  },
+		  {
+			"id": "8.2",
+			"type": "Core Topic",
+			"parent_clause": "8",
+			"description": "Risk assessment"
+		  },
+		  {
+			"id": "8.2 a)",
+			"type": "Control Topic",
+			"parent_clause": "8.2",
+			"description": "Identification of risks"
+		  },
+		  {
+			"id": "8.2 b)",
+			"type": "Control Topic",
+			"parent_clause": "8.2",
+			"description": "Risk mitigation"
+		  },
+		  {
+			"id": "8.3",
+			"type": "Core Topic",
+			"parent_clause": "8",
+			"description": "Operational performance monitoring"
+		  }
+		]
+	  },
+	  {
+		"id": "9",
+		"title": "Improvement",
+		"sub_clauses": [
+		  {
+			"id": "9.1",
+			"type": "Core Topic",
+			"parent_clause": "9",
+			"description": "Nonconformity and corrective action",
+			"sub_sub_clauses": [
+			  {
+				"id": "9.1.1",
+				"description": "Nonconformity occurs when a product or service does not meet the specified requirements, and corrective actions are necessary to address the issue."
+			  },
+			  {
+				"id": "9.1.2",
+				"description": "Actions taken to eliminate the causes of nonconformities to prevent their recurrence."
+			  }
+			]
+		  },
+		  {
+			"id": "9.2",
+			"type": "Core Topic",
+			"parent_clause": "9",
+			"description": "Continual improvement",
+			"sub_sub_clauses": [
+			  {
+				"id": "9.2.1",
+				"description": "The process of continually improving the performance of the quality management system to enhance customer satisfaction."
+			  },
+			  {
+				"id": "9.2.2",
+				"description": "Opportunities for improvement should be identified and addressed through corrective and preventive actions."
+			  }
+			]
+		  }
+		]
+	  },
+	  {
+		"id": "10",
+		"title": "Performance evaluation",
+		"sub_clauses": [
+		  {
+			"id": "10.1",
+			"type": "Core Topic",
+			"parent_clause": "10",
+			"description": "Monitoring, measurement, analysis, and evaluation"
+		  },
+		  {
+			"id": "10.2",
+			"type": "Core Topic",
+			"parent_clause": "10",
+			"description": "Internal audit"
+		  },
+		  {
+			"id": "10.3",
+			"type": "Core Topic",
+			"parent_clause": "10",
+			"description": "Management review"
+		  }
+		]
+	  }
+  ]
+}
