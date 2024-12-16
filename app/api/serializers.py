@@ -137,7 +137,7 @@ class ProjectTaskSerializer(serializers.ModelSerializer):
             return None
     
     def get_files(self, obj):
-        return TemplateFileSerializer(obj.templatefile_set.all(), many=True).data
+        return TemplateFileSerializer(obj.files.all(), many=True).data
 
     def get_my_files(self, obj):
         return TemplateFileSerializer(obj.user_files.all(), many=True).data
