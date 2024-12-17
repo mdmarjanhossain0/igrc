@@ -434,3 +434,11 @@ class ProjectScratchpadSerializer(serializers.ModelSerializer):
     
     def get_can_write(self,obj):
         return obj.project.can_write_scratchpad
+
+# class AuditorControlAccessSerializer(serializers.Serializer):
+#     ready_for_auditor = serializers.SerializerMethodField()
+#     username = serializers.CharField()
+#     controls = serializers.ListField(
+#         child=serializers.CharField()
+#     )
+
