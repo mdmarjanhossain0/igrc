@@ -287,7 +287,7 @@ class ControlWithSubControlsByProjectView(viewsets.ModelViewSet):
 
 class TasksByProjectView(viewsets.ModelViewSet):
 	serializer_class = ProjectTaskSerializer
-
+	pagination_class = None
 	def get_permissions(self):
 		if self.action in ['list','retrieve']:
 			return [IsAuthenticated()]
@@ -487,3 +487,5 @@ class ProjectScratchpadModelViewSet(viewsets.ModelViewSet):
 			if not project.can_write_scratchpad:
 					raise PermissionDenied("Cannot write scratchpad.")
 			serializer.save()
+
+

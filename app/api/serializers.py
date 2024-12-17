@@ -442,3 +442,7 @@ class ProjectScratchpadSerializer(serializers.ModelSerializer):
 #         child=serializers.CharField()
 #     )
 
+#     def get_ready_for_auditor(self, obj):
+#         # project = 
+        
+
