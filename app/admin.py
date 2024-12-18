@@ -20,7 +20,9 @@ from app.models import(
     ProjectSubControl,
     Comment,
     Note,
-    AuditorFeedback
+    AuditorFeedback,
+    Evidence,
+    EvidenceFile
 )
 
 
@@ -68,3 +70,5 @@ admin.site.register(ProjectSubControl)
 admin.site.register(Comment)
 admin.site.register(Note)
 admin.site.register(AuditorFeedback)
+admin.site.register(Evidence)
+admin.site.register(EvidenceFile)

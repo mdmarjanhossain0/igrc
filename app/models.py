@@ -28,6 +28,7 @@ class Framework(BaseModel):
 class Task(BaseModel):
 	framework = models.ForeignKey(Framework, on_delete=models.CASCADE)
 	id=models.AutoField(primary_key=True,)
+	serial = models.CharField(max_length=32, null=True, blank=True)
 	title=models.CharField(max_length=255, null=False,blank=False)
 	description=models.TextField(null=True,blank=True)
 	type = models.CharField(max_length=32)
@@ -262,6 +263,7 @@ def assign_all_related_fields(sender, instance, created, **kwargs):
 class ProjectTask(BaseModel):
 	project = models.ForeignKey(Project, on_delete=models.CASCADE)
 	task = models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True)
+	serial = models.CharField(max_length=32, null=True, blank=True)
 	files = models.ManyToManyField('TemplateFile', blank=True)
 	user_files = models.ManyToManyField('TemplateFile', blank=True, related_name="user_files")
 	completion = models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
@@ -465,6 +467,7 @@ class Evidence(BaseModel):
 	is_complete = models.BooleanField(default=False)
 
 class Comment(BaseModel):
+	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
 	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
 	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
 	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
@@ -474,6 +477,7 @@ class Comment(BaseModel):
 	created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)
 
 class Note(BaseModel):
+	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
 	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
 	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
 	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
@@ -489,6 +493,7 @@ class AuditorFeedback(BaseModel):
 		("action required","action required"),
 		("completed", "completed")
 	]
+	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
 	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
 	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
 	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
@@ -516,10 +521,13 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 				project_task=ProjectTask.objects.create(
 					project=instance,
 					task=item,
+					serial=item.serial,
 					title=item.title,
 					description=item.description,
 					type=item.type,
-
+					start=item.start,
+					end=item.end,
+					assignee=item.assignee if item.assignee else instance.owner
 				)
 				project_task.files.set(item.files.all())
 
