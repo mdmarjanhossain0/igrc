@@ -129,6 +129,7 @@ class ProjectTaskSerializer(serializers.ModelSerializer):
     assignee_name = serializers.SerializerMethodField()
     files = serializers.SerializerMethodField()
     user_files = serializers.SerializerMethodField()
+    
     evidences = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     notes=serializers.SerializerMethodField()
