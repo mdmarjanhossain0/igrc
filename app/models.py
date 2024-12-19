@@ -38,6 +38,9 @@ class Task(BaseModel):
 	assignee = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
 	files = models.ManyToManyField('TemplateFile', blank=True)
 	deliverable = models.TextField(null=True, blank=True)
+ 
+	context = models.TextField(null=True, blank=True)
+	feedback = models.TextField(null=True, blank=True)
 
 	# subclauses = models.ManyToManyField('SubClause', blank=True, related_name='subclauses')
 	# subcontrols = models.ManyToManyField('SubControl', blank=True, related_name='subcontrols')
@@ -288,7 +291,9 @@ class ProjectTask(BaseModel):
 	subclauses = models.ManyToManyField('ProjectSubClause', blank=True, related_name='project_subclauses')
 	subcontrols = models.ManyToManyField('ProjectSubControl', blank=True, related_name='project_subcontrols')
 
-
+	context = models.TextField(null=True, blank=True)
+	feedback = models.TextField(null=True, blank=True)
+ 
 class ProjectClause(BaseModel):
 	CORE = "core"
 	CONTROL = "control"
@@ -452,7 +457,7 @@ class EvidenceFile(BaseModel):
 	file = models.FileField(upload_to='evidence/', null=True, blank=True)
 
 class Evidence(BaseModel):
-	tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
+	tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
 	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
 	clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
@@ -527,7 +532,10 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 					type=item.type,
 					start=item.start,
 					end=item.end,
-					assignee=item.assignee if item.assignee else instance.owner
+					assignee=item.assignee if item.assignee else instance.owner,
+					context = item.context,
+					feedback = item.feedback
+     
 				)
 				project_task.files.set(item.files.all())
 

@@ -129,6 +129,9 @@ class ProjectTaskSerializer(serializers.ModelSerializer):
     assignee_name = serializers.SerializerMethodField()
     files = serializers.SerializerMethodField()
     user_files = serializers.SerializerMethodField()
+    evidences = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+    notes=serializers.SerializerMethodField()
 
     class Meta:
         model = ProjectTask
@@ -145,6 +148,15 @@ class ProjectTaskSerializer(serializers.ModelSerializer):
 
     def get_user_files(self, obj):
         return TemplateFileSerializer(obj.user_files.all(), many=True).data
+    
+    def get_notes(self,obj):
+        return NoteSerializer(obj.note_set.all(), many=True).data
+    
+    def get_evidences(self, obj):
+        return EvidenceSerializer(obj.evidence_set.all(), many=True).data
+    
+    def get_comments(self, obj):
+        return CommentSerializer(obj.comment_set.all(), many=True).data
 
 class ProjectClauseSerializer(serializers.ModelSerializer):
 
