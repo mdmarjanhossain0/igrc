@@ -305,19 +305,19 @@ class TasksByProjectView(viewsets.ModelViewSet):
 	def perform_update(self, serializer):
 		project_id = self.kwargs.get('project_id')
 		project = Project.objects.get(id=project_id)
-		# serializer.save(project=project)
-		user = self.request.user
-		instance = serializer.instance
+		serializer.save(project=project)
+		# user = self.request.user
+		# instance = serializer.instance
 
-		if user.role == "Admin":
-			serializer.save(project=project, assigned_to=user)
-		else:
-			update_data = self.request.data
-			if 'completion' in update_data and len(update_data) == 1:
-				instance.completion = update_data.get('completion')
-				return Response({"message":"Updated Successfully"}, status=status.HTTP_200_OK)
-			else:
-				raise PermissionDenied("You are only allowed to update the completion field.")
+		# if user.role == "Admin":
+		# 	serializer.save(project=project, assigned_to=user)
+		# else:
+		# 	update_data = self.request.data
+		# 	if 'completion' in update_data and len(update_data) == 1:
+		# 		instance.completion = update_data.get('completion')
+		# 		return Response({"message":"Updated Successfully"}, status=status.HTTP_200_OK)
+		# 	else:
+		# 		raise PermissionDenied("You are only allowed to update the completion field.")
     
   
 
