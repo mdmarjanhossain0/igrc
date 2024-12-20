@@ -489,6 +489,7 @@ class Note(BaseModel):
 	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
 	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
 	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
+	project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True)
 	content = models.TextField(null=True, blank=True)
 	audit = models.ForeignKey(Audit, on_delete=models.SET_NULL, null=True, blank=True)
 	created_by = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False)

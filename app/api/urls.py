@@ -1,14 +1,15 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectModelViewSet,
+from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectModelViewSet, 
     ControlModelViewSet, ControlsByProjectView, ControlWithSubControlsByProjectView,
     EvidenceModelViewSet, FrameworkModelViewSet, normative_reference_view, PolicyModelViewSet,
     ProjectClauseModelViewSet, ProjectControlModelViewSet, ProjectMemberByProject,
     ProjectMemberModelViewSet, ProjectMembersByProject, ProjectModelViewSet,
     ProjectPoicyModelViewSet, ProjectScratchpadModelViewSet, ProjectSubControlModelViewSet,
     ProjectTaskModelViewSet, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
-    TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, NoteViewSet, CommentViewSet, AditorFeedBackViewSet)
+    TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, NoteViewSet, 
+    CommentViewSet, AditorFeedBackViewSet, CommentByProjectTaskModelViewSet, NoteByProjectTaskModelViewSet, EvidenceByProjectTaskModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -48,6 +49,11 @@ router.register(r'project/(?P<project_id>\d+)/controls-with-subcontrols', Contro
 router.register(r'project/(?P<project_id>\d+)/members', ProjectMembersByProject, basename='project-members')
 router.register(r'project/(?P<project_id>\d+)/comments', CommentByProjectModelViewSet, basename='project-comments'),
 router.register(r'evidence_set/(?P<tenant_id>\d+)', TenantEvidenceModelViewSet, basename='evidence_set')
+
+router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/comments', CommentByProjectTaskModelViewSet, basename='project-task-comments'),
+router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/notes', NoteByProjectTaskModelViewSet, basename='project-task-notes'),
+router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/evidences', EvidenceByProjectTaskModelViewSet, basename='project-task-evidences'),
+
 
 
 
