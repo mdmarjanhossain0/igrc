@@ -236,7 +236,7 @@ class EvidenceFileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EvidenceSerializer(serializers.ModelSerializer):
-    files = EvidenceFileSerializer(many=True, read_only=False)
+    files = EvidenceFileSerializer(many=True, read_only=True)
 
     class Meta:
         model = Evidence

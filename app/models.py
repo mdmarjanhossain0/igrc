@@ -470,6 +470,9 @@ class Evidence(BaseModel):
 	content = models.TextField(null=False, blank=False)
 	files = models.ManyToManyField(EvidenceFile, blank=True)
 	is_complete = models.BooleanField(default=False)
+ 
+    # New Add for context template
+	is_context = models.BooleanField(default=False, blank=True, null=True)
 
 class Comment(BaseModel):
 	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
