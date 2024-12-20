@@ -301,7 +301,7 @@ class TasksByProjectView(viewsets.ModelViewSet):
 		return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
 	
 	def get_queryset(self):
-		project_id = self.kwargs.get('project_id').order_by('serial')
+		project_id = self.kwargs.get('project_id')
 		return ProjectTask.objects.filter(project_id=project_id)
 
 	def perform_create(self, serializer):
