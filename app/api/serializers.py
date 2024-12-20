@@ -133,6 +133,7 @@ class ProjectTaskSerializer(serializers.ModelSerializer):
     evidences = serializers.SerializerMethodField()
     comments = serializers.SerializerMethodField()
     notes=serializers.SerializerMethodField()
+    
 
     class Meta:
         model = ProjectTask
@@ -236,7 +237,10 @@ class EvidenceFileSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class EvidenceSerializer(serializers.ModelSerializer):
+    # files = EvidenceFileSerializer(many=True, read_only=False)
+    # Change Becuase File not uploaded
     files = EvidenceFileSerializer(many=True, read_only=True)
+    
 
     class Meta:
         model = Evidence

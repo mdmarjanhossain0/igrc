@@ -20,7 +20,7 @@ from .serializers import (ClauseSerializer, CommentSerializer, ControlSerializer
 	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer,
 	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
 	TenantPolicySerializer, TenantSerializer, NoteSerializer, AuditorFeedbackSerializer)
-
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
@@ -159,6 +159,13 @@ class EvidenceModelViewSet(viewsets.ModelViewSet):
 		for file in files:
 			evidence_file = EvidenceFile.objects.create(file=file)
 			evidence.files.add(evidence_file)
+   
+   # get context template 
+	@action(detail=False, methods=['get'], url_path='context')
+	def get_context_evidence(self, request):
+		queryset = self.get_queryset().filter(is_context=True)
+		serializer = self.get_serializer(queryset, many=True)
+		return Response(serializer.data)
 
 class EvidenceByProjectView(viewsets.ModelViewSet):
 	serializer_class = EvidenceSerializer
@@ -294,7 +301,7 @@ class TasksByProjectView(viewsets.ModelViewSet):
 		return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
 	
 	def get_queryset(self):
-		project_id = self.kwargs.get('project_id')
+		project_id = self.kwargs.get('project_id').order_by('serial')
 		return ProjectTask.objects.filter(project_id=project_id)
 
 	def perform_create(self, serializer):
