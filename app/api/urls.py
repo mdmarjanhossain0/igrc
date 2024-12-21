@@ -10,7 +10,7 @@ from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectMo
     ProjectTaskModelViewSet, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
     TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, NoteViewSet, 
     CommentViewSet, AditorFeedBackViewSet, CommentByProjectTaskModelViewSet, NoteByProjectTaskModelViewSet, 
-    EvidenceByProjectTaskModelViewSet, ContextFileByProjectTaskModelViewSet)
+    EvidenceByProjectTaskModelViewSet, ContextFileByProjectTaskModelViewSet, RemoveEvidenceFileView)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -90,6 +90,7 @@ urlpatterns = [
     # path("project/<int:project_id>/members/<int:member_id>/", ProjectMemberByProject.as_view(), name="project-member-by-project"),
 
     path("project/<int:project_id>/normative_reference/", normative_reference_view, name="normative_reference_view"),
-    path("normative_reference/<int:project_id>/", normative_reference_view, name="normative_reference_view")
+    path("normative_reference/<int:project_id>/", normative_reference_view, name="normative_reference_view"),
+    path('project/task/evidence/<int:evidence_id>/file/<int:file_id>/remove/', RemoveEvidenceFileView.as_view(), name='remove-evidence-file'),
 
 ]

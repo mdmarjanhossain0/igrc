@@ -1,3 +1,4 @@
+import os
 import django.contrib.auth
 from rest_framework import viewsets, status
 
@@ -596,27 +597,35 @@ class ContextFileByProjectTaskModelViewSet(viewsets.ModelViewSet):
         instance.delete()
 
   
-# class RemoveEvidenceFileView(APIView):
+class RemoveEvidenceFileView(APIView):
     
-#     def delete(self, request, evidence_id, file_id):
+    def delete(self, request, evidence_id, file_id):
 
-#         evidence = Evidence.objects.get(id=evidence_id)
-#         evidence_file = Evidence.objects.get(id=file_id)
+        evidence = Evidence.objects.get(id=evidence_id)
+        evidence_file = EvidenceFile.objects.get(id=file_id)
+        
+		
+        # Check if the file is associated with the evidence
+        if not evidence.files.filter(id=file_id).exists():
+            return Response(
+                {"detail": "File not associated with this evidence."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-#         # Check if the file is associated with the evidence
-#         if not evidence.files.filter(id=file_id).exists():
-#             return Response(
-#                 {"detail": "File not associated with this evidence."},
-#                 status=status.HTTP_400_BAD_REQUEST
-#             )
-
-#         # Remove the file from the evidence's ManyToMany relationship
-#         evidence.files.remove(evidence_file)
-
-#         return Response(
-#             {"detail": "File removed from the evidence successfully."},
-#             status=status.HTTP_204_NO_CONTENT
-#         )
+        # Remove the file from the evidence's ManyToMany relationship
+        evidence.files.remove(evidence_file)
+                # Delete the file from the filesystem
+        if evidence_file.file:  # Assuming the file field is named 'file'
+            file_path = evidence_file.file.path  # Get the file path
+            # print(file_path)
+            if os.path.isfile(file_path):  # Check if file exists
+                os.remove(file_path)  # Delete the file from the filesystem
+        evidence_file.delete()
+		
+        return Response(
+            {"detail": "File removed from the evidence successfully."},
+            status=status.HTTP_204_NO_CONTENT
+        )
         
 class ProjectScratchpadModelViewSet(viewsets.ModelViewSet):
 	serializer_class = ProjectScratchpadSerializer
