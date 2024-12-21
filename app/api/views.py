@@ -565,25 +565,19 @@ class ContextFileByProjectTaskModelViewSet(viewsets.ModelViewSet):
         task_id = self.kwargs.get('task_id')
         
         return ContextFile.objects.filter(project__id=project_id, task__id=task_id)
-    
     def perform_create(self, serializer):
-        # Retrieve project and task based on kwargs
-        project_id = self.kwargs.get('project_id')
-        task_id = self.kwargs.get('task_id')
-
-        project = Project.objects.get(id=project_id)
-        task = ProjectTask.objects.get(id=task_id)
-
-        # Save the context instance with the related project and task
-        context = serializer.save(project=project, task=task)
-        
-        # Handle uploaded files
-        files = self.request.FILES.getlist('files')
-        for file in files:
-            # Create and associate the file with the context
-            context_file = ContextFile.objects.create(file=file, project=project, task=task)
-            # context.file.add(context_file)
+        try:
+            project_id = self.kwargs.get('project_id')
+            project = Project.objects.get(id=project_id)
+            task_id = self.kwargs.get('task_id')
+            task = ProjectTask.objects.get(id=task_id)
+            uploaded_file = self.request.FILES.get('file')
+            serializer.save(file=uploaded_file, project=project, task=task)
             
+        except Exception as e:
+            print(f"Error: {e}")
+            return Response({"error": "Error creating context file"}, status=status.HTTP_400_BAD_REQUEST)
+           
 
     def perform_update(self, serializer):
         # Retrieve project and task based on kwargs
@@ -591,65 +585,38 @@ class ContextFileByProjectTaskModelViewSet(viewsets.ModelViewSet):
         project = Project.objects.get(id=project_id)
         task_id = self.kwargs.get('task_id')
         task = ProjectTask.objects.get(id=task_id)
+        uploaded_file = self.request.FILES.get('file')
+        serializer.save(project=project, task=task, file=uploaded_file)
+		
 
-        # Save the context instance with updated project and task
-        context = serializer.save(project=project, task=task)
 
-        # Handle uploaded files if provided
-        files = self.request.FILES.getlist('files')
-        if files:
-            # Uncomment to clear old files if you want to replace them
-            context.files.clear()  # Clear existing files
-            for file in files:
-                context_file = ContextFile.objects.create(file=file)
-                context.files.add(context_file)
 
     def perform_destroy(self, instance):
         # Delete the instance
         instance.delete()
 
   
-	# @action(detail=True, methods=['delete'], url_path='delete-file/(?P<file_id>\d+)')
-	# def delete_file(self, request, pk=None, file_id=None):
-	# 	try:
-	# 		context = Contexts.objects.get(id=pk)
-	# 		context_file = ContextFile.objects.get(id=file_id)
-            
-    #         # Check if the file is associated with the context
-	# 		if context.files.filter(id=context_file.id).exists():
-    #             # Remove the file from the context
-	# 			context.files.remove(context_file)
-	# 			context_file.delete()  # Optionally delete the file instance if not needed anymore
-	# 			return Response({"message": "File deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
-    #         else:
-    #             return Response({"error": "File not associated with this context."}, status=status.HTTP_400_BAD_REQUEST)
-    #     except Contexts.DoesNotExist:
-    #         return Response({"error": "Context not found."}, status=status.HTTP_404_NOT_FOUND)
-    #     except ContextFile.DoesNotExist:
-    #         return Response({"error": "File not found."}, status=status.HTTP_404_NOT_FOUND)
- 
-  
-class RemoveEvidenceFileView(APIView):
+# class RemoveEvidenceFileView(APIView):
     
-    def delete(self, request, evidence_id, file_id):
+#     def delete(self, request, evidence_id, file_id):
 
-        evidence = Evidence.objects.get(id=evidence_id)
-        evidence_file = Evidence.objects.get(id=file_id)
+#         evidence = Evidence.objects.get(id=evidence_id)
+#         evidence_file = Evidence.objects.get(id=file_id)
 
-        # Check if the file is associated with the evidence
-        if not evidence.files.filter(id=file_id).exists():
-            return Response(
-                {"detail": "File not associated with this evidence."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+#         # Check if the file is associated with the evidence
+#         if not evidence.files.filter(id=file_id).exists():
+#             return Response(
+#                 {"detail": "File not associated with this evidence."},
+#                 status=status.HTTP_400_BAD_REQUEST
+#             )
 
-        # Remove the file from the evidence's ManyToMany relationship
-        evidence.files.remove(evidence_file)
+#         # Remove the file from the evidence's ManyToMany relationship
+#         evidence.files.remove(evidence_file)
 
-        return Response(
-            {"detail": "File removed from the evidence successfully."},
-            status=status.HTTP_204_NO_CONTENT
-        )
+#         return Response(
+#             {"detail": "File removed from the evidence successfully."},
+#             status=status.HTTP_204_NO_CONTENT
+#         )
         
 class ProjectScratchpadModelViewSet(viewsets.ModelViewSet):
 	serializer_class = ProjectScratchpadSerializer
