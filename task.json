@@ -1,0 +1,419 @@
+[
+    {
+        "title": "Management Support",
+        "type": "S",
+        "duration": 31,
+        "start": "2024-08-01",
+        "end": "2024-09-12",
+        "serial": 1
+    },
+    {
+        "title": "Purchase ISO/IEC 27001:2022",
+        "type": "T",
+        "duration": 1,
+        "start": "2024-08-01",
+        "end": "2024-08-01",
+        "serial": 2
+    },
+    {
+        "title": "Understand business vision and objectives",
+        "type": "T",
+        "duration": 1,
+        "start": "2024-09-13",
+        "end": "2024-09-13",
+        "serial": 3
+    },
+    {
+        "title": "Outline business case",
+        "type": "T",
+        "duration": 9,
+        "start": "2024-08-02",
+        "end": "2024-08-14",
+        "serial": 4
+    },
+    {
+        "title": "Present business case",
+        "type": "T",
+        "duration": 1,
+        "start": "2024-08-15",
+        "end": "2024-08-15",
+        "serial": 5
+    },
+    {
+        "title": "Develop project charter",
+        "type": "T",
+        "duration": 10,
+        "start": "2024-08-16",
+        "end": "2024-08-29",
+        "serial": 6
+    },
+    {
+        "title": "Obtain approval for project charter",
+        "type": "T",
+        "duration": 2,
+        "start": "2024-08-30",
+        "end": "2024-09-02",
+        "serial": 7
+    },
+    {
+        "title": "Assign overall responsibility for the ISMS",
+        "type": "T",
+        "duration": 1,
+        "start": "2024-09-03",
+        "end": "2024-09-03",
+        "serial": 8
+    },
+    {
+        "title": "Communicate roles, responsibilities and authorities for the ISMS",
+        "type": "T",
+        "duration": 1,
+        "start": "2024-09-04",
+        "end": "2024-09-04",
+        "serial": 9
+    },
+    {
+        "title": "Establish information security governance process",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-09-05",
+        "end": "2024-09-11",
+        "serial": 10
+    },
+    {
+        "title": "Management support is obtained",
+        "type": "M",
+        "duration": 0,
+        "start": "2024-09-11",
+        "end": "2024-09-11",
+        "serial": 11
+    },
+    {
+        "title": "Scope of the ISMS",
+        "type": "S",
+        "duration": 37,
+        "start": "2024-09-12",
+        "end": "2024-11-01",
+        "serial": 12
+    },
+    {
+        "title": "Establish requirements management process",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-09-12",
+        "end": "2024-09-18",
+        "serial": 13
+    },
+    {
+        "title": "Establish customer relationship management process",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-09-19",
+        "end": "2024-09-25",
+        "serial": 14
+    },
+    {
+        "title": "Determine external issues",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-09-26",
+        "end": "2024-10-02",
+        "serial": 15
+    },
+    {
+        "title": "Determine internal issues",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-10-03",
+        "end": "2024-10-09",
+        "serial": 16
+    },
+    {
+        "title": "Identify external interested parties",
+        "type": "T",
+        "duration": 3,
+        "start": "2024-10-10",
+        "end": "2024-10-14",
+        "serial": 17
+    },
+    {
+        "title": "Identify internal interested parties",
+        "type": "T",
+        "duration": 3,
+        "start": "2024-10-15",
+        "end": "2024-10-17",
+        "serial": 18
+    },
+    {
+        "title": "Identify requirements of interested parties",
+        "type": "T",
+        "duration": 2,
+        "start": "2024-10-18",
+        "end": "2024-10-21",
+        "serial": 19
+    },
+    {
+        "title": "Determine preliminary scope",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-10-22",
+        "end": "2024-10-28",
+        "serial": 20
+    },
+    {
+        "title": "Determine refined scope",
+        "type": "T",
+        "duration": 1,
+        "start": "2024-10-29",
+        "end": "2024-10-29",
+        "serial": 21
+    },
+    {
+        "title": "Determine final scope",
+        "type": "T",
+        "duration": 1,
+        "start": "2024-10-30",
+        "end": "2024-10-30",
+        "serial": 22
+    },
+    {
+        "title": "Document final scope",
+        "type": "T",
+        "duration": 1,
+        "start": "2024-10-31",
+        "end": "2024-10-31",
+        "serial": 23
+    },
+    {
+        "title": "Approve final scope",
+        "type": "T",
+        "duration": 1,
+        "start": "2024-11-01",
+        "end": "2024-11-01",
+        "serial": 24
+    },
+    {
+        "title": "ISMS scope is approved",
+        "type": "M",
+        "duration": 0,
+        "start": "2024-11-01",
+        "end": "2024-11-01",
+        "serial": 25
+    },
+    {
+        "title": "Gap Analysis",
+        "type": "S",
+        "duration": 23,
+        "start": "2024-11-04",
+        "end": "2024-12-04",
+        "serial": 26
+    },
+    {
+        "title": "Information Security Policy",
+        "type": "S",
+        "duration": 21,
+        "start": "2024-12-05",
+        "end": "2025-01-02",
+        "serial": 27
+    },
+    {
+        "title": "Competence Assurance",
+        "type": "S",
+        "duration": 21,
+        "start": "2024-12-27",
+        "end": "2025-01-24",
+        "serial": 28
+    },
+    {
+        "title": "Inventory of Assets",
+        "type": "S",
+        "duration": 33,
+        "start": "2025-01-27",
+        "end": "2025-03-12",
+        "serial": 29
+    },
+    {
+        "title": "Risk Management Methodology",
+        "type": "S",
+        "duration": 22,
+        "start": "2025-03-05",
+        "end": "2025-04-03",
+        "serial": 30
+    },
+    {
+        "title": "Information Security Risk Assessment",
+        "type": "S",
+        "duration": 33,
+        "start": "2025-03-28",
+        "end": "2025-05-13",
+        "serial": 31
+    },
+    {
+        "title": "Information Security Risk Treatment",
+        "type": "S",
+        "duration": 244,
+        "start": "2025-05-14",
+        "end": "2026-04-20",
+        "serial": 32
+    },
+    {
+        "title": "Develop Risk Treatment Plan",
+        "type": "S",
+        "duration": 31,
+        "start": "2025-05-14",
+        "end": "2025-06-25",
+        "serial": 33
+    },
+    {
+        "title": "Establish resource management process",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-05-14",
+        "end": "2025-05-20",
+        "serial": 34
+    },
+    {
+        "title": "Select risk treatment options",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-05-21",
+        "end": "2025-05-27",
+        "serial": 35
+    },
+    {
+        "title": "Determine controls",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-05-28",
+        "end": "2025-06-03",
+        "serial": 36
+    },
+    {
+        "title": "Produce Statement of Applicability (SoA)",
+        "type": "T",
+        "duration": 1,
+        "start": "2025-06-04",
+        "end": "2025-06-04",
+        "serial": 37
+    },
+    {
+        "title": "Formulate risk treatment plan",
+        "type": "T",
+        "duration": 10,
+        "start": "2025-06-05",
+        "end": "2025-06-18",
+        "serial": 38
+    },
+    {
+        "title": "Obtain approval for risk treatment plan",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-06-19",
+        "end": "2025-06-25",
+        "serial": 39
+    },
+    {
+        "title": "Risk treatment plan is approved",
+        "type": "M",
+        "duration": 0,
+        "start": "2025-06-25",
+        "end": "2025-06-25",
+        "serial": 40
+    },
+    {
+        "title": "Implement Risk Treatment Plan",
+        "type": "S",
+        "duration": 123,
+        "start": "2025-06-26",
+        "end": "2025-12-15",
+        "serial": 41
+    },
+    {
+        "title": "Do Risk Treatment",
+        "type": "T",
+        "duration": 1,
+        "start": "2025-06-26",
+        "end": "2025-06-26",
+        "serial": 42
+    },
+    {
+        "title": "Obtain approval for residual risk",
+        "type": "T",
+        "duration": 1,
+        "start": "2025-06-26",
+        "end": "2025-06-26",
+        "serial": 43
+    },
+    {
+        "title": "Update Statement of Applicability (SoA)",
+        "type": "T",
+        "duration": 1,
+        "start": "2025-06-27",
+        "end": "2025-06-27",
+        "serial": 44
+    },
+    {
+        "title": "Risk treatment plan is implemented",
+        "type": "M",
+        "duration": 0,
+        "start": "2025-06-27",
+        "end": "2025-06-27",
+        "serial": 45
+    },
+    {
+        "title": "ISMS Operations",
+        "type": "S",
+        "duration": 90,
+        "start": "2025-06-30",
+        "end": "2025-10-31",
+        "serial": 46
+    },
+    {
+        "title": "Operate ISMS processes",
+        "type": "T",
+        "duration": 30,
+        "start": "2025-11-03",
+        "end": "2025-12-12",
+        "serial": 47
+    },
+    {
+        "title": "Control ISMS processes",
+        "type": "T",
+        "duration": 30,
+        "start": "2025-12-15",
+        "end": "2026-01-23",
+        "serial": 48
+    },
+    {
+        "title": "Manage outsourced functions",
+        "type": "T",
+        "duration": 30,
+        "start": "2026-01-26",
+        "end": "2026-03-06",
+        "serial": 49
+    },
+    {
+        "title": "Performance Evaluation",
+        "type": "S",
+        "duration": 57,
+        "start": "2026-03-09",
+        "end": "2026-05-26",
+        "serial": 50
+    },
+    {
+        "title": "Improvement",
+        "type": "S",
+        "duration": 25,
+        "start": "2026-05-18",
+        "end": "2026-06-19",
+        "serial": 51
+    },
+    {
+        "title": "Certification audit",
+        "type": "S",
+        "duration": 21,
+        "start": "2026-06-22",
+        "end": "2026-07-20",
+        "serial": 52
+    }
+]
+

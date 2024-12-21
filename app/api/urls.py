@@ -9,7 +9,8 @@ from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectMo
     ProjectPoicyModelViewSet, ProjectScratchpadModelViewSet, ProjectSubControlModelViewSet,
     ProjectTaskModelViewSet, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
     TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, NoteViewSet, 
-    CommentViewSet, AditorFeedBackViewSet, CommentByProjectTaskModelViewSet, NoteByProjectTaskModelViewSet, EvidenceByProjectTaskModelViewSet)
+    CommentViewSet, AditorFeedBackViewSet, CommentByProjectTaskModelViewSet, NoteByProjectTaskModelViewSet, 
+    EvidenceByProjectTaskModelViewSet, ContextFileByProjectTaskModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -53,6 +54,9 @@ router.register(r'evidence_set/(?P<tenant_id>\d+)', TenantEvidenceModelViewSet, 
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/comments', CommentByProjectTaskModelViewSet, basename='project-task-comments'),
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/notes', NoteByProjectTaskModelViewSet, basename='project-task-notes'),
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/evidences', EvidenceByProjectTaskModelViewSet, basename='project-task-evidences'),
+
+router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/contexts', ContextFileByProjectTaskModelViewSet, basename='project-task-evidences'),
+
 
 
 

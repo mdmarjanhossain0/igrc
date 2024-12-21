@@ -453,6 +453,27 @@ class ProjectSubControl(BaseModel):
 	#category
 	#subcategory
 
+class ContextTempFile(BaseModel):
+	file = models.FileField(upload_to='context-temp/', null=True, blank=True)
+
+class ContextTemp(BaseModel):
+	tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
+	clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
+	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
+	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
+	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
+
+	title = models.CharField(max_length=255, null=False, blank=False)
+	description = models.TextField(max_length=255, null=True, blank=True)
+	content = models.TextField(null=False, blank=False)
+	files = models.ManyToManyField(ContextTempFile, blank=True)
+	is_complete = models.BooleanField(default=False)
+ 
+    # New Add for context template
+	is_context = models.BooleanField(default=True, blank=True, null=True)
+     
 class EvidenceFile(BaseModel):
 	file = models.FileField(upload_to='evidence/', null=True, blank=True)
 
@@ -539,9 +560,31 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 					assignee=item.assignee if item.assignee else instance.owner,
 					context = item.context,
 					feedback = item.feedback
-     
+
 				)
 				project_task.files.set(item.files.all())
+				# print(project_task)
+    # Copy ContextTemp to Evidence for this task
+				context_temps = ContextTemp.objects.all()
+				for context_temp in context_temps:
+					evidence = Evidence.objects.create(
+						tenant=context_temp.tenant,
+						project=instance,
+						task=project_task,
+						clause=context_temp.clause,
+						policy=context_temp.policy,
+						control=context_temp.control,
+						sub_control=context_temp.sub_control,
+						title=context_temp.title,
+						description=context_temp.description,
+						content=context_temp.content,
+						is_complete=context_temp.is_complete,
+						is_context=True 
+				)
+			    # Copy associated ContextTempFiles to EvidenceFiles
+					for context_file in context_temp.files.all():
+						evidence_file = EvidenceFile.objects.create(file=context_file.file)
+						evidence.files.add(evidence_file)
 
 			for item in instance.framework.clause_set.all():
 				clause = ProjectClause.objects.create(

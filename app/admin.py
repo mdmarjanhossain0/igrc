@@ -22,7 +22,9 @@ from app.models import(
     Note,
     AuditorFeedback,
     Evidence,
-    EvidenceFile
+    EvidenceFile,
+    ContextTempFile,
+    ContextTemp,
 )
 
 
@@ -72,3 +74,6 @@ admin.site.register(Note)
 admin.site.register(AuditorFeedback)
 admin.site.register(Evidence)
 admin.site.register(EvidenceFile)
+
+admin.site.register(ContextTempFile)
+admin.site.register(ContextTemp)

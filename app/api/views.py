@@ -560,7 +560,37 @@ class EvidenceByProjectTaskModelViewSet(viewsets.ModelViewSet):
 
 	def perform_destroy(self, instance):
 		instance.delete()
- 
+
+class ContextFileByProjectTaskModelViewSet(viewsets.ModelViewSet):
+	serializer_class = EvidenceSerializer
+	
+	def get_queryset(self):
+		project_id = self.kwargs.get('project_id')
+		task_id = self.kwargs.get('task_id')
+		return Evidence.objects.filter(project_id=project_id, task_id=task_id, is_context=True)
+
+	def perform_update(self, serializer):
+		# Retrieve project and task based on kwargs
+		project_id = self.kwargs.get('project_id')
+		project = Project.objects.get(id=project_id)
+		task_id = self.kwargs.get('task_id')
+		task = ProjectTask.objects.get(id=task_id)
+		
+		# Save evidence instance with updated project and task
+		evidence = serializer.save(project=project, task=task, is_context=True)
+
+		# Handle uploaded files if provided
+		files = self.request.FILES.getlist('files')
+		if files:
+			# evidence.files.clear()  # Clear existing files if new files are uploaded
+			for file in files:
+				evidence_file = EvidenceFile.objects.create(file=file)
+				evidence.files.add(evidence_file)
+      
+
+	def perform_destroy(self, instance):
+		instance.delete()
+
 class ProjectScratchpadModelViewSet(viewsets.ModelViewSet):
 	serializer_class = ProjectScratchpadSerializer
 
