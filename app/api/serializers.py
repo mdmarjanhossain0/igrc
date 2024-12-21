@@ -381,6 +381,19 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
         
+    def to_representation(self, instance):
+        # Get the default serialized data
+        data = super().to_representation(instance)
+        # Include only specific fields for created_by
+        if instance.created_by:
+            created_by = AccountSerializer(instance.created_by).data
+            data['created_by'] = {
+                'id': created_by['id'],
+                'username': created_by['username'],
+                'email': created_by['email'],
+                "profile_picture":created_by['profile_picture']
+            }
+        return data    
 
         
 class NoteSerializer(serializers.ModelSerializer):
