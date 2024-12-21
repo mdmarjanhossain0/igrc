@@ -375,7 +375,7 @@ class AuditorFeedbackSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
-    created_by = AccountSerializer()
+    
     
     class Meta:
         model = Comment
