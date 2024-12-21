@@ -563,16 +563,6 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 						file = context_temp.file,
 					)
 					
-					# # Copy associated ContextTempFile files to ContextFile
-					# if context_temp.file:
-					# 	# Assuming you want to copy a single file from ContextTempFile to ContextFile
-					# 	context_file = ContextFile.objects.create(
-					# 		file=context_temp.file,
-					# 		title=context_temp.title  # Optional: Copy title if needed
-					# 	)
-					# 	# Adding the copied file to the context file's 'files' related field, if applicable
-					# 	context.files.add(context_file)  # Ensure that `files` is a many-to-many field if needed
-
 			for item in instance.framework.clause_set.all():
 				clause = ProjectClause.objects.create(
 					project=instance,

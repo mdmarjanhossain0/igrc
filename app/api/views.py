@@ -543,12 +543,12 @@ class EvidenceByProjectTaskModelViewSet(viewsets.ModelViewSet):
 		task_id = self.kwargs.get('task_id')
 		task = ProjectTask.objects.get(id=task_id)
 		evidence = serializer.save(project=project, task=task)
-
 		# Handling uploaded files during update
 		files = self.request.FILES.getlist('files')
+		# print("xyz", len(files))
 		if files:
 			# First remove existing files if necessary
-			evidence.files.clear()  # Remove all existing files
+			# evidence.files.clear()  # Remove all existing files
 			for file in files:
 				evidence_file = EvidenceFile.objects.create(file=file)
 				evidence.files.add(evidence_file)
