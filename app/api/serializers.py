@@ -2,7 +2,7 @@ from rest_framework import serializers
 from app.models import (AuditorFeedback, Clause, Comment, Control, Evidence, EvidenceFile,
     Framework, Note, Policy, Project, ProjectClause, ProjectControl, ProjectMember,
     ProjectScratchpad, ProjectSubClause, ProjectSubControl, ProjectTask, SubClause, SubControl,
-    Task, TemplateFile, Tenant, TenantPolicy, Contexts, ContextFile)
+    Task, TemplateFile, Tenant, TenantPolicy,  ContextFile)
 
 from account.api.serializers import (
 	AccountSerializer
@@ -241,16 +241,6 @@ class ContextFileSerializer(serializers.ModelSerializer):
         model = ContextFile
         fields = '__all__'
 
-class ContextSerializer(serializers.ModelSerializer):
-    # files = EvidenceFileSerializer(many=True, read_only=False)
-    # Change Becuase File not uploaded
-    files = ContextFileSerializer(many=True, read_only=True)
-    
-
-    class Meta:
-        model = Contexts
-        fields = '__all__'
-
 class EvidenceFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = EvidenceFile
@@ -416,6 +406,20 @@ class NoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Note
         fields = '__all__'
+        
+    def to_representation(self, instance):
+        # Get the default serialized data
+        data = super().to_representation(instance)
+        # Include only specific fields for created_by
+        if instance.created_by:
+            created_by = AccountSerializer(instance.created_by).data
+            data['created_by'] = {
+                'id': created_by['id'],
+                'username': created_by['username'],
+                'email': created_by['email'],
+                "profile_picture":created_by['profile_picture']
+            }
+        return data  
 
 
 class NormativeReferencesSerializer(serializers.ModelSerializer):

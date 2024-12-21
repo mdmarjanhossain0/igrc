@@ -10,7 +10,7 @@ from rest_framework.decorators import (
 
 from app.models import (Clause, Comment, Control, Evidence, EvidenceFile, Framework, Policy,
 	Project, ProjectClause, ProjectControl, ProjectMember, ProjectScratchpad, ProjectSubControl,
-	ProjectTask, SubControl, Task, Tenant, TenantPolicy, Note, AuditorFeedback, Comment, Contexts, ContextFile)
+	ProjectTask, SubControl, Task, Tenant, TenantPolicy, Note, AuditorFeedback, Comment,  ContextFile)
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
 	IsProjectManager, Or)
@@ -19,7 +19,7 @@ from .serializers import (ClauseSerializer, CommentSerializer, ControlSerializer
 	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
 	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer,
 	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
-	TenantPolicySerializer, TenantSerializer, NoteSerializer, AuditorFeedbackSerializer, ContextSerializer, ContextFileSerializer)
+	TenantPolicySerializer, TenantSerializer, NoteSerializer, AuditorFeedbackSerializer,  ContextFileSerializer)
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -558,36 +558,77 @@ class EvidenceByProjectTaskModelViewSet(viewsets.ModelViewSet):
 
 class ContextFileByProjectTaskModelViewSet(viewsets.ModelViewSet):
     
-	serializer_class = ContextSerializer
-	
-	def get_queryset(self):
-		project_id = self.kwargs.get('project_id')
-		task_id = self.kwargs.get('task_id')
-		return Contexts.objects.filter(project_id=project_id, task_id=task_id)
+    serializer_class = ContextFileSerializer
 
-	def perform_update(self, serializer):
-		# Retrieve project and task based on kwargs
-		project_id = self.kwargs.get('project_id')
-		project = Project.objects.get(id=project_id)
-		task_id = self.kwargs.get('task_id')
-		task = ProjectTask.objects.get(id=task_id)
-		
-		# Save evidence instance with updated project and task
-		context = serializer.save(project=project, task=task)
+    def get_queryset(self):
+        project_id = self.kwargs.get('project_id')
+        task_id = self.kwargs.get('task_id')
+        
+        return ContextFile.objects.filter(project__id=project_id, task__id=task_id)
+    
+    def perform_create(self, serializer):
+        # Retrieve project and task based on kwargs
+        project_id = self.kwargs.get('project_id')
+        task_id = self.kwargs.get('task_id')
 
-		# Handle uploaded files if provided
-		files = self.request.FILES.getlist('files')
-		if files:
-			# evidence.files.clear()  # Clear existing files if new files are uploaded
-			for file in files:
-				context_file = ContextFile.objects.create(file=file)
-				context.files.add(context_file)
-      
+        project = Project.objects.get(id=project_id)
+        task = ProjectTask.objects.get(id=task_id)
 
-	def perform_destroy(self, instance):
-		instance.delete()
+        # Save the context instance with the related project and task
+        context = serializer.save(project=project, task=task)
+        
+        # Handle uploaded files
+        files = self.request.FILES.getlist('files')
+        for file in files:
+            # Create and associate the file with the context
+            context_file = ContextFile.objects.create(file=file, project=project, task=task)
+            # context.file.add(context_file)
+            
+
+    def perform_update(self, serializer):
+        # Retrieve project and task based on kwargs
+        project_id = self.kwargs.get('project_id')
+        project = Project.objects.get(id=project_id)
+        task_id = self.kwargs.get('task_id')
+        task = ProjectTask.objects.get(id=task_id)
+
+        # Save the context instance with updated project and task
+        context = serializer.save(project=project, task=task)
+
+        # Handle uploaded files if provided
+        files = self.request.FILES.getlist('files')
+        if files:
+            # Uncomment to clear old files if you want to replace them
+            context.files.clear()  # Clear existing files
+            for file in files:
+                context_file = ContextFile.objects.create(file=file)
+                context.files.add(context_file)
+
+    def perform_destroy(self, instance):
+        # Delete the instance
+        instance.delete()
+
   
-
+	# @action(detail=True, methods=['delete'], url_path='delete-file/(?P<file_id>\d+)')
+	# def delete_file(self, request, pk=None, file_id=None):
+	# 	try:
+	# 		context = Contexts.objects.get(id=pk)
+	# 		context_file = ContextFile.objects.get(id=file_id)
+            
+    #         # Check if the file is associated with the context
+	# 		if context.files.filter(id=context_file.id).exists():
+    #             # Remove the file from the context
+	# 			context.files.remove(context_file)
+	# 			context_file.delete()  # Optionally delete the file instance if not needed anymore
+	# 			return Response({"message": "File deleted successfully."}, status=status.HTTP_204_NO_CONTENT)
+    #         else:
+    #             return Response({"error": "File not associated with this context."}, status=status.HTTP_400_BAD_REQUEST)
+    #     except Contexts.DoesNotExist:
+    #         return Response({"error": "Context not found."}, status=status.HTTP_404_NOT_FOUND)
+    #     except ContextFile.DoesNotExist:
+    #         return Response({"error": "File not found."}, status=status.HTTP_404_NOT_FOUND)
+ 
+  
 class RemoveEvidenceFileView(APIView):
     
     def delete(self, request, evidence_id, file_id):

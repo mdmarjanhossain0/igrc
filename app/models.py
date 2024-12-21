@@ -454,44 +454,17 @@ class ProjectSubControl(BaseModel):
 	#subcategory
 
 class ContextTempFile(BaseModel):
+	title = models.CharField(max_length=255, null=True, blank=True)
 	file = models.FileField(upload_to='context-temp/', null=True, blank=True)
-
-class ContextTemp(BaseModel):
-	tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
-	clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
-	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
-	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
-	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
-
-	title = models.CharField(max_length=255, null=False, blank=False)
-	description = models.TextField(max_length=255, null=True, blank=True)
-	content = models.TextField(null=False, blank=False)
-	files = models.ManyToManyField(ContextTempFile, blank=True)
-	is_complete = models.BooleanField(default=False)
- 
+	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)	
 
 class ContextFile(BaseModel):
+	title = models.CharField(max_length=255, null=True, blank=True)
 	file = models.FileField(upload_to='context/', null=True, blank=True)
-
-class Contexts(BaseModel):
-	tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
-	clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
-	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
-	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
-	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
-
-	title = models.CharField(max_length=255, null=False, blank=False)
-	description = models.TextField(max_length=255, null=True, blank=True)
-	
-	files = models.ManyToManyField(ContextFile, blank=True)
-	is_complete = models.BooleanField(default=False)
- 
-
-    
+	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)	
+   
 class EvidenceFile(BaseModel):
 	file = models.FileField(upload_to='evidence/', null=True, blank=True)
 
@@ -580,27 +553,24 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 				)
 				project_task.files.set(item.files.all())
 				# print(project_task)
-    		# Copy ContextTemp to Evidence for this task
-				context_temps = ContextTemp.objects.all()
+				context_temps = ContextTempFile.objects.all()
 				for context_temp in context_temps:
-					context = Contexts.objects.create(
-						tenant=context_temp.tenant,
+					# Create a new ContextFile instance
+					context = ContextFile.objects.create(
 						project=instance,
 						task=project_task,
-						clause=context_temp.clause,
-						policy=context_temp.policy,
-						control=context_temp.control,
-						sub_control=context_temp.sub_control,
-						title=context_temp.title,
-						description=context_temp.description,
-						content=context_temp.content,
-						is_complete=context_temp.is_complete
-						
-				)
-			    # Copy associated ContextTempFiles to EvidenceFiles
-					for context_file in context_temp.files.all():
-						c_file = ContextFile.objects.create(file=context_file.file)
-						context.files.add(c_file)
+						title=context_temp.title  # If you want to copy the title
+					)
+					
+					# Copy associated ContextTempFile files to ContextFile
+					if context_temp.file:
+						# Assuming you want to copy a single file from ContextTempFile to ContextFile
+						context_file = ContextFile.objects.create(
+							file=context_temp.file,
+							title=context_temp.title  # Optional: Copy title if needed
+						)
+						# Adding the copied file to the context file's 'files' related field, if applicable
+						context.files.add(context_file)  # Ensure that `files` is a many-to-many field if needed
 
 			for item in instance.framework.clause_set.all():
 				clause = ProjectClause.objects.create(

@@ -24,9 +24,8 @@ from app.models import(
     Evidence,
     EvidenceFile,
     ContextTempFile,
-    ContextTemp,
     ContextFile,
-    Contexts
+
 )
 
 
@@ -78,7 +77,6 @@ admin.site.register(Evidence)
 admin.site.register(EvidenceFile)
 
 admin.site.register(ContextTempFile)
-admin.site.register(ContextTemp)
+
 
 admin.site.register(ContextFile)
-admin.site.register(Contexts)
