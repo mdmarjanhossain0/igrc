@@ -3,6 +3,11 @@ from app.models import (AuditorFeedback, Clause, Comment, Control, Evidence, Evi
     Framework, Note, Policy, Project, ProjectClause, ProjectControl, ProjectMember,
     ProjectScratchpad, ProjectSubClause, ProjectSubControl, ProjectTask, SubClause, SubControl,
     Task, TemplateFile, Tenant, TenantPolicy)
+
+from account.api.serializers import (
+	AccountSerializer
+)
+
 from django.db.models import Sum, Avg
 from riskapp.api.serializers import RiskMitigationSerializer
 from riskapp.models import RiskMitigation
@@ -370,9 +375,13 @@ class AuditorFeedbackSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class CommentSerializer(serializers.ModelSerializer):
+    created_by = AccountSerializer()
+    
     class Meta:
         model = Comment
         fields = '__all__'
+        
+
         
 class NoteSerializer(serializers.ModelSerializer):
 

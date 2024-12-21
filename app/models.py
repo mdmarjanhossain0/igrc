@@ -564,7 +564,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 				)
 				project_task.files.set(item.files.all())
 				# print(project_task)
-    # Copy ContextTemp to Evidence for this task
+    			# Copy ContextTemp to Evidence for this task
 				context_temps = ContextTemp.objects.all()
 				for context_temp in context_temps:
 					evidence = Evidence.objects.create(
