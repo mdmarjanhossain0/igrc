@@ -2,7 +2,7 @@ from rest_framework import serializers
 from app.models import (AuditorFeedback, Clause, Comment, Control, Evidence, EvidenceFile,
     Framework, Note, Policy, Project, ProjectClause, ProjectControl, ProjectMember,
     ProjectScratchpad, ProjectSubClause, ProjectSubControl, ProjectTask, SubClause, SubControl,
-    Task, TemplateFile, Tenant, TenantPolicy)
+    Task, TemplateFile, Tenant, TenantPolicy, Contexts, ContextFile)
 
 from account.api.serializers import (
 	AccountSerializer
@@ -235,6 +235,21 @@ class ProjectSubControlSerializer(serializers.ModelSerializer):
         return CommentSerializer(obj.comment_set.all(), many=True).data
     def get_notes(self, obj):
         return NoteSerializer(obj.note_set.all(), many=True).data
+
+class ContextFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContextFile
+        fields = '__all__'
+
+class ContextSerializer(serializers.ModelSerializer):
+    # files = EvidenceFileSerializer(many=True, read_only=False)
+    # Change Becuase File not uploaded
+    files = ContextFileSerializer(many=True, read_only=True)
+    
+
+    class Meta:
+        model = Contexts
+        fields = '__all__'
 
 class EvidenceFileSerializer(serializers.ModelSerializer):
     class Meta:

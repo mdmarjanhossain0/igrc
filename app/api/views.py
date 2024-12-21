@@ -10,7 +10,7 @@ from rest_framework.decorators import (
 
 from app.models import (Clause, Comment, Control, Evidence, EvidenceFile, Framework, Policy,
 	Project, ProjectClause, ProjectControl, ProjectMember, ProjectScratchpad, ProjectSubControl,
-	ProjectTask, SubControl, Task, Tenant, TenantPolicy, Note, AuditorFeedback, Comment)
+	ProjectTask, SubControl, Task, Tenant, TenantPolicy, Note, AuditorFeedback, Comment, Contexts, ContextFile)
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
 	IsProjectManager, Or)
@@ -19,7 +19,7 @@ from .serializers import (ClauseSerializer, CommentSerializer, ControlSerializer
 	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
 	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer,
 	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
-	TenantPolicySerializer, TenantSerializer, NoteSerializer, AuditorFeedbackSerializer)
+	TenantPolicySerializer, TenantSerializer, NoteSerializer, AuditorFeedbackSerializer, ContextSerializer, ContextFileSerializer)
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -160,12 +160,7 @@ class EvidenceModelViewSet(viewsets.ModelViewSet):
 			evidence_file = EvidenceFile.objects.create(file=file)
 			evidence.files.add(evidence_file)
    
-   # get context template
-	@action(detail=False, methods=['get'], url_path='context')
-	def get_context_evidence(self, request):
-		queryset = self.get_queryset().filter(is_context=True)
-		serializer = self.get_serializer(queryset, many=True)
-		return Response(serializer.data)
+
 
 class EvidenceByProjectView(viewsets.ModelViewSet):
 	serializer_class = EvidenceSerializer
@@ -562,12 +557,13 @@ class EvidenceByProjectTaskModelViewSet(viewsets.ModelViewSet):
 		instance.delete()
 
 class ContextFileByProjectTaskModelViewSet(viewsets.ModelViewSet):
-	serializer_class = EvidenceSerializer
+    
+	serializer_class = ContextSerializer
 	
 	def get_queryset(self):
 		project_id = self.kwargs.get('project_id')
 		task_id = self.kwargs.get('task_id')
-		return Evidence.objects.filter(project_id=project_id, task_id=task_id, is_context=True)
+		return Contexts.objects.filter(project_id=project_id, task_id=task_id)
 
 	def perform_update(self, serializer):
 		# Retrieve project and task based on kwargs
@@ -577,20 +573,43 @@ class ContextFileByProjectTaskModelViewSet(viewsets.ModelViewSet):
 		task = ProjectTask.objects.get(id=task_id)
 		
 		# Save evidence instance with updated project and task
-		evidence = serializer.save(project=project, task=task, is_context=True)
+		context = serializer.save(project=project, task=task)
 
 		# Handle uploaded files if provided
 		files = self.request.FILES.getlist('files')
 		if files:
 			# evidence.files.clear()  # Clear existing files if new files are uploaded
 			for file in files:
-				evidence_file = EvidenceFile.objects.create(file=file)
-				evidence.files.add(evidence_file)
+				context_file = ContextFile.objects.create(file=file)
+				context.files.add(context_file)
       
 
 	def perform_destroy(self, instance):
 		instance.delete()
+  
 
+class RemoveEvidenceFileView(APIView):
+    
+    def delete(self, request, evidence_id, file_id):
+
+        evidence = Evidence.objects.get(id=evidence_id)
+        evidence_file = Evidence.objects.get(id=file_id)
+
+        # Check if the file is associated with the evidence
+        if not evidence.files.filter(id=file_id).exists():
+            return Response(
+                {"detail": "File not associated with this evidence."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Remove the file from the evidence's ManyToMany relationship
+        evidence.files.remove(evidence_file)
+
+        return Response(
+            {"detail": "File removed from the evidence successfully."},
+            status=status.HTTP_204_NO_CONTENT
+        )
+        
 class ProjectScratchpadModelViewSet(viewsets.ModelViewSet):
 	serializer_class = ProjectScratchpadSerializer
 

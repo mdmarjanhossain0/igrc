@@ -471,9 +471,27 @@ class ContextTemp(BaseModel):
 	files = models.ManyToManyField(ContextTempFile, blank=True)
 	is_complete = models.BooleanField(default=False)
  
-    # New Add for context template
-	is_context = models.BooleanField(default=True, blank=True, null=True)
-     
+
+class ContextFile(BaseModel):
+	file = models.FileField(upload_to='context/', null=True, blank=True)
+
+class Contexts(BaseModel):
+	tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
+	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
+	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
+	clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
+	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
+	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
+	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
+
+	title = models.CharField(max_length=255, null=False, blank=False)
+	description = models.TextField(max_length=255, null=True, blank=True)
+	
+	files = models.ManyToManyField(ContextFile, blank=True)
+	is_complete = models.BooleanField(default=False)
+ 
+
+    
 class EvidenceFile(BaseModel):
 	file = models.FileField(upload_to='evidence/', null=True, blank=True)
 
@@ -492,8 +510,6 @@ class Evidence(BaseModel):
 	files = models.ManyToManyField(EvidenceFile, blank=True)
 	is_complete = models.BooleanField(default=False)
  
-    # New Add for context template
-	is_context = models.BooleanField(default=False, blank=True, null=True)
 
 class Comment(BaseModel):
 	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
@@ -564,10 +580,10 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 				)
 				project_task.files.set(item.files.all())
 				# print(project_task)
-    			# Copy ContextTemp to Evidence for this task
+    		# Copy ContextTemp to Evidence for this task
 				context_temps = ContextTemp.objects.all()
 				for context_temp in context_temps:
-					evidence = Evidence.objects.create(
+					context = Contexts.objects.create(
 						tenant=context_temp.tenant,
 						project=instance,
 						task=project_task,
@@ -578,13 +594,13 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 						title=context_temp.title,
 						description=context_temp.description,
 						content=context_temp.content,
-						is_complete=context_temp.is_complete,
-						is_context=True 
+						is_complete=context_temp.is_complete
+						
 				)
 			    # Copy associated ContextTempFiles to EvidenceFiles
 					for context_file in context_temp.files.all():
-						evidence_file = EvidenceFile.objects.create(file=context_file.file)
-						evidence.files.add(evidence_file)
+						c_file = ContextFile.objects.create(file=context_file.file)
+						context.files.add(c_file)
 
 			for item in instance.framework.clause_set.all():
 				clause = ProjectClause.objects.create(
