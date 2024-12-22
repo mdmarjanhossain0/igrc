@@ -740,9 +740,10 @@ class ProjectStatusView(APIView):
 
 			# Calculate evidence progress
 			evidence_required_tasks = tasks.filter(evidence_required=True)
-			# total_evidence_required_tasks = evidence_required_tasks.count()
-			evidence_progress = evidence_required_tasks.aggregate(models.Avg('evidence_provided'))['evidence_provided__avg'] or 0
-			# evidence_progress = (evidence_available_tasks / total_evidence_required_tasks) * 100 if total_evidence_required_tasks > 0 else 0
+			total_evidence_required_tasks = evidence_required_tasks.count()
+			evidence_available_tasks = evidence_required_tasks.filter(evidence_provided=100).count()
+			# evidence_progress = evidence_required_tasks.aggregate(models.Avg('evidence_provided'))['evidence_provided__avg'] or 0
+			evidence_progress = (evidence_available_tasks / total_evidence_required_tasks) * 100 if total_evidence_required_tasks > 0 else 0
 
 			# Prepare response data
 			data = {
