@@ -279,6 +279,8 @@ class ProjectTask(BaseModel):
 	
 	# assigned_member = models.ForeignKey(Account, on_delete=models.DO_NOTHING, null=True, blank=True)
 	is_completed = models.BooleanField(default=False)
+	is_audited = models.BooleanField(default=False)
+	evidence_required = models.BooleanField(default=True)
 
 	deadline = models.DateTimeField(null=True, blank=True)
 	completed_at = models.DateTimeField(null=True, blank=True)
