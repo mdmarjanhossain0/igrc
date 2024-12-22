@@ -471,23 +471,23 @@ class CommentByProjectTaskModelViewSet(viewsets.ModelViewSet):
 	serializer_class = CommentSerializer
 
 	def get_queryset(self):
-		project_id = self.kwargs.get('project_id')
+		# project_id = self.kwargs.get('project_id')
 		task_id = self.kwargs.get('task_id')
-		return Comment.objects.filter(project_id=project_id, task_id=task_id)
+		return Comment.objects.filter( task_id=task_id)
 
 	def perform_create(self, serializer):
-		project_id = self.kwargs.get('project_id')
-		project = Project.objects.get(id=project_id)
+		# project_id = self.kwargs.get('project_id')
+		# project = Project.objects.get(id=project_id)
 		task_id = self.kwargs.get('task_id')
 		task = ProjectTask.objects.get(id=task_id)
-		serializer.save(project=project, task=task)
+		serializer.save( task=task)
 
 	def perform_update(self, serializer):
-		project_id = self.kwargs.get('project_id')
-		project = Project.objects.get(id=project_id)
+		# project_id = self.kwargs.get('project_id')
+		# project = Project.objects.get(id=project_id)
 		task_id = self.kwargs.get('task_id')
 		task = ProjectTask.objects.get(id=task_id)
-		serializer.save(project=project, task=task)
+		serializer.save( task=task)
 
 	def perform_destroy(self, instance):
 		instance.delete()
