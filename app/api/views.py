@@ -1,3 +1,4 @@
+from django.db import models
 import os
 import django.contrib.auth
 from rest_framework import viewsets, status
@@ -15,12 +16,13 @@ from app.models import (Clause, Comment, Control, Evidence, EvidenceFile, Framew
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
 	IsProjectManager, Or)
-from .serializers import (ClauseSerializer, CommentSerializer, ControlSerializer,
-	EvidenceSerializer, FrameworkSerializer, NormativeReferencesSerializer, PolicySerializer,
-	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
-	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer,
+from .serializers import (AuditorFeedbackSerializer, ClauseSerializer, CommentSerializer,
+	ContextFileSerializer, ControlSerializer, EvidenceSerializer, FrameworkSerializer,
+	NormativeReferencesSerializer, NoteSerializer, PolicySerializer, ProjectClauseSerializer,
+	ProjectControlSerializer, ProjectControlWithSubControlSerializer, ProjectMemberSerializer,
+	ProjectScratchpadSerializer, ProjectSerializer, ProjectStatusSerializer,
 	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
-	TenantPolicySerializer, TenantSerializer, NoteSerializer, AuditorFeedbackSerializer,  ContextFileSerializer)
+	TenantPolicySerializer, TenantSerializer)
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -716,3 +718,40 @@ class NoteByProjectControlModelViewSet(viewsets.ModelViewSet):
 	def perform_destroy(self, instance):
 		instance.delete()
 
+class ProjectStatusView(APIView):
+	permission_classes = [IsAuthenticated]
+
+
+	def get(self, request, project_id):
+			project = Project.objects.get(id=project_id)
+			tasks = ProjectTask.objects.filter(project=project)
+
+			# Calculate completion percentage
+			total_tasks = tasks.count()
+			completed_tasks = tasks.filter(is_completed=True).count()
+			completion_percentage = (completed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
+
+			# Calculate implementation average
+			implementation_average = tasks.aggregate(models.Avg('completion'))['completion__avg'] or 0
+
+			# Calculate review progress
+			reviewed_tasks = tasks.filter(is_audited=True).count()
+			review_progress = (reviewed_tasks / total_tasks) * 100 if total_tasks > 0 else 0
+
+			# Calculate evidence progress
+			evidence_required_tasks = tasks.filter(evidence_required=True)
+			total_evidence_required_tasks = evidence_required_tasks.count()
+			evidence_available_tasks = evidence_required_tasks.filter(evidence__isnull=False).distinct().count()
+			evidence_progress = (evidence_available_tasks / total_evidence_required_tasks) * 100 if total_evidence_required_tasks > 0 else 0
+
+			# Prepare response data
+			data = {
+					'completion_percentage': completion_percentage,
+					'implementation_average': implementation_average,
+					'review_progress': review_progress,
+					'evidence_progress': evidence_progress
+			}
+
+			serializer = ProjectStatusSerializer(data=data)
+			serializer.is_valid(raise_exception=True)
+			return Response(serializer.data)

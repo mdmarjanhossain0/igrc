@@ -493,6 +493,15 @@ class ProjectScratchpadSerializer(serializers.ModelSerializer):
     def get_can_write(self,obj):
         return obj.project.can_write_scratchpad
 
+
+
+class ProjectStatusSerializer(serializers.Serializer):
+    completion_percentage = serializers.FloatField()
+    implementation_average = serializers.FloatField()
+    review_progress = serializers.FloatField()
+    evidence_progress = serializers.FloatField()
+
+
 # class AuditorControlAccessSerializer(serializers.Serializer):
 #     ready_for_auditor = serializers.SerializerMethodField()
 #     username = serializers.CharField()

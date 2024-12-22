@@ -96,5 +96,7 @@ urlpatterns = [
     path("project/<int:project_id>/normative_reference/", normative_reference_view, name="normative_reference_view"),
     path("normative_reference/<int:project_id>/", normative_reference_view, name="normative_reference_view"),
     path('project/task/evidence/<int:evidence_id>/file/<int:file_id>/remove/', RemoveEvidenceFileView.as_view(), name='remove-evidence-file'),
+    path('project/<int:project_id>/status/', ProjectStatusView.as_view(), name='project-status'),
+
 
 ]
