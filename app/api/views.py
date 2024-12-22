@@ -16,11 +16,11 @@ from app.models import (Clause, Comment, Control, Evidence, EvidenceFile, Framew
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
 	IsProjectManager, Or)
-from .serializers import (AuditorFeedbackSerializer, ClauseSerializer, CommentSerializer,
-	ContextFileSerializer, ControlSerializer, EvidenceSerializer, FrameworkSerializer,
-	NormativeReferencesSerializer, NoteSerializer, PolicySerializer, ProjectClauseSerializer,
-	ProjectControlSerializer, ProjectControlWithSubControlSerializer, ProjectMemberSerializer,
-	ProjectScratchpadSerializer, ProjectSerializer, ProjectStatusSerializer,
+from .serializers import (AuditorFeedbackSerializer, AuditorSummarySerrializer, ClauseSerializer,
+	CommentSerializer, ContextFileSerializer, ControlSerializer, EvidenceSerializer,
+	FrameworkSerializer, NormativeReferencesSerializer, NoteSerializer, PolicySerializer,
+	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
+	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer, ProjectStatusSerializer,
 	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
 	TenantPolicySerializer, TenantSerializer)
 from rest_framework.decorators import action
@@ -756,3 +756,12 @@ class ProjectStatusView(APIView):
 			serializer = ProjectStatusSerializer(data=data)
 			serializer.is_valid(raise_exception=True)
 			return Response(serializer.data)
+
+class AuditorSummaryView(APIView):
+	def get(self, request, project_id):
+		data = {
+			'project_id':project_id
+		}
+		serializer=AuditorSummarySerrializer(data=data,context={'project_id':project_id})
+		serializer.is_valid(raise_exception=True)
+		return Response(serializer.data)
