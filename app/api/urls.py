@@ -10,7 +10,8 @@ from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectMo
     ProjectTaskModelViewSet, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
     TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, NoteViewSet, 
     CommentViewSet, AditorFeedBackViewSet, CommentByProjectTaskModelViewSet, NoteByProjectTaskModelViewSet, 
-    EvidenceByProjectTaskModelViewSet, ContextFileByProjectTaskModelViewSet, RemoveEvidenceFileView)
+    EvidenceByProjectTaskModelViewSet, ContextFileByProjectTaskModelViewSet, RemoveEvidenceFileView, 
+    CommentByProjectControlModelViewSet, NoteByProjectControlModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -51,12 +52,15 @@ router.register(r'project/(?P<project_id>\d+)/members', ProjectMembersByProject,
 router.register(r'project/(?P<project_id>\d+)/comments', CommentByProjectModelViewSet, basename='project-comments'),
 router.register(r'evidence_set/(?P<tenant_id>\d+)', TenantEvidenceModelViewSet, basename='evidence_set')
 
+# Project Task
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/comments', CommentByProjectTaskModelViewSet, basename='project-task-comments'),
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/notes', NoteByProjectTaskModelViewSet, basename='project-task-notes'),
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/evidences', EvidenceByProjectTaskModelViewSet, basename='project-task-evidences'),
-
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/contexts', ContextFileByProjectTaskModelViewSet, basename='project-task-evidences'),
 
+# Project Control
+router.register(r'project/(?P<project_id>\d+)/control/(?P<control_id>\d+)/comments', CommentByProjectControlModelViewSet, basename='project-control-comments'),
+router.register(r'project/(?P<project_id>\d+)/control/(?P<control_id>\d+)/notes', NoteByProjectControlModelViewSet, basename='project-control-notes'),
 
 
 

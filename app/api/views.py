@@ -497,40 +497,41 @@ class NoteByProjectTaskModelViewSet(viewsets.ModelViewSet):
 	serializer_class = NoteSerializer
 
 	def get_queryset(self):
-		project_id = self.kwargs.get('project_id')
+		# project_id = self.kwargs.get('project_id')
 		task_id = self.kwargs.get('task_id')
-		return Note.objects.filter(project_id=project_id, task_id=task_id)
+		return Note.objects.filter(task_id=task_id)
 
 	def perform_create(self, serializer):
-		project_id = self.kwargs.get('project_id')
-		project = Project.objects.get(id=project_id)
+		# project_id = self.kwargs.get('project_id')
+		# project = Project.objects.get(id=project_id)
 		task_id = self.kwargs.get('task_id')
 		task = ProjectTask.objects.get(id=task_id)
-		serializer.save(project=project, task=task)
+		serializer.save(task=task)
 
 	def perform_update(self, serializer):
-		project_id = self.kwargs.get('project_id')
-		project = Project.objects.get(id=project_id)
+		# project_id = self.kwargs.get('project_id')
+		# project = Project.objects.get(id=project_id)
 		task_id = self.kwargs.get('task_id')
 		task = ProjectTask.objects.get(id=task_id)
-		serializer.save(project=project, task=task)
+		serializer.save(task=task)
 
 	def perform_destroy(self, instance):
 		instance.delete()
+
 class EvidenceByProjectTaskModelViewSet(viewsets.ModelViewSet):
 	serializer_class = EvidenceSerializer
 	
 	def get_queryset(self):
-		project_id = self.kwargs.get('project_id')
+		# project_id = self.kwargs.get('project_id')
 		task_id = self.kwargs.get('task_id')
-		return Evidence.objects.filter(project_id=project_id, task_id=task_id)
+		return Evidence.objects.filter(task_id=task_id)
 
 	def perform_create(self, serializer):
-		project_id = self.kwargs.get('project_id')
-		project = Project.objects.get(id=project_id)
+		# project_id = self.kwargs.get('project_id')
+		# project = Project.objects.get(id=project_id)
 		task_id = self.kwargs.get('task_id')
 		task = ProjectTask.objects.get(id=task_id)
-		evidence = serializer.save(project=project, task=task)
+		evidence = serializer.save(task=task)
 
 		# Handling uploaded files
 		files = self.request.FILES.getlist('files')
@@ -539,11 +540,11 @@ class EvidenceByProjectTaskModelViewSet(viewsets.ModelViewSet):
 			evidence.files.add(evidence_file)
       
 	def perform_update(self, serializer):
-		project_id = self.kwargs.get('project_id')
-		project = Project.objects.get(id=project_id)
+		# project_id = self.kwargs.get('project_id')
+		# project = Project.objects.get(id=project_id)
 		task_id = self.kwargs.get('task_id')
 		task = ProjectTask.objects.get(id=task_id)
-		evidence = serializer.save(project=project, task=task)
+		evidence = serializer.save(task=task)
 		# Handling uploaded files during update
 		files = self.request.FILES.getlist('files')
 		# print("xyz", len(files))
@@ -617,9 +618,9 @@ class RemoveEvidenceFileView(APIView):
                 # Delete the file from the filesystem
         if evidence_file.file:  # Assuming the file field is named 'file'
             file_path = evidence_file.file.path  # Get the file path
-            # print(file_path)
-            if os.path.isfile(file_path):  # Check if file exists
-                os.remove(file_path)  # Delete the file from the filesystem
+            
+            if os.path.isfile(file_path):
+                os.remove(file_path)  
         evidence_file.delete()
 		
         return Response(
@@ -668,4 +669,50 @@ class ProjectScratchpadModelViewSet(viewsets.ModelViewSet):
 					raise PermissionDenied("Cannot write scratchpad.")
 			serializer.save()
 
+class CommentByProjectControlModelViewSet(viewsets.ModelViewSet):
+	queryset = Comment.objects.all().order_by("-pk")
+	serializer_class = CommentSerializer
+
+	def get_queryset(self):
+		control_id = self.kwargs.get('control_id')
+		return Comment.objects.filter( control_id=control_id)
+
+	def perform_create(self, serializer):
+
+		control_id = self.kwargs.get('control_id')
+		control = ProjectControl.objects.get(id=control_id)
+		serializer.save( control=control)
+
+	def perform_update(self, serializer):
+
+		control_id = self.kwargs.get('control_id')
+		control = ProjectControl.objects.get(id=control_id)
+		serializer.save( control=control)
+
+	def perform_destroy(self, instance):
+		instance.delete()
+  
+class NoteByProjectControlModelViewSet(viewsets.ModelViewSet):
+	queryset = Note.objects.all().order_by("-pk")
+	serializer_class = NoteSerializer
+
+	def get_queryset(self):
+		
+		control_id = self.kwargs.get('control_id')
+		return Note.objects.filter(control_id=control_id)
+
+	def perform_create(self, serializer):
+
+		control_id = self.kwargs.get('control_id')
+		control = ProjectControl.objects.get(id=control_id)
+		serializer.save(control=control)
+
+	def perform_update(self, serializer):
+
+		control_id = self.kwargs.get('control_id')
+		control = ProjectControl.objects.get(id=control_id)
+		serializer.save(control=control)
+
+	def perform_destroy(self, instance):
+		instance.delete()
 
