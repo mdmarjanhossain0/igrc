@@ -208,12 +208,108 @@
         "serial": 26
     },
     {
+        "title": "Define desired state",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-11-04",
+        "end": "2024-11-08",
+        "serial": 27
+    },
+    {
+        "title": "Analyze current state",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-11-11",
+        "end": "2024-11-15",
+        "serial": 28
+    },
+    {
+        "title": "Compare current state with desired state",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-11-18",
+        "end": "2024-11-22",
+        "serial": 29
+    },
+    {
+        "title": "Identify gaps",
+        "type": "T",
+        "duration": 3,
+        "start": "2024-11-25",
+        "end": "2024-11-27",
+        "serial": 30
+    },
+    {
+        "title": "Produce gap analysis report",
+        "type": "T",
+        "duration": 3,
+        "start": "2024-11-28",
+        "end": "2024-12-02",
+        "serial": 31
+    },
+    {
+        "title": "Update project plan",
+        "type": "T",
+        "duration": 2,
+        "start": "2024-12-03",
+        "end": "2024-12-04",
+        "serial": 32
+    },
+    {
         "title": "Information Security Policy",
         "type": "S",
         "duration": 21,
         "start": "2024-12-05",
         "end": "2025-01-02",
-        "serial": 27
+        "serial": 33
+    },
+    {
+        "title": "Establish policy management process",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-12-05",
+        "end": "2024-12-11",
+        "serial": 34
+    },
+    {
+        "title": "Establish communication process",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-12-12",
+        "end": "2024-12-18",
+        "serial": 33
+    },
+    {
+        "title": "Determine information security objectives",
+        "type": "T",
+        "duration": 3,
+        "start": "2024-12-12",
+        "end": "2024-12-16",
+        "serial": 34
+    },
+    {
+        "title": "Develop information security policy",
+        "type": "T",
+        "duration": 6,
+        "start": "2024-12-17",
+        "end": "2024-12-24",
+        "serial": 35
+    },
+    {
+        "title": "Obtain approval for information security policy",
+        "type": "T",
+        "duration": 2,
+        "start": "2024-12-25",
+        "end": "2024-12-26",
+        "serial": 36
+    },
+    {
+        "title": "Publish information security policy",
+        "type": "M",
+        "duration": 0,
+        "start": "2024-12-26",
+        "end": "2024-12-26",
+        "serial": 37
     },
     {
         "title": "Competence Assurance",
@@ -221,7 +317,87 @@
         "duration": 21,
         "start": "2024-12-27",
         "end": "2025-01-24",
-        "serial": 28
+        "serial": 38
+    },
+    {
+        "title": "Establish competence and awareness assurance process",
+        "type": "T",
+        "duration": 5,
+        "start": "2024-12-27",
+        "end": "2025-01-02",
+        "serial": 39
+    },
+    {
+        "title": "Identify roles affecting information security",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-01-03",
+        "end": "2025-01-06",
+        "serial": 40
+    },
+    {
+        "title": "Determine competence and awareness requirements",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-01-07",
+        "end": "2025-01-08",
+        "serial": 41
+    },
+    {
+        "title": "Assess current competence and awareness levels",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-01-09",
+        "end": "2025-01-10",
+        "serial": 42
+    },
+    {
+        "title": "Plan IS education and training programme",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-01-13",
+        "end": "2025-01-14",
+        "serial": 43
+    },
+    {
+        "title": "Plan IS awareness programme",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-01-15",
+        "end": "2025-01-16",
+        "serial": 44
+    },
+    {
+        "title": "Conduct IS training and awareness measures",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-01-17",
+        "end": "2025-01-20",
+        "serial": 45
+    },
+    {
+        "title": "Document IS training and awareness results",
+        "type": "T",
+        "duration": 1,
+        "start": "2025-01-21",
+        "end": "2025-01-21",
+        "serial": 46
+    },
+    {
+        "title": "Evaluate programme effectiveness",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-01-22",
+        "end": "2025-01-23",
+        "serial": 47
+    },
+    {
+        "title": "Plan for recruitment or outsourcing",
+        "type": "T",
+        "duration": 1,
+        "start": "2025-01-24",
+        "end": "2025-01-24",
+        "serial": 48
     },
     {
         "title": "Inventory of Assets",
@@ -229,7 +405,87 @@
         "duration": 33,
         "start": "2025-01-27",
         "end": "2025-03-12",
-        "serial": 29
+        "serial": 49
+    },
+    {
+        "title": "Establish asset management process",
+        "type": "T",
+        "duration": 1,
+        "start": "2025-01-27",
+        "end": "2025-01-27",
+        "serial": 50
+    },
+    {
+        "title": "Identify primary assets",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-01-27",
+        "end": "2025-01-31",
+        "serial": 51
+    },
+    {
+        "title": "Identify supporting assets",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-01-27",
+        "end": "2025-01-31",
+        "serial": 52
+    },
+    {
+        "title": "Map primary and supporting assets",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-02-03",
+        "end": "2025-02-07",
+        "serial": 53
+    },
+    {
+        "title": "Identify asset owners",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-02-10",
+        "end": "2025-02-11",
+        "serial": 54
+    },
+    {
+        "title": "Establish topic-specific policy on information classification",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-02-12",
+        "end": "2025-02-18",
+        "serial": 55
+    },
+    {
+        "title": "Classify assets",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-02-19",
+        "end": "2025-02-20",
+        "serial": 56
+    },
+    {
+        "title": "Establish procedures for information labelling",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-02-21",
+        "end": "2025-02-27",
+        "serial": 57
+    },
+    {
+        "title": "Label assets",
+        "type": "T",
+        "duration": 1,
+        "start": "2025-02-28",
+        "end": "2025-02-28",
+        "serial": 58
+    },
+    {
+        "title": "Document asset inventory",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-03-03",
+        "end": "2025-03-04",
+        "serial": 59
     },
     {
         "title": "Risk Management Methodology",
@@ -237,7 +493,55 @@
         "duration": 22,
         "start": "2025-03-05",
         "end": "2025-04-03",
-        "serial": 30
+        "serial": 60
+    },
+    {
+        "title": "Define information security risk assessment criteria",
+        "type": "T",
+        "duration": 3,
+        "start": "2025-03-05",
+        "end": "2025-03-07",
+        "serial": 61
+    },
+    {
+        "title": "Define information security risk acceptance criteria",
+        "type": "T",
+        "duration": 3,
+        "start": "2025-03-10",
+        "end": "2025-03-12",
+        "serial": 62
+    },
+    {
+        "title": "Approve information security risk criteria",
+        "type": "T",
+        "duration": 1,
+        "start": "2025-03-13",
+        "end": "2025-03-13",
+        "serial": 63
+    },
+    {
+        "title": "Establish information security risk assessment process",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-03-14",
+        "end": "2025-03-20",
+        "serial": 64
+    },
+    {
+        "title": "Establish information security risk treatment process",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-03-21",
+        "end": "2025-03-27",
+        "serial": 65
+    },
+    {
+        "title": "Establish control implementation process",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-03-28",
+        "end": "2025-04-03",
+        "serial": 66
     },
     {
         "title": "Information Security Risk Assessment",
@@ -245,7 +549,111 @@
         "duration": 33,
         "start": "2025-03-28",
         "end": "2025-05-13",
-        "serial": 31
+        "serial": 67
+    },
+    {
+        "title": "Risk identification",
+        "type": "S",
+        "duration": 18,
+        "start": "2025-03-28",
+        "end": "2025-04-22",
+        "serial": 68
+    },
+    {
+        "title": "Identify threats",
+        "type": "T",
+        "duration": 2,
+        "start": "2025-03-28",
+        "end": "2025-03-31",
+        "serial": 69
+    },
+    {
+        "title": "Identify existing controls",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-04-01",
+        "end": "2025-04-07",
+        "serial": 70
+    },
+    {
+        "title": "Identify vulnerabilities",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-04-08",
+        "end": "2025-04-14",
+        "serial": 71
+    },
+    {
+        "title": "Identify consequences (impact)",
+        "type": "T",
+        "duration": 3,
+        "start": "2025-04-15",
+        "end": "2025-04-17",
+        "serial": 72
+    },
+    {
+        "title": "Identify risk owners",
+        "type": "T",
+        "duration": 3,
+        "start": "2025-04-18",
+        "end": "2025-04-22",
+        "serial": 73
+    },
+    {
+        "title": "Risk analysis",
+        "type": "S",
+        "duration": 10,
+        "start": "2025-04-23",
+        "end": "2025-05-06",
+        "serial": 74
+    },
+    {
+        "title": "Assess consequences (impact)",
+        "type": "T",
+        "duration": 3,
+        "start": "2025-04-23",
+        "end": "2025-04-25",
+        "serial": 75
+    },
+    {
+        "title": "Assess likelihood",
+        "type": "T",
+        "duration": 3,
+        "start": "2025-04-28",
+        "end": "2025-04-30",
+        "serial": 76
+    },
+    {
+        "title": "Determine risk level",
+        "type": "T",
+        "duration": 4,
+        "start": "2025-05-01",
+        "end": "2025-05-06",
+        "serial": 77
+    },
+    {
+        "title": "Risk evaluation",
+        "type": "S",
+        "duration": 5,
+        "start": "2025-05-07",
+        "end": "2025-05-13",
+        "serial": 78
+    },
+    {
+        "title": "Evaluate risks",
+        "type": "T",
+        "duration": 5,
+        "start": "2025-05-07",
+        "end": "2025-05-13",
+        "serial": 79
+    },
+    {
+        "title": "Risk assessment is completed",
+        "type": "M",
+        "duration": 0,
+        "start": "2025-05-13",
+        "end": "2025-05-13",
+        "serial": 80
     },
     {
         "title": "Information Security Risk Treatment",
@@ -253,7 +661,7 @@
         "duration": 244,
         "start": "2025-05-14",
         "end": "2026-04-20",
-        "serial": 32
+        "serial": 81
     },
     {
         "title": "Develop Risk Treatment Plan",
@@ -261,7 +669,7 @@
         "duration": 31,
         "start": "2025-05-14",
         "end": "2025-06-25",
-        "serial": 33
+        "serial": 82
     },
     {
         "title": "Establish resource management process",
@@ -269,7 +677,7 @@
         "duration": 5,
         "start": "2025-05-14",
         "end": "2025-05-20",
-        "serial": 34
+        "serial": 83
     },
     {
         "title": "Select risk treatment options",
@@ -277,7 +685,7 @@
         "duration": 5,
         "start": "2025-05-21",
         "end": "2025-05-27",
-        "serial": 35
+        "serial": 84
     },
     {
         "title": "Determine controls",
@@ -285,7 +693,7 @@
         "duration": 5,
         "start": "2025-05-28",
         "end": "2025-06-03",
-        "serial": 36
+        "serial": 85
     },
     {
         "title": "Produce Statement of Applicability (SoA)",
@@ -293,7 +701,7 @@
         "duration": 1,
         "start": "2025-06-04",
         "end": "2025-06-04",
-        "serial": 37
+        "serial": 86
     },
     {
         "title": "Formulate risk treatment plan",
@@ -301,7 +709,7 @@
         "duration": 10,
         "start": "2025-06-05",
         "end": "2025-06-18",
-        "serial": 38
+        "serial": 87
     },
     {
         "title": "Obtain approval for risk treatment plan",
@@ -309,7 +717,7 @@
         "duration": 5,
         "start": "2025-06-19",
         "end": "2025-06-25",
-        "serial": 39
+        "serial": 88
     },
     {
         "title": "Risk treatment plan is approved",
@@ -317,7 +725,7 @@
         "duration": 0,
         "start": "2025-06-25",
         "end": "2025-06-25",
-        "serial": 40
+        "serial": 89
     },
     {
         "title": "Implement Risk Treatment Plan",
@@ -325,7 +733,7 @@
         "duration": 123,
         "start": "2025-06-26",
         "end": "2025-12-15",
-        "serial": 41
+        "serial": 90
     },
     {
         "title": "Do Risk Treatment",
@@ -333,7 +741,7 @@
         "duration": 1,
         "start": "2025-06-26",
         "end": "2025-06-26",
-        "serial": 42
+        "serial": 91
     },
     {
         "title": "Obtain approval for residual risk",
@@ -341,7 +749,7 @@
         "duration": 1,
         "start": "2025-06-26",
         "end": "2025-06-26",
-        "serial": 43
+        "serial": 92
     },
     {
         "title": "Update Statement of Applicability (SoA)",
@@ -349,7 +757,7 @@
         "duration": 1,
         "start": "2025-06-27",
         "end": "2025-06-27",
-        "serial": 44
+        "serial": 93
     },
     {
         "title": "Risk treatment plan is implemented",
@@ -357,7 +765,7 @@
         "duration": 0,
         "start": "2025-06-27",
         "end": "2025-06-27",
-        "serial": 45
+        "serial": 94
     },
     {
         "title": "ISMS Operations",
@@ -365,7 +773,7 @@
         "duration": 90,
         "start": "2025-06-30",
         "end": "2025-10-31",
-        "serial": 46
+        "serial": 95
     },
     {
         "title": "Operate ISMS processes",
@@ -373,7 +781,7 @@
         "duration": 30,
         "start": "2025-11-03",
         "end": "2025-12-12",
-        "serial": 47
+        "serial": 96
     },
     {
         "title": "Control ISMS processes",
@@ -381,7 +789,7 @@
         "duration": 30,
         "start": "2025-12-15",
         "end": "2026-01-23",
-        "serial": 48
+        "serial": 97
     },
     {
         "title": "Manage outsourced functions",
@@ -389,7 +797,7 @@
         "duration": 30,
         "start": "2026-01-26",
         "end": "2026-03-06",
-        "serial": 49
+        "serial": 98
     },
     {
         "title": "Performance Evaluation",
@@ -397,7 +805,191 @@
         "duration": 57,
         "start": "2026-03-09",
         "end": "2026-05-26",
-        "serial": 50
+        "serial": 99
+    },
+    {
+        "title": "Monitoring",
+        "type": "S",
+        "duration": 22,
+        "start": "2026-03-09",
+        "end": "2026-04-07",
+        "serial": 100
+    },
+    {
+        "title": "Establish performance evaluation process",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-03-09",
+        "end": "2026-03-13",
+        "serial": 101
+    },
+    {
+        "title": "Identify information needs",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-03-16",
+        "end": "2026-03-20",
+        "serial": 102
+    },
+    {
+        "title": "Create and maintain measures",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-03-23",
+        "end": "2026-03-27",
+        "serial": 103
+    },
+    {
+        "title": "Monitor and measure",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-03-30",
+        "end": "2026-03-31",
+        "serial": 104
+    },
+    {
+        "title": "Analyse results",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-04-01",
+        "end": "2026-04-01",
+        "serial": 105
+    },
+    {
+        "title": "Evaluate information security performance",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-04-02",
+        "end": "2026-04-02",
+        "serial": 106
+    },
+    {
+        "title": "Evaluate ISMS effectiveness",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-04-03",
+        "end": "2026-04-03",
+        "serial": 107
+    },
+    {
+        "title": "Document results",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-04-06",
+        "end": "2026-04-07",
+        "serial": 108
+    },
+    {
+        "title": "Internal audit",
+        "type": "S",
+        "duration": 27,
+        "start": "2026-04-08",
+        "end": "2026-05-14",
+        "serial": 109
+    },
+    {
+        "title": "Establish internal audit process",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-04-08",
+        "end": "2026-04-14",
+        "serial": 110
+    },
+    {
+        "title": "Establish audit programme objectives",
+        "type": "T",
+        "duration": 3,
+        "start": "2026-04-15",
+        "end": "2026-04-17",
+        "serial": 111
+    },
+    {
+        "title": "Determine audit programme risks and opportunities",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-04-20",
+        "end": "2026-04-21",
+        "serial": 112
+    },
+    {
+        "title": "Evaluate audit programme risks and opportunities",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-04-22",
+        "end": "2026-04-23",
+        "serial": 113
+    },
+    {
+        "title": "Establish audit programme",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-04-24",
+        "end": "2026-04-27",
+        "serial": 114
+    },
+    {
+        "title": "Implement audit programme",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-04-28",
+        "end": "2026-05-04",
+        "serial": 115
+    },
+    {
+        "title": "Conduct internal audits",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-05-05",
+        "end": "2026-05-11",
+        "serial": 116
+    },
+    {
+        "title": "Report audit results",
+        "type": "T",
+        "duration": 3,
+        "start": "2026-05-12",
+        "end": "2026-05-14",
+        "serial": 117
+    },
+    {
+        "title": "Management review",
+        "type": "S",
+        "duration": 8,
+        "start": "2026-05-15",
+        "end": "2026-05-26",
+        "serial": 118
+    },
+    {
+        "title": "Establish management review process",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-05-15",
+        "end": "2026-05-15",
+        "serial": 119
+    },
+    {
+        "title": "Prepare management reports",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-05-15",
+        "end": "2026-05-21",
+        "serial": 120
+    },
+    {
+        "title": "Review management reports of the performance of the ISMS",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-05-15",
+        "end": "2026-05-15",
+        "serial": 121
+    },
+    {
+        "title": "Document and communicate results of management review",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-05-15",
+        "end": "2026-05-15",
+        "serial": 122
     },
     {
         "title": "Improvement",
@@ -405,7 +997,95 @@
         "duration": 25,
         "start": "2026-05-18",
         "end": "2026-06-19",
-        "serial": 51
+        "serial": 123
+    },
+    {
+        "title": "Establish ISMS improvement process",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-05-18",
+        "end": "2026-05-19",
+        "serial": 124
+    },
+    {
+        "title": "Establish ISMS change management process",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-05-20",
+        "end": "2026-05-21",
+        "serial": 125
+    },
+    {
+        "title": "Identify nonconformities",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-05-22",
+        "end": "2026-05-25",
+        "serial": 126
+    },
+    {
+        "title": "Review nonconformities",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-05-26",
+        "end": "2026-05-27",
+        "serial": 127
+    },
+    {
+        "title": "Perform root cause analysis",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-05-28",
+        "end": "2026-05-29",
+        "serial": 128
+    },
+    {
+        "title": "Determine corrective actions",
+        "type": "T",
+        "duration": 3,
+        "start": "2026-06-01",
+        "end": "2026-06-03",
+        "serial": 129
+    },
+    {
+        "title": "Plan corrective actions",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-06-04",
+        "end": "2026-06-05",
+        "serial": 130
+    },
+    {
+        "title": "Implement corrective actions",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-06-08",
+        "end": "2026-06-12",
+        "serial": 131
+    },
+    {
+        "title": "Assess corrective actions",
+        "type": "T",
+        "duration": 3,
+        "start": "2026-06-15",
+        "end": "2026-06-17",
+        "serial": 132
+    },
+    {
+        "title": "Document nonconformities",
+        "type": "T",
+        "duration": 2,
+        "start": "2026-06-18",
+        "end": "2026-06-19",
+        "serial": 133
+    },
+    {
+        "title": "ISMS is compliant",
+        "type": "M",
+        "duration": 0,
+        "start": "2026-06-19",
+        "end": "2026-06-19",
+        "serial": 134
     },
     {
         "title": "Certification audit",
@@ -413,7 +1093,86 @@
         "duration": 21,
         "start": "2026-06-22",
         "end": "2026-07-20",
-        "serial": 52
+        "serial": 135
+    },
+    {
+        "title": "Contact certification bodies",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-06-22",
+        "end": "2026-06-22",
+        "serial": 136
+    },
+    {
+        "title": "Request proposals",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-06-23",
+        "end": "2026-06-29",
+        "serial": 137
+    },
+    {
+        "title": "Review proposals",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-06-30",
+        "end": "2026-06-30",
+        "serial": 138
+    },
+    {
+        "title": "Select certification body",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-07-01",
+        "end": "2026-07-01",
+        "serial": 139
+    },
+    {
+        "title": "Sign engagement letter",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-07-02",
+        "end": "2026-07-02",
+        "serial": 140
+    },
+    {
+        "title": "Schedule stage 1 audit",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-07-03",
+        "end": "2026-07-03",
+        "serial": 141
+    },
+    {
+        "title": "Undergo stage 1 audit",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-07-06",
+        "end": "2026-07-10",
+        "serial": 142
+    },
+    {
+        "title": "Schedule stage 2 audit",
+        "type": "T",
+        "duration": 1,
+        "start": "2026-07-13",
+        "end": "2026-07-13",
+        "serial": 143
+    },
+    {
+        "title": "Undergo stage 2 audit",
+        "type": "T",
+        "duration": 5,
+        "start": "2026-07-14",
+        "end": "2026-07-20",
+        "serial": 144
+    },
+    {
+        "title": "ISMS is certified",
+        "type": "M",
+        "duration": 0,
+        "start": "2026-07-20",
+        "end": "2026-07-20",
+        "serial": 145
     }
 ]
-

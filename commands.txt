@@ -8,4 +8,8 @@ python manage.py createsuperuser
 
 
 **** create fake data
-python manage.py create_part1.py
+python manage.py create_fake_data
+python manage.py create_part1
+python manage.py import_clause
+python manage.py import_control
+python manage.py import_tasks_by_json 1

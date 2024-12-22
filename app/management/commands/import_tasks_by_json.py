@@ -27,8 +27,14 @@ class Command(BaseCommand):
             raise CommandError(f"Static JSON file not found at: {STATIC_JSON_PATH}")
         except json.JSONDecodeError:
             raise CommandError("Error decoding JSON file. Ensure the file is valid.")
-
+        # counts = {}
         for task in data:
+            # print(task['serial'])
+            # if task['serial'] in counts:
+            #     counts[task['serial']] = counts[task['serial']]  + 1
+            #     print(task['serial'])
+            # else:
+            #     counts[task['serial']] = 1
             task['start'] = datetime.strptime(task['start'], '%Y-%m-%d').date()
             task['end'] = datetime.strptime(task['end'], '%Y-%m-%d').date()
             Task.objects.create(
@@ -38,7 +44,8 @@ class Command(BaseCommand):
                 duration=task['duration'],
                 start=task['start'],
                 end=task['end'],
+                serial = task['serial'],
                 assignee=assignee
             )
-
+        # print(counts)
         self.stdout.write(self.style.SUCCESS(f'Tasks have been successfully created for framework ID {framework_id}.'))

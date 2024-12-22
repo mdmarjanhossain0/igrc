@@ -13,7 +13,7 @@ ALLOWED_HOSTS = ["*"]
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=100),
+    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
 }
 
