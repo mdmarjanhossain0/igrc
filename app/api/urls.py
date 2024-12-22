@@ -11,7 +11,7 @@ from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectMo
     TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, NoteViewSet, 
     CommentViewSet, AditorFeedBackViewSet, CommentByProjectTaskModelViewSet, NoteByProjectTaskModelViewSet, 
     EvidenceByProjectTaskModelViewSet, ContextFileByProjectTaskModelViewSet, RemoveEvidenceFileView, 
-    CommentByProjectControlModelViewSet, NoteByProjectControlModelViewSet)
+    CommentByProjectControlModelViewSet, NoteByProjectControlModelViewSet, ProjectStatusView)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
