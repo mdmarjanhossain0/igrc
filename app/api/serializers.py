@@ -8,7 +8,7 @@ from account.api.serializers import (
 	AccountSerializer
 )
 
-from django.db.models import Sum, Avg
+from django.db.models import Sum, Avg, Q
 from riskapp.api.serializers import RiskMitigationSerializer
 from riskapp.models import RiskMitigation
 
@@ -518,5 +518,5 @@ class AuditorSummarySerrializer(serializers.Serializer):
     
     def get_incomplete(self,obj):
         project_id = self.context.get('project_id')
-        incomplete = ProjectControl.objects.filter(project_id=project_id, status='completed').exclude(auditorfeedback__isnull=False, auditorfeedback__status='completed')
+        incomplete = ProjectControl.objects.filter(project_id=project_id, status='completed').exclude(Q(auditorfeedback__isnull=False)| Q(auditorfeedback__status='completed'))
         return ProjectControlSerializer(incomplete, many=True).data
