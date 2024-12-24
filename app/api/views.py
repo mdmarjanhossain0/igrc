@@ -792,9 +792,17 @@ class ProjectEvidenceView(APIView):
         # Serialize the evidence data
         serializer = EvidenceSerializer(evidence_list, many=True)
         
-        
+                # Construct the standard response
+        # Construct the standard response with count
+        response = {
+            "success": True,
+            "message": "Evidence retrieved successfully",
+            "count": evidence_list.count(),
+            "data": serializer.data,
+        }
         # Return the serialized data as a response
-        return Response(serializer.data)
+        return Response(response)
+    
 class AuditorSummaryView(APIView):
 	def get(self, request, project_id):
 		data = {
