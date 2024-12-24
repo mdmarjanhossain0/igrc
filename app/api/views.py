@@ -798,7 +798,7 @@ class ProjectEvidenceView(APIView):
             "success": True,
             "message": "Evidence retrieved successfully",
             "count": evidence_list.count(),
-            "data": serializer.data,
+            "results": serializer.data,
         }
         # Return the serialized data as a response
         return Response(response)
