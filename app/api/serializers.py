@@ -64,7 +64,6 @@ class TenantSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
 class ProjectSerializer(serializers.ModelSerializer):
     completion = serializers.SerializerMethodField("get_completion")
     implementation = serializers.SerializerMethodField("get_implementation")
@@ -373,6 +372,7 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
         return CommentSerializer(obj.comment_set.all(), many=True).data
     def get_notes(self, obj):
         return NoteSerializer(obj.note_set.all(), many=True).data
+
 
 class AuditorFeedbackSerializer(serializers.ModelSerializer):
     class Meta:

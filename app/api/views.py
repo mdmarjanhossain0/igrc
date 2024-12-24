@@ -717,7 +717,31 @@ class NoteByProjectControlModelViewSet(viewsets.ModelViewSet):
 
 	def perform_destroy(self, instance):
 		instance.delete()
+  
+class AuditorFeedbackByProjectControlModelViewSet(viewsets.ModelViewSet):
+	queryset = AuditorFeedback.objects.all().order_by("-pk")
+	serializer_class = AuditorFeedbackSerializer
 
+	def get_queryset(self):
+		
+		control_id = self.kwargs.get('control_id')
+		return AuditorFeedback.objects.filter(control_id=control_id)
+
+	def perform_create(self, serializer):
+
+		control_id = self.kwargs.get('control_id')
+		control = ProjectControl.objects.get(id=control_id)
+		serializer.save(control=control)
+
+	def perform_update(self, serializer):
+
+		control_id = self.kwargs.get('control_id')
+		control = ProjectControl.objects.get(id=control_id)
+		serializer.save(control=control)
+
+	def perform_destroy(self, instance):
+		instance.delete()
+  
 class ProjectStatusView(APIView):
 	permission_classes = [IsAuthenticated]
 
@@ -755,3 +779,18 @@ class ProjectStatusView(APIView):
 			serializer = ProjectStatusSerializer(data=data)
 			serializer.is_valid(raise_exception=True)
 			return Response(serializer.data)
+
+class ProjectEvidenceView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, project_id):
+        # Retrieve all evidence related to the given project ID
+        evidence_list = Evidence.objects.filter(task__project__id=project_id)
+        
+        
+        # Serialize the evidence data
+        serializer = EvidenceSerializer(evidence_list, many=True)
+        
+        
+        # Return the serialized data as a response
+        return Response(serializer.data)

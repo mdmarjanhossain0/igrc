@@ -11,7 +11,8 @@ from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectMo
     TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, NoteViewSet, 
     CommentViewSet, AditorFeedBackViewSet, CommentByProjectTaskModelViewSet, NoteByProjectTaskModelViewSet, 
     EvidenceByProjectTaskModelViewSet, ContextFileByProjectTaskModelViewSet, RemoveEvidenceFileView, 
-    CommentByProjectControlModelViewSet, NoteByProjectControlModelViewSet, ProjectStatusView)
+    CommentByProjectControlModelViewSet, NoteByProjectControlModelViewSet, ProjectStatusView,
+    AuditorFeedbackByProjectControlModelViewSet, ProjectEvidenceView)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -56,11 +57,12 @@ router.register(r'evidence_set/(?P<tenant_id>\d+)', TenantEvidenceModelViewSet, 
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/comments', CommentByProjectTaskModelViewSet, basename='project-task-comments'),
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/notes', NoteByProjectTaskModelViewSet, basename='project-task-notes'),
 router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/evidences', EvidenceByProjectTaskModelViewSet, basename='project-task-evidences'),
-router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/contexts', ContextFileByProjectTaskModelViewSet, basename='project-task-evidences'),
+router.register(r'project/(?P<project_id>\d+)/task/(?P<task_id>\d+)/contexts', ContextFileByProjectTaskModelViewSet, basename='project-task-contexts'),
 
 # Project Control
 router.register(r'project/(?P<project_id>\d+)/control/(?P<control_id>\d+)/comments', CommentByProjectControlModelViewSet, basename='project-control-comments'),
 router.register(r'project/(?P<project_id>\d+)/control/(?P<control_id>\d+)/notes', NoteByProjectControlModelViewSet, basename='project-control-notes'),
+router.register(r'project/(?P<project_id>\d+)/control/(?P<control_id>\d+)/auditor-feedback', AuditorFeedbackByProjectControlModelViewSet, basename='project-control-auditor'),
 
 
 
@@ -97,6 +99,8 @@ urlpatterns = [
     path("normative_reference/<int:project_id>/", normative_reference_view, name="normative_reference_view"),
     path('project/task/evidence/<int:evidence_id>/file/<int:file_id>/remove/', RemoveEvidenceFileView.as_view(), name='remove-evidence-file'),
     path('project/<int:project_id>/status/', ProjectStatusView.as_view(), name='project-status'),
+    path('project/<int:project_id>/evidences/', ProjectEvidenceView.as_view(), name='project-evidence'),
+    
 
 
 ]
