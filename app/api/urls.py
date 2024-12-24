@@ -1,18 +1,19 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import (ClauseModelViewSet, ClausesByProjectView, CommentByProjectModelViewSet, 
-    ControlModelViewSet, ControlsByProjectView, ControlWithSubControlsByProjectView,
-    EvidenceModelViewSet, FrameworkModelViewSet, normative_reference_view, PolicyModelViewSet,
-    ProjectClauseModelViewSet, ProjectControlModelViewSet, ProjectMemberByProject,
-    ProjectMemberModelViewSet, ProjectMembersByProject, ProjectModelViewSet,
-    ProjectPoicyModelViewSet, ProjectScratchpadModelViewSet, ProjectSubControlModelViewSet,
-    ProjectTaskModelViewSet, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
-    TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, NoteViewSet, 
-    CommentViewSet, AditorFeedBackViewSet, CommentByProjectTaskModelViewSet, NoteByProjectTaskModelViewSet, 
-    EvidenceByProjectTaskModelViewSet, ContextFileByProjectTaskModelViewSet, RemoveEvidenceFileView, 
-    CommentByProjectControlModelViewSet, NoteByProjectControlModelViewSet, ProjectStatusView,
-    AuditorFeedbackByProjectControlModelViewSet, ProjectEvidenceView)
+from .views import (
+    AditorFeedBackViewSet, AuditorSummaryView, ClauseModelViewSet, ClausesByProjectView,
+    CommentByProjectControlModelViewSet, CommentByProjectModelViewSet, CommentByProjectTaskModelViewSet,
+    CommentViewSet, ContextFileByProjectTaskModelViewSet, ControlModelViewSet, ControlsByProjectView,
+    ControlWithSubControlsByProjectView, EvidenceModelViewSet, FrameworkModelViewSet, normative_reference_view,
+    PolicyModelViewSet, ProjectClauseModelViewSet, ProjectControlModelViewSet, ProjectMemberByProject,
+    ProjectMemberModelViewSet, ProjectMembersByProject, ProjectModelViewSet, ProjectPoicyModelViewSet,
+    ProjectScratchpadModelViewSet, ProjectSubControlModelViewSet, ProjectTaskModelViewSet, SubControlModelViewSet,
+    SubControlsByProjectView, TaskModelViewSet, TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet,
+    TenantPolicyModelViewSet, NoteViewSet, NoteByProjectTaskModelViewSet, EvidenceByProjectTaskModelViewSet,
+    RemoveEvidenceFileView, NoteByProjectControlModelViewSet, ProjectStatusView,
+    AuditorFeedbackByProjectControlModelViewSet, ProjectEvidenceView
+)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -101,6 +102,7 @@ urlpatterns = [
     path('project/<int:project_id>/status/', ProjectStatusView.as_view(), name='project-status'),
     path('project/<int:project_id>/evidences/', ProjectEvidenceView.as_view(), name='project-evidence'),
     
+    path('project/<int:project_id>/auditor-summary/', AuditorSummaryView.as_view(), name='project-auditor-summary'),
 
 
 ]

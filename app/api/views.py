@@ -16,11 +16,11 @@ from app.models import (Clause, Comment, Control, Evidence, EvidenceFile, Framew
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
 	IsProjectManager, Or)
-from .serializers import (AuditorFeedbackSerializer, ClauseSerializer, CommentSerializer,
-	ContextFileSerializer, ControlSerializer, EvidenceSerializer, FrameworkSerializer,
-	NormativeReferencesSerializer, NoteSerializer, PolicySerializer, ProjectClauseSerializer,
-	ProjectControlSerializer, ProjectControlWithSubControlSerializer, ProjectMemberSerializer,
-	ProjectScratchpadSerializer, ProjectSerializer, ProjectStatusSerializer,
+from .serializers import (AuditorFeedbackSerializer, AuditorSummarySerrializer, ClauseSerializer,
+	CommentSerializer, ContextFileSerializer, ControlSerializer, EvidenceSerializer,
+	FrameworkSerializer, NormativeReferencesSerializer, NoteSerializer, PolicySerializer,
+	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
+	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer, ProjectStatusSerializer,
 	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
 	TenantPolicySerializer, TenantSerializer)
 from rest_framework.decorators import action
@@ -765,7 +765,8 @@ class ProjectStatusView(APIView):
 			# Calculate evidence progress
 			evidence_required_tasks = tasks.filter(evidence_required=True)
 			total_evidence_required_tasks = evidence_required_tasks.count()
-			evidence_available_tasks = evidence_required_tasks.filter(evidence__isnull=False).distinct().count()
+			evidence_available_tasks = evidence_required_tasks.filter(evidence_provided=100).count()
+			# evidence_progress = evidence_required_tasks.aggregate(models.Avg('evidence_provided'))['evidence_provided__avg'] or 0
 			evidence_progress = (evidence_available_tasks / total_evidence_required_tasks) * 100 if total_evidence_required_tasks > 0 else 0
 
 			# Prepare response data
@@ -794,3 +795,11 @@ class ProjectEvidenceView(APIView):
         
         # Return the serialized data as a response
         return Response(serializer.data)
+class AuditorSummaryView(APIView):
+	def get(self, request, project_id):
+		data = {
+			'project_id':project_id
+		}
+		serializer=AuditorSummarySerrializer(data=data,context={'project_id':project_id})
+		serializer.is_valid(raise_exception=True)
+		return Response(serializer.data)

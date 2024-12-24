@@ -8,7 +8,7 @@ from account.api.serializers import (
 	AccountSerializer
 )
 
-from django.db.models import Sum, Avg
+from django.db.models import Sum, Avg, Q
 from riskapp.api.serializers import RiskMitigationSerializer
 from riskapp.models import RiskMitigation
 
@@ -502,14 +502,21 @@ class ProjectStatusSerializer(serializers.Serializer):
     evidence_progress = serializers.FloatField()
 
 
-# class AuditorControlAccessSerializer(serializers.Serializer):
-#     ready_for_auditor = serializers.SerializerMethodField()
-#     username = serializers.CharField()
-#     controls = serializers.ListField(
-#         child=serializers.CharField()
-#     )
+class AuditorSummarySerrializer(serializers.Serializer):
+    ready_for_auditor=serializers.SerializerMethodField()
+    completed = serializers.SerializerMethodField()
+    incomplete = serializers.SerializerMethodField()
 
-#     def get_ready_for_auditor(self, obj):
-#         # project = 
-        
+    def get_ready_for_auditor(self,obj):
+        project_id=self.context.get('project_id')
+        return ProjectControlSerializer(ProjectControl.objects.filter(project_id=project_id, status="completed").exclude(auditorfeedback__isnull=False), many=True).data
 
+    def get_completed(self, obj):
+        project_id = self.context.get('project_id')
+        completed = ProjectControl.objects.filter(project_id=project_id, status='completed', auditorfeedback__status='completed')
+        return ProjectControlSerializer(completed, many=True).data
+    
+    def get_incomplete(self,obj):
+        project_id = self.context.get('project_id')
+        incomplete = ProjectControl.objects.filter(project_id=project_id, status='completed').exclude(Q(auditorfeedback__isnull=True)| Q(auditorfeedback__status='completed'))
+        return ProjectControlSerializer(incomplete, many=True).data

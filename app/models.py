@@ -281,6 +281,7 @@ class ProjectTask(BaseModel):
 	is_completed = models.BooleanField(default=False)
 	is_audited = models.BooleanField(default=False)
 	evidence_required = models.BooleanField(default=True)
+	evidence_provided =models.IntegerField(default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
 
 	deadline = models.DateTimeField(null=True, blank=True)
 	completed_at = models.DateTimeField(null=True, blank=True)
