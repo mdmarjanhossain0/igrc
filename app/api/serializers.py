@@ -340,8 +340,9 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
     
     def get_framework_name(self, obj):
         projects = []
-        for project in obj.project.all():
-            projects.append(project.name)
+        for item in obj.project.all():
+            print(item)
+            projects.append(item.title)
         return projects
     
     def get_evidence_progress(self, obj):

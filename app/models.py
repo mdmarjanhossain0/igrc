@@ -473,9 +473,7 @@ class ContextFile(BaseModel):
 
 class EvidenceFile(BaseModel):
     def upload_to(instance, filename):
-        # Generate a unique UUID for each file
         unique_prefix = uuid.uuid4().hex
-        # Return the path with UUID prefix and original file name
         return f'evidence/{unique_prefix}-{filename}'
 
     file = models.FileField(upload_to=upload_to, null=True, blank=True)
