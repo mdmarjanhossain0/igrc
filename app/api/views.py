@@ -131,6 +131,13 @@ class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 	queryset = TenantPolicy.objects.all()
 	serializer_class = TenantPolicySerializer
 
+	def get_queryset(self):
+		tenant_id = self.kwargs.get('tenant_id', None)
+		if tenant_id:
+			return TenantPolicy.objects.filter(project__tenant_id=tenant_id).distinct()
+		else:
+			return TenantPolicy.objects.all()
+
 class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
 	queryset = TenantPolicy.objects.all()
 	serializer_class = TenantPolicySerializer
