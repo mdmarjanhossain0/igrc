@@ -186,6 +186,7 @@ class ProjectControlSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     notes=serializers.SerializerMethodField()
     auditor_feedback=serializers.SerializerMethodField()
+
     class Meta:
         model = ProjectControl
         fields = '__all__'
@@ -327,6 +328,7 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
     evidence_progress = serializers.SerializerMethodField()
     framework_name = serializers.SerializerMethodField()
     projects = serializers.SerializerMethodField()
+
     class Meta:
         model = ProjectControl
         fields = '__all__'
@@ -335,15 +337,13 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
     def get_framework_name(self, obj):
         frameworks = []
         for project in obj.project.all():
-            frameworks.append(project.framework.name)
-        return frameworks
+            frameworks.append(project.framework)
+        data = FrameworkSerializer(frameworks, many=True)
+        return data.data
     
     def get_projects(self, obj):
-        projects = []
-        for item in obj.project.all():
-            print(item)
-            projects.append(item.title)
-        return projects
+        data = ProjectSerializer(obj.project.all(), many=True)
+        return data.data
     
     def get_evidence_progress(self, obj):
         try:
@@ -532,3 +532,10 @@ class AuditorSummarySerrializer(serializers.Serializer):
         project_id = self.context.get('project_id')
         incomplete = ProjectControl.objects.filter(project_id=project_id, status='completed').exclude(Q(auditorfeedback__isnull=True)| Q(auditorfeedback__status='completed'))
         return ProjectControlSerializer(incomplete, many=True).data
+
+
+class ControlAddToProjectSerializer(serializers.Serializer):
+    control_id = serializers.IntegerField()
+    project_id = serializers.IntegerField()
+
+    

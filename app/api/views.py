@@ -22,7 +22,9 @@ from .serializers import (AuditorFeedbackSerializer, AuditorSummarySerrializer, 
 	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
 	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer, ProjectStatusSerializer,
 	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
-	TenantPolicySerializer, TenantSerializer)
+	TenantPolicySerializer, TenantSerializer,
+	ControlAddToProjectSerializer
+	)
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -32,6 +34,9 @@ from drf_yasg import openapi
 from app.api.utils import (
 	EvidenceFilterSet
 )
+from drf_yasg.utils import swagger_auto_schema
+
+
 
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -145,7 +150,14 @@ class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
 
 class ProjectControlModelViewSet(viewsets.ModelViewSet):
 	queryset = ProjectControl.objects.all()
-	serializer_class = ProjectControlSerializer
+	serializer_class = ProjectControlWithSubControlSerializer
+
+	def get_queryset(self):
+		tenant_id = self.kwargs.get('tenant_id', None)
+		if tenant_id:
+			return ProjectControl.objects.filter(project__tenant_id=tenant_id).distinct()
+		else:
+			return ProjectControl.objects.all()
 
 class ProjectSubControlModelViewSet(viewsets.ModelViewSet):
 	queryset = ProjectSubControl.objects.all()
@@ -327,7 +339,7 @@ class TasksByProjectView(viewsets.ModelViewSet):
 				return Response({"message":"Updated Successfully"}, status=status.HTTP_200_OK)
 
 			raise PermissionDenied("You are only allowed to update the completion field.")
-    
+	
 	def perform_destroy(self, instance):
 		instance.delete()
 	
@@ -521,121 +533,121 @@ class NoteByProjectTaskModelViewSet(viewsets.ModelViewSet):
 		instance.delete()
 
 class EvidenceByProjectTaskModelViewSet(viewsets.ModelViewSet):
-    serializer_class = EvidenceSerializer
+	serializer_class = EvidenceSerializer
 
-    def get_queryset(self):
-        task_id = self.kwargs.get('task_id')
-        if task_id:
-            return Evidence.objects.filter(task__id=task_id)  # Filter by task ID in ManyToManyField
-        return Evidence.objects.none()  # Return an empty queryset if `task_id` is not provided
+	def get_queryset(self):
+		task_id = self.kwargs.get('task_id')
+		if task_id:
+			return Evidence.objects.filter(task__id=task_id)  # Filter by task ID in ManyToManyField
+		return Evidence.objects.none()  # Return an empty queryset if `task_id` is not provided
 
-    def perform_create(self, serializer):
-        task_id = self.kwargs.get('task_id')
-        if task_id:
-            task = ProjectTask.objects.get(id=task_id)  # Fetch the task instance
-            evidence = serializer.save()  # Save the Evidence instance
+	def perform_create(self, serializer):
+		task_id = self.kwargs.get('task_id')
+		if task_id:
+			task = ProjectTask.objects.get(id=task_id)  # Fetch the task instance
+			evidence = serializer.save()  # Save the Evidence instance
 
-            # Add the task to the ManyToManyField
-            evidence.task.add(task)
+			# Add the task to the ManyToManyField
+			evidence.task.add(task)
 
-            # Handling uploaded files
-            files = self.request.FILES.getlist('files')
-            for file in files:
-                evidence_file = EvidenceFile.objects.create(file=file)
-                evidence.files.add(evidence_file)  # Add each file to the ManyToManyField
+			# Handling uploaded files
+			files = self.request.FILES.getlist('files')
+			for file in files:
+				evidence_file = EvidenceFile.objects.create(file=file)
+				evidence.files.add(evidence_file)  # Add each file to the ManyToManyField
 
-    def perform_update(self, serializer):
-        task_id = self.kwargs.get('task_id')
-        if task_id:
-            task = ProjectTask.objects.get(id=task_id)  # Fetch the task instance
-            evidence = serializer.save()  # Save the updated Evidence instance
+	def perform_update(self, serializer):
+		task_id = self.kwargs.get('task_id')
+		if task_id:
+			task = ProjectTask.objects.get(id=task_id)  # Fetch the task instance
+			evidence = serializer.save()  # Save the updated Evidence instance
 
-            # Add the task to the ManyToManyField (ensure it is included)
-            evidence.task.add(task)
+			# Add the task to the ManyToManyField (ensure it is included)
+			evidence.task.add(task)
 
-            # Handling uploaded files during update
-            files = self.request.FILES.getlist('files')
-            if files:
-                # Optionally clear existing files if needed
-                # evidence.files.clear()  
-                for file in files:
-                    evidence_file = EvidenceFile.objects.create(file=file)
-                    evidence.files.add(evidence_file)
+			# Handling uploaded files during update
+			files = self.request.FILES.getlist('files')
+			if files:
+				# Optionally clear existing files if needed
+				# evidence.files.clear()  
+				for file in files:
+					evidence_file = EvidenceFile.objects.create(file=file)
+					evidence.files.add(evidence_file)
 
-    def perform_destroy(self, instance):
-        instance.delete()
+	def perform_destroy(self, instance):
+		instance.delete()
 
 
 class ContextFileByProjectTaskModelViewSet(viewsets.ModelViewSet):
-    
-    serializer_class = ContextFileSerializer
+	
+	serializer_class = ContextFileSerializer
 
-    def get_queryset(self):
-        project_id = self.kwargs.get('project_id')
-        task_id = self.kwargs.get('task_id')
-        
-        return ContextFile.objects.filter(project__id=project_id, task__id=task_id)
-    def perform_create(self, serializer):
-        try:
-            project_id = self.kwargs.get('project_id')
-            project = Project.objects.get(id=project_id)
-            task_id = self.kwargs.get('task_id')
-            task = ProjectTask.objects.get(id=task_id)
-            uploaded_file = self.request.FILES.get('file')
-            serializer.save(file=uploaded_file, project=project, task=task)
-            
-        except Exception as e:
-            print(f"Error: {e}")
-            return Response({"error": "Error creating context file"}, status=status.HTTP_400_BAD_REQUEST)
-           
+	def get_queryset(self):
+		project_id = self.kwargs.get('project_id')
+		task_id = self.kwargs.get('task_id')
+		
+		return ContextFile.objects.filter(project__id=project_id, task__id=task_id)
+	def perform_create(self, serializer):
+		try:
+			project_id = self.kwargs.get('project_id')
+			project = Project.objects.get(id=project_id)
+			task_id = self.kwargs.get('task_id')
+			task = ProjectTask.objects.get(id=task_id)
+			uploaded_file = self.request.FILES.get('file')
+			serializer.save(file=uploaded_file, project=project, task=task)
+			
+		except Exception as e:
+			print(f"Error: {e}")
+			return Response({"error": "Error creating context file"}, status=status.HTTP_400_BAD_REQUEST)
+		   
 
-    def perform_update(self, serializer):
-        # Retrieve project and task based on kwargs
-        project_id = self.kwargs.get('project_id')
-        project = Project.objects.get(id=project_id)
-        task_id = self.kwargs.get('task_id')
-        task = ProjectTask.objects.get(id=task_id)
-        uploaded_file = self.request.FILES.get('file')
-        serializer.save(project=project, task=task, file=uploaded_file)
+	def perform_update(self, serializer):
+		# Retrieve project and task based on kwargs
+		project_id = self.kwargs.get('project_id')
+		project = Project.objects.get(id=project_id)
+		task_id = self.kwargs.get('task_id')
+		task = ProjectTask.objects.get(id=task_id)
+		uploaded_file = self.request.FILES.get('file')
+		serializer.save(project=project, task=task, file=uploaded_file)
 		
 
 
 
-    def perform_destroy(self, instance):
-        # Delete the instance
-        instance.delete()
+	def perform_destroy(self, instance):
+		# Delete the instance
+		instance.delete()
 
   
 class RemoveEvidenceFileView(APIView):
-    
-    def delete(self, request, evidence_id, file_id):
+	
+	def delete(self, request, evidence_id, file_id):
 
-        evidence = Evidence.objects.get(id=evidence_id)
-        evidence_file = EvidenceFile.objects.get(id=file_id)
-        
+		evidence = Evidence.objects.get(id=evidence_id)
+		evidence_file = EvidenceFile.objects.get(id=file_id)
 		
-        # Check if the file is associated with the evidence
-        if not evidence.files.filter(id=file_id).exists():
-            return Response(
-                {"detail": "File not associated with this evidence."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+		
+		# Check if the file is associated with the evidence
+		if not evidence.files.filter(id=file_id).exists():
+			return Response(
+				{"detail": "File not associated with this evidence."},
+				status=status.HTTP_400_BAD_REQUEST
+			)
 
-        # Remove the file from the evidence's ManyToMany relationship
-        evidence.files.remove(evidence_file)
-                # Delete the file from the filesystem
-        if evidence_file.file:  # Assuming the file field is named 'file'
-            file_path = evidence_file.file.path  # Get the file path
-            
-            if os.path.isfile(file_path):
-                os.remove(file_path)  
-        evidence_file.delete()
+		# Remove the file from the evidence's ManyToMany relationship
+		evidence.files.remove(evidence_file)
+				# Delete the file from the filesystem
+		if evidence_file.file:  # Assuming the file field is named 'file'
+			file_path = evidence_file.file.path  # Get the file path
+			
+			if os.path.isfile(file_path):
+				os.remove(file_path)  
+		evidence_file.delete()
 		
-        return Response(
-            {"detail": "File removed from the evidence successfully."},
-            status=status.HTTP_204_NO_CONTENT
-        )
-        
+		return Response(
+			{"detail": "File removed from the evidence successfully."},
+			status=status.HTTP_204_NO_CONTENT
+		)
+		
 class ProjectScratchpadModelViewSet(viewsets.ModelViewSet):
 	serializer_class = ProjectScratchpadSerializer
 
@@ -788,27 +800,27 @@ class ProjectStatusView(APIView):
 			return Response(serializer.data)
 
 class ProjectEvidenceView(APIView):
-    permission_classes = [IsAuthenticated]
-    
-    def get(self, request, project_id):
-        # Retrieve all evidence related to the given project ID
-        evidence_list = Evidence.objects.filter(task__project__id=project_id).distinct()
-        
-        
-        # Serialize the evidence data
-        serializer = EvidenceSerializer(evidence_list, many=True)
-        
-                # Construct the standard response
-        # Construct the standard response with count
-        response = {
-            "success": True,
-            "message": "Evidence retrieved successfully",
-            "count": evidence_list.count(),
-            "results": serializer.data,
-        }
-        # Return the serialized data as a response
-        return Response(response)
-    
+	permission_classes = [IsAuthenticated]
+	
+	def get(self, request, project_id):
+		# Retrieve all evidence related to the given project ID
+		evidence_list = Evidence.objects.filter(task__project__id=project_id).distinct()
+		
+		
+		# Serialize the evidence data
+		serializer = EvidenceSerializer(evidence_list, many=True)
+		
+				# Construct the standard response
+		# Construct the standard response with count
+		response = {
+			"success": True,
+			"message": "Evidence retrieved successfully",
+			"count": evidence_list.count(),
+			"results": serializer.data,
+		}
+		# Return the serialized data as a response
+		return Response(response)
+	
 class AuditorSummaryView(APIView):
 	def get(self, request, project_id):
 		data = {
@@ -817,3 +829,46 @@ class AuditorSummaryView(APIView):
 		serializer=AuditorSummarySerrializer(data=data,context={'project_id':project_id})
 		serializer.is_valid(raise_exception=True)
 		return Response(serializer.data)
+
+
+class ControlAddToProjectView(APIView):
+
+	@swagger_auto_schema(
+        request_body=ControlAddToProjectSerializer,
+        responses={
+            200: openapi.Response(
+                description="Successs",
+                examples={
+                    "application/json": {
+                        "response": "success",
+                        "msg": "Successfully added"
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="Error: Not Found",
+                examples={
+                    "application/json": {
+                        "response": "error",
+                        "msg": "Not found"
+                    }
+                }
+            ),
+        },
+    )
+	def post(self, request, *args, **kwargs):
+		control_id = request.data.get('control_id')
+		project_id = request.data.get('project_id')
+		try:
+			control = ProjectControl.objects.get(id=control_id)
+			project = Project.objects.get(id=project_id)
+			control.project.add(project)
+			return Response({
+				"response": "success",
+				"msg": "Successfully added"
+			}, status=status.HTTP_200_OK)
+		except:
+			return Response({
+				"response": "error",
+				"msg": "Not found"
+			}, status=404)

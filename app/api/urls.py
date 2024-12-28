@@ -12,7 +12,8 @@ from .views import (
     SubControlsByProjectView, TaskModelViewSet, TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet,
     TenantPolicyModelViewSet, NoteViewSet, NoteByProjectTaskModelViewSet, EvidenceByProjectTaskModelViewSet,
     RemoveEvidenceFileView, NoteByProjectControlModelViewSet, ProjectStatusView,
-    AuditorFeedbackByProjectControlModelViewSet, ProjectEvidenceView
+    AuditorFeedbackByProjectControlModelViewSet, ProjectEvidenceView,
+    ControlAddToProjectView
 )
 
 from drf_yasg.views import get_schema_view
@@ -34,7 +35,7 @@ router.register(r'project-members', ProjectMemberModelViewSet)
 router.register(r'project-tasks', ProjectTaskModelViewSet)
 router.register(r'project-clauses', ProjectClauseModelViewSet)
 router.register(r'tenant-policies', TenantPolicyModelViewSet)
-router.register(r'project-controls', ProjectControlModelViewSet)
+router.register(r'project-controls/(?P<tenant_id>\d+)', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
 router.register(r'evidence', EvidenceModelViewSet)
 router.register(r'note', NoteViewSet)
@@ -103,6 +104,5 @@ urlpatterns = [
     path('project/<int:project_id>/evidences/', ProjectEvidenceView.as_view(), name='project-evidence'),
     
     path('project/<int:project_id>/auditor-summary/', AuditorSummaryView.as_view(), name='project-auditor-summary'),
-
-
+    path("control_add_to_project/", ControlAddToProjectView.as_view(),)
 ]
