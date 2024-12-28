@@ -169,7 +169,7 @@ class EvidenceByProjectView(viewsets.ModelViewSet):
 	serializer_class = EvidenceSerializer
 	def get_queryset(self):
 		project_id = self.kwargs.get('project_id')
-		return Evidence.objects.filter(project_id=project_id)
+		return Evidence.objects.filter(project__in=project_id)
 	
 
 
@@ -208,7 +208,7 @@ class ControlsByProjectView(viewsets.ModelViewSet):
 	
 	def get_queryset(self):
 		project_id = self.kwargs.get('project_id')
-		return ProjectControl.objects.filter(project_id=project_id)
+		return ProjectControl.objects.filter(project__in=project_id)
 
 	def perform_create(self, serializer):
 		project_id = self.kwargs.get('project_id')
@@ -272,7 +272,7 @@ class ControlWithSubControlsByProjectView(viewsets.ModelViewSet):
 	
 	def get_queryset(self):
 		project_id = self.kwargs.get('project_id')
-		return ProjectControl.objects.filter(project_id=project_id)
+		return ProjectControl.objects.filter(project__in=project_id)
 
 
 	def perform_create(self, serializer):
@@ -521,44 +521,50 @@ class NoteByProjectTaskModelViewSet(viewsets.ModelViewSet):
 		instance.delete()
 
 class EvidenceByProjectTaskModelViewSet(viewsets.ModelViewSet):
-	serializer_class = EvidenceSerializer
-	
-	def get_queryset(self):
-		# project_id = self.kwargs.get('project_id')
-		task_id = self.kwargs.get('task_id')
-		return Evidence.objects.filter(task_id=task_id)
+    serializer_class = EvidenceSerializer
 
-	def perform_create(self, serializer):
-		# project_id = self.kwargs.get('project_id')
-		# project = Project.objects.get(id=project_id)
-		task_id = self.kwargs.get('task_id')
-		task = ProjectTask.objects.get(id=task_id)
-		evidence = serializer.save(task=task)
+    def get_queryset(self):
+        task_id = self.kwargs.get('task_id')
+        if task_id:
+            return Evidence.objects.filter(task__id=task_id)  # Filter by task ID in ManyToManyField
+        return Evidence.objects.none()  # Return an empty queryset if `task_id` is not provided
 
-		# Handling uploaded files
-		files = self.request.FILES.getlist('files')
-		for file in files:
-			evidence_file = EvidenceFile.objects.create(file=file)
-			evidence.files.add(evidence_file)
-      
-	def perform_update(self, serializer):
-		# project_id = self.kwargs.get('project_id')
-		# project = Project.objects.get(id=project_id)
-		task_id = self.kwargs.get('task_id')
-		task = ProjectTask.objects.get(id=task_id)
-		evidence = serializer.save(task=task)
-		# Handling uploaded files during update
-		files = self.request.FILES.getlist('files')
-		# print("xyz", len(files))
-		if files:
-			# First remove existing files if necessary
-			# evidence.files.clear()  # Remove all existing files
-			for file in files:
-				evidence_file = EvidenceFile.objects.create(file=file)
-				evidence.files.add(evidence_file)
+    def perform_create(self, serializer):
+        task_id = self.kwargs.get('task_id')
+        if task_id:
+            task = ProjectTask.objects.get(id=task_id)  # Fetch the task instance
+            evidence = serializer.save()  # Save the Evidence instance
 
-	def perform_destroy(self, instance):
-		instance.delete()
+            # Add the task to the ManyToManyField
+            evidence.task.add(task)
+
+            # Handling uploaded files
+            files = self.request.FILES.getlist('files')
+            for file in files:
+                evidence_file = EvidenceFile.objects.create(file=file)
+                evidence.files.add(evidence_file)  # Add each file to the ManyToManyField
+
+    def perform_update(self, serializer):
+        task_id = self.kwargs.get('task_id')
+        if task_id:
+            task = ProjectTask.objects.get(id=task_id)  # Fetch the task instance
+            evidence = serializer.save()  # Save the updated Evidence instance
+
+            # Add the task to the ManyToManyField (ensure it is included)
+            evidence.task.add(task)
+
+            # Handling uploaded files during update
+            files = self.request.FILES.getlist('files')
+            if files:
+                # Optionally clear existing files if needed
+                # evidence.files.clear()  
+                for file in files:
+                    evidence_file = EvidenceFile.objects.create(file=file)
+                    evidence.files.add(evidence_file)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
 
 class ContextFileByProjectTaskModelViewSet(viewsets.ModelViewSet):
     
@@ -786,7 +792,7 @@ class ProjectEvidenceView(APIView):
     
     def get(self, request, project_id):
         # Retrieve all evidence related to the given project ID
-        evidence_list = Evidence.objects.filter(task__project__id=project_id)
+        evidence_list = Evidence.objects.filter(task__project__id=project_id).distinct()
         
         
         # Serialize the evidence data

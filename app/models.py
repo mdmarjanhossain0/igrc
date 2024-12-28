@@ -13,6 +13,7 @@ from grc_config.models import (
 	StatusDB
 )
 import os
+import uuid
 
 class Framework(BaseModel):
 	id=models.AutoField(primary_key=True)
@@ -289,6 +290,7 @@ class ProjectTask(BaseModel):
 	start = models.DateField(null=True, blank=True)
 	end = models.DateField(null=True, blank=True)
 	assignee = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True)
+	
 	ref_id = models.CharField(max_length=8, null=False, blank=True)
 	# clause = models.ManyToManyField(Clause, blank=True)
 	subclauses = models.ManyToManyField('ProjectSubClause', blank=True, related_name='project_subclauses')
@@ -382,7 +384,8 @@ class ProjectControl(BaseModel):
 		(MODARATE, MODARATE),
 		(HARD, HARD),
 	]
-	project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	# project = models.ForeignKey(Project, on_delete=models.CASCADE)
+	project = models.ManyToManyField(Project, blank=True)
 	control = models.ForeignKey(Control, on_delete=models.SET_NULL, null=True, blank=True)
 	project_sub_clause = models.ForeignKey(ProjectSubClause, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -467,18 +470,25 @@ class ContextFile(BaseModel):
 	file = models.FileField(upload_to='context/', null=True, blank=True)
 	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
 	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)	
-   
+
 class EvidenceFile(BaseModel):
-	file = models.FileField(upload_to='evidence/', null=True, blank=True)
+    def upload_to(instance, filename):
+        # Generate a unique UUID for each file
+        unique_prefix = uuid.uuid4().hex
+        # Return the path with UUID prefix and original file name
+        return f'evidence/{unique_prefix}-{filename}'
+
+    file = models.FileField(upload_to=upload_to, null=True, blank=True)
+
 
 class Evidence(BaseModel):
 	tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
-	project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True, blank=True)
-	task = models.ForeignKey(ProjectTask, on_delete=models.SET_NULL, null=True, blank=True)
-	clause = models.ForeignKey(ProjectClause, on_delete=models.SET_NULL, null=True, blank=True)
-	policy = models.ForeignKey(TenantPolicy, on_delete=models.SET_NULL, null=True, blank=True)
-	control = models.ForeignKey(ProjectControl, on_delete=models.SET_NULL, null=True, blank=True)
-	sub_control = models.ForeignKey(ProjectSubControl, on_delete=models.SET_NULL, null=True, blank=True)
+	project = models.ManyToManyField(Project, blank=True)
+	task = models.ManyToManyField(ProjectTask, blank=True)
+	clause = models.ManyToManyField(ProjectClause, blank=True)
+	policy = models.ManyToManyField(TenantPolicy, blank=True)
+	control = models.ManyToManyField(ProjectControl, blank=True)
+	sub_control = models.ManyToManyField(ProjectSubControl, blank=True)
 
 	title = models.CharField(max_length=255, null=False, blank=False)
 	description = models.TextField(max_length=255, null=True, blank=True)
@@ -606,8 +616,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 				project_sub_clauses = ProjectSubClause.objects.filter(sub_clause=item.sub_clause, project=instance)
 				if project_sub_clauses:
 					for psc in project_sub_clauses:
-						ProjectControl.objects.create(
-								project=instance,
+						project_control = ProjectControl.objects.create(
 								control=item,
 								ref_id=item.ref_id,
 								project_sub_clause=psc,
@@ -618,9 +627,10 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 								operational_capability=item.operational_capability,
 								control_type=item.control_type
 							)
+						project_control.project.add(instance)
 				else:
-					ProjectControl.objects.create(
-								project=instance,
+					project_control = ProjectControl.objects.create(
+								# project=instance,
 								control=item,
 								ref_id=item.ref_id,
 								visible=item.visible,
@@ -630,6 +640,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 								operational_capability=item.operational_capability,
 								control_type=item.control_type
 							)
+					project_control.project.add(instance)
 
 			for item in instance.framework.subcontrol_set.all():
 				for project_control in item.control.projectcontrol_set.all():
