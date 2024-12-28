@@ -338,7 +338,7 @@ class ProjectControlWithSubControlSerializer(serializers.ModelSerializer):
             frameworks.append(project.framework.name)
         return frameworks
     
-    def get_framework_name(self, obj):
+    def get_projects(self, obj):
         projects = []
         for item in obj.project.all():
             print(item)
