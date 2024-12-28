@@ -351,9 +351,11 @@ class ProjectSubClause(BaseModel):
 			if self.sub_clause:
 				self.ref_id = self.sub_clause.ref_id 
 		super(ProjectSubClause, self).save(*args, **kwargs)
-	
+
+
 class TenantPolicy(BaseModel):
-	project = models.ManyToManyField(Project)
+	tenant=models.ForeignKey(Tenant, on_delete=models.CASCADE)
+	project = models.ManyToManyField(Project, blank=True)
 	policy = models.ForeignKey(Policy, on_delete=models.SET_NULL, null=True, blank=True)
 	title = models.CharField(max_length=255, blank=True)
 	description = models.TextField(blank=True)
@@ -480,7 +482,7 @@ class EvidenceFile(BaseModel):
 
 
 class Evidence(BaseModel):
-	tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE, null=True, blank=True)
+	tenant = models.ForeignKey(Tenant, on_delete=models.CASCADE)
 	project = models.ManyToManyField(Project, blank=True)
 	task = models.ManyToManyField(ProjectTask, blank=True)
 	clause = models.ManyToManyField(ProjectClause, blank=True)

@@ -539,3 +539,13 @@ class ControlAddToProjectSerializer(serializers.Serializer):
     project_id = serializers.IntegerField()
 
     
+
+class PolicyAddToProjectSerializer(serializers.Serializer):
+    policy_id = serializers.IntegerField()
+    project_id = serializers.IntegerField()
+
+class EvidenceAddToProjectTaskSerializer(serializers.Serializer):
+    evidence_id = serializers.IntegerField()
+    projecttask_id = serializers.IntegerField()
+
+    

@@ -17,14 +17,13 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
 	IsProjectManager, Or)
 from .serializers import (AuditorFeedbackSerializer, AuditorSummarySerrializer, ClauseSerializer,
-	CommentSerializer, ContextFileSerializer, ControlSerializer, EvidenceSerializer,
-	FrameworkSerializer, NormativeReferencesSerializer, NoteSerializer, PolicySerializer,
+	CommentSerializer, ContextFileSerializer, ControlAddToProjectSerializer, ControlSerializer,
+	EvidenceAddToProjectTaskSerializer, EvidenceSerializer, FrameworkSerializer,
+	NormativeReferencesSerializer, NoteSerializer, PolicyAddToProjectSerializer, PolicySerializer,
 	ProjectClauseSerializer, ProjectControlSerializer, ProjectControlWithSubControlSerializer,
 	ProjectMemberSerializer, ProjectScratchpadSerializer, ProjectSerializer, ProjectStatusSerializer,
 	ProjectSubControlSerializer, ProjectTaskSerializer, SubControlSerializer, TaskSerializer,
-	TenantPolicySerializer, TenantSerializer,
-	ControlAddToProjectSerializer
-	)
+	TenantPolicySerializer, TenantSerializer)
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -134,9 +133,9 @@ class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 	def get_queryset(self):
 		tenant_id = self.kwargs.get('tenant_id', None)
 		if tenant_id:
-			return TenantPolicy.objects.filter(project__tenant_id=tenant_id).distinct()
-		else:
-			return TenantPolicy.objects.all()
+			return TenantPolicy.objects.filter(tenant_id=tenant_id).distinct()
+		# else:
+		# 	return TenantPolicy.objects.all()
 
 class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
 	queryset = TenantPolicy.objects.all()
@@ -870,6 +869,92 @@ class ControlAddToProjectView(APIView):
 			control = ProjectControl.objects.get(id=control_id)
 			project = Project.objects.get(id=project_id)
 			control.project.add(project)
+			return Response({
+				"response": "success",
+				"msg": "Successfully added"
+			}, status=status.HTTP_200_OK)
+		except:
+			return Response({
+				"response": "error",
+				"msg": "Not found"
+			}, status=404)
+
+
+class PolicyAddToProjectView(APIView):
+
+	@swagger_auto_schema(
+        request_body=PolicyAddToProjectSerializer,
+        responses={
+            200: openapi.Response(
+                description="Successs",
+                examples={
+                    "application/json": {
+                        "response": "success",
+                        "msg": "Successfully added"
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="Error: Not Found",
+                examples={
+                    "application/json": {
+                        "response": "error",
+                        "msg": "Not found"
+                    }
+                }
+            ),
+        },
+    )
+	def post(self, request, *args, **kwargs):
+		policy_id = request.data.get('policy_id')
+		project_id = request.data.get('project_id')
+		try:
+			policy = TenantPolicy.objects.get(id=policy_id)
+			project = Project.objects.get(id=project_id)
+			policy.project.add(project)
+			return Response({
+				"response": "success",
+				"msg": "Successfully added"
+			}, status=status.HTTP_200_OK)
+		except:
+			return Response({
+				"response": "error",
+				"msg": "Not found"
+			}, status=404)
+
+
+class EvidenceAddToProjectTaskView(APIView):
+
+	@swagger_auto_schema(
+        request_body=EvidenceAddToProjectTaskSerializer,
+        responses={
+            200: openapi.Response(
+                description="Successs",
+                examples={
+                    "application/json": {
+                        "response": "success",
+                        "msg": "Successfully added"
+                    }
+                }
+            ),
+            404: openapi.Response(
+                description="Error: Not Found",
+                examples={
+                    "application/json": {
+                        "response": "error",
+                        "msg": "Not found"
+                    }
+                }
+            ),
+        },
+    )
+	def post(self, request, *args, **kwargs):
+		evidence_id = request.data.get('evidence_id')
+		projecttask_id = request.data.get('projecttask_id')
+		try:
+			evidence = Evidence.objects.get(id=evidence_id)
+			project_task = ProjectTask.objects.get(id=projecttask_id)
+			evidence.task.add(project_task)
 			return Response({
 				"response": "success",
 				"msg": "Successfully added"
