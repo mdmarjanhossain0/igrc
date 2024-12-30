@@ -291,7 +291,7 @@ class ControlWithSubControlsByProjectView(viewsets.ModelViewSet):
 	
 	def get_queryset(self):
 		project_id = self.kwargs.get('project_id')
-		return ProjectControl.objects.filter(project__in=project_id)
+		return ProjectControl.objects.filter(project__in=[project_id])
 
 
 	def perform_create(self, serializer):
