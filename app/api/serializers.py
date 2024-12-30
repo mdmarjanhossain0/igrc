@@ -521,16 +521,16 @@ class AuditorSummarySerrializer(serializers.Serializer):
 
     def get_ready_for_auditor(self,obj):
         project_id=self.context.get('project_id')
-        return ProjectControlSerializer(ProjectControl.objects.filter(project_id=project_id, status="completed").exclude(auditorfeedback__isnull=False), many=True).data
+        return ProjectControlSerializer(ProjectControl.objects.filter(project__id=project_id, status="completed").exclude(auditorfeedback__isnull=False), many=True).data
 
     def get_completed(self, obj):
         project_id = self.context.get('project_id')
-        completed = ProjectControl.objects.filter(project_id=project_id, status='completed', auditorfeedback__status='completed')
+        completed = ProjectControl.objects.filter(project__id=project_id, status='completed', auditorfeedback__status='completed')
         return ProjectControlSerializer(completed, many=True).data
     
     def get_incomplete(self,obj):
         project_id = self.context.get('project_id')
-        incomplete = ProjectControl.objects.filter(project_id=project_id, status='completed').exclude(Q(auditorfeedback__isnull=True)| Q(auditorfeedback__status='completed'))
+        incomplete = ProjectControl.objects.filter(project__id=project_id, status='completed').exclude(Q(auditorfeedback__isnull=True)| Q(auditorfeedback__status='completed'))
         return ProjectControlSerializer(incomplete, many=True).data
 
 
