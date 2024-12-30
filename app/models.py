@@ -628,13 +628,13 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 								level=item.level,
 								operational_capability=item.operational_capability,
 								control_type=item.control_type,
-								implementation_context=item.implementation_context,
+								# implementation_context=item.implementation_context,
 								category=item.category,
 								sub_category=item.sub_category,
-								implementation_difficulty=item.implementation_difficulty,
-								collaboration_difficulty=item.collaboration_difficulty,
+								# implementation_difficulty=item.implementation_difficulty,
+								# collaboration_difficulty=item.collaboration_difficulty,
 								guidance=item.guidance,
-								applicable=item.applicable
+								# applicable=item.applicable
 							)
 						project_control.project.add(instance)
 				else:
@@ -650,13 +650,13 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 								level=item.level,
 								operational_capability=item.operational_capability,
 								control_type=item.control_type,
-								implementation_context=item.implementation_context,
+								# implementation_context=item.implementation_context,
 								category=item.category,
 								sub_category=item.sub_category,
-								implementation_difficulty=item.implementation_difficulty,
-								collaboration_difficulty=item.collaboration_difficulty,
+								# implementation_difficulty=item.implementation_difficulty,
+								# collaboration_difficulty=item.collaboration_difficulty,
 								guidance=item.guidance,
-								applicable=item.applicable
+								# applicable=item.applicable
 							)
 					project_control.project.add(instance)
 
