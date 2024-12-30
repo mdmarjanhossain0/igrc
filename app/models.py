@@ -620,12 +620,21 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 								control=item,
 								ref_id=item.ref_id,
 								project_sub_clause=psc,
+								title=item.title,
+								description=item.description,
 								visible=item.visible,
 								zreferences=item.zreferences,
-								mapping = item.mapping,
+								mapping=item.mapping,
 								level=item.level,
 								operational_capability=item.operational_capability,
-								control_type=item.control_type
+								control_type=item.control_type,
+								implementation_context=item.implementation_context,
+								category=item.category,
+								sub_category=item.sub_category,
+								implementation_difficulty=item.implementation_difficulty,
+								collaboration_difficulty=item.collaboration_difficulty,
+								guidance=item.guidance,
+								applicable=item.applicable
 							)
 						project_control.project.add(instance)
 				else:
@@ -633,12 +642,21 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 								# project=instance,
 								control=item,
 								ref_id=item.ref_id,
+								title=item.title,
+								description=item.description,
 								visible=item.visible,
 								zreferences=item.zreferences,
-								mapping = item.mapping,
+								mapping=item.mapping,
 								level=item.level,
 								operational_capability=item.operational_capability,
-								control_type=item.control_type
+								control_type=item.control_type,
+								implementation_context=item.implementation_context,
+								category=item.category,
+								sub_category=item.sub_category,
+								implementation_difficulty=item.implementation_difficulty,
+								collaboration_difficulty=item.collaboration_difficulty,
+								guidance=item.guidance,
+								applicable=item.applicable
 							)
 					project_control.project.add(instance)
 
