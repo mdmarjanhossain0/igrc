@@ -14,8 +14,7 @@ from app.models import (Clause, Comment, Control, Evidence, EvidenceFile, Framew
 	Project, ProjectClause, ProjectControl, ProjectMember, ProjectScratchpad, ProjectSubControl,
 	ProjectTask, SubControl, Task, Tenant, TenantPolicy, Note, AuditorFeedback, Comment,  ContextFile)
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from app.api.permissions import ( IsGrcAdmin, IsProjectAdmin,
-	IsProjectManager, Or)
+from app.api.permissions import IsGrcAdmin, IsProjectAdmin, IsProjectManager, IsTenantOwner, Or
 from .serializers import (AuditorFeedbackSerializer, AuditorSummarySerrializer, ClauseSerializer,
 	CommentSerializer, ContextFileSerializer, ControlAddToProjectSerializer, ControlSerializer,
 	EvidenceAddToProjectTaskSerializer, EvidenceSerializer, FrameworkSerializer,
@@ -99,10 +98,10 @@ class ProjectModelViewSet(viewsets.ModelViewSet):
 		if self.action in ['list','retrieve']:
 			return [IsAuthenticated()]
 		if self.action == 'create':
-			return [Or(IsGrcAdmin,IsProjectAdmin)]
+			return [Or(IsGrcAdmin,IsProjectAdmin,IsTenantOwner)]
 		if self.action in ['update', 'partial_update', 'destroy']:
 			return [IsGrcAdmin()]
-		return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager)]
+		return [Or(IsGrcAdmin,IsProjectAdmin,IsProjectManager,IsTenantOwner)]
 		
 
 

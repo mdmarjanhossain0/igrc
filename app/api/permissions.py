@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from app.models import Project, ProjectMember
+from app.models import Project, ProjectMember, Tenant
 from account.models import Account
 
 
@@ -27,6 +27,17 @@ class IsProjectAdmin(BasePermission):
             role='Admin'
         ).exists()
     
+class IsTenantOwner(BasePermission):
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            return False
+        
+        tenant_id = request.data.get('tenant')
+
+        return Tenant.objects.filter(
+            id=tenant_id,
+            owner=request.user
+        ).exists()
 class IsProjectManager(BasePermission):
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
