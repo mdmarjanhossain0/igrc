@@ -160,6 +160,7 @@ class ProjectControlModelViewSet(viewsets.ModelViewSet):
 
 	def get_queryset(self):
 		tenant_id = self.kwargs.get('tenant_id', None)
+		# print(tenant_id)
 		if tenant_id:
 			return ProjectControl.objects.filter(project__tenant_id=tenant_id).distinct()
 		else:
@@ -290,7 +291,7 @@ class ControlWithSubControlsByProjectView(viewsets.ModelViewSet):
 	
 	def get_queryset(self):
 		project_id = self.kwargs.get('project_id')
-		return ProjectControl.objects.filter(project__in=project_id)
+		return ProjectControl.objects.filter(project__id=project_id)
 
 
 	def perform_create(self, serializer):
