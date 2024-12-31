@@ -15,7 +15,7 @@ from .views import (AditorFeedBackViewSet, AuditorFeedbackByProjectControlModelV
     ProjectPoicyModelViewSet, ProjectScratchpadModelViewSet, ProjectStatusView,
     ProjectSubControlModelViewSet, ProjectTaskModelViewSet, RemoveEvidenceFileView,
     SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet, TasksByProjectView,
-    TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet)
+    TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, ProjectByTenantView)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -107,5 +107,6 @@ urlpatterns = [
     path('project/<int:project_id>/auditor-summary/', AuditorSummaryView.as_view(), name='project-auditor-summary'),
     path("control_add_to_project/", ControlAddToProjectView.as_view(),),
     path("policy_add_to_project/", PolicyAddToProjectView.as_view(),),
-    path("evidence_add_to_projecttask/", EvidenceAddToProjectTaskView.as_view(),)
+    path("evidence_add_to_projecttask/", EvidenceAddToProjectTaskView.as_view(),),
+    path("tenants/<int:tenant_id>/projects", ProjectByTenantView.as_view(),),
 ]

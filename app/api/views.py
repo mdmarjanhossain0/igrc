@@ -964,3 +964,24 @@ class EvidenceAddToProjectTaskView(APIView):
 				"response": "error",
 				"msg": "Not found"
 			}, status=404)
+
+
+class ProjectByTenantView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, tenant_id):
+        try:
+            projects = Project.objects.filter(tenant_id=tenant_id)
+            if projects.exists():
+                serializer = ProjectSerializer(projects, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(
+                    {"response": "error", "message": "The requested resource could not be found."},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+        except Exception as e:
+            return Response(
+                {"response": "error", "message": f"An unexpected error occurred. Please try again later.{e}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
