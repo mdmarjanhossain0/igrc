@@ -228,7 +228,8 @@ class ProjectMember(BaseModel):
 	ROLE_CHOICES = [
 		('viewer', 'Viewer'),
 		('Editor', 'Editor'),
-		('Admin', 'Admin'),
+		('Owner', 'Owner'),
+	 	('Employee','Employee'),
 		('Manager','Manager'),
 		('external_auditor', 'Auditor(External)'),
 		('internal_auditor', 'Auditor(Internal)'),
@@ -552,7 +553,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 		ProjectMember.objects.create(
 			project=instance,
 			member=instance.owner,
-			role="Admin"
+			role="Owner"
 		)
 		
 		if instance.framework:
