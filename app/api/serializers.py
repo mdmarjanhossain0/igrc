@@ -199,7 +199,7 @@ class TenantPolicySerializer(serializers.ModelSerializer):
         model = TenantPolicy
         fields = '__all__'
 
-    def get_project_list(self, obj):
+    def get_project_list(self,obj):
         return ProjectSerializer(obj.project.all(), many=True).data
 
 
