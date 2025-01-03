@@ -141,7 +141,7 @@ class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 	def get_queryset(self):
 		tenant_id = self.kwargs.get('tenant_id', None)
 		if tenant_id:
-			return TenantPolicy.objects.filter(tenant_id=tenant_id).distinct()
+			return TenantPolicy.objects.filter(tenant_id=tenant_id).distinct('policy_id')
 		# else:
 		# 	return TenantPolicy.objects.all()
 	
@@ -476,7 +476,7 @@ class TenantEvidenceModelViewSet(viewsets.ModelViewSet):
 	serializer_class = EvidenceSerializer
 	pagination_class = None
 	filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
-	
+
 	filterset_class = EvidenceFilterSet
 
 	def get_queryset(self):
