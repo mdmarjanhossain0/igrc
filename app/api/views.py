@@ -66,13 +66,21 @@ class SubControlModelViewSet(viewsets.ModelViewSet):
 
 class TenantModelViewSet(viewsets.ModelViewSet):
 	queryset=Tenant.objects.all()
+	pagination_class=None
 	serializer_class = TenantSerializer
 
 	def get_permissions(self):
 		if self.action in ['create', 'update', 'partial_update', 'destroy']:
 			self.permission_classes=[IsGrcAdmin]
 		return super(TenantModelViewSet, self).get_permissions()
-
+	
+	def list(self, request, *args, **kwargs):
+			queryset = self.get_queryset()
+			serializer = self.get_serializer(queryset, many=True)
+			response_data = {
+					'results': serializer.data
+			}
+			return Response(response_data)
 
 
 
@@ -128,6 +136,7 @@ class ProjectClauseModelViewSet(viewsets.ModelViewSet):
 class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 	queryset = TenantPolicy.objects.all()
 	serializer_class = TenantPolicySerializer
+	pagination_class=None
 
 	def get_queryset(self):
 		tenant_id = self.kwargs.get('tenant_id', None)
@@ -135,6 +144,15 @@ class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 			return TenantPolicy.objects.filter(tenant_id=tenant_id).distinct()
 		# else:
 		# 	return TenantPolicy.objects.all()
+	
+	def list(self, request, *args, **kwargs):
+			queryset = self.get_queryset()
+			serializer = self.get_serializer(queryset, many=True)
+			response_data = {
+					'results': serializer.data
+			}
+			return Response(response_data)
+
 
 class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
 	queryset = TenantPolicy.objects.all()
@@ -156,7 +174,7 @@ class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
 class ProjectControlModelViewSet(viewsets.ModelViewSet):
 	queryset = ProjectControl.objects.all()
 	serializer_class = ProjectControlWithSubControlSerializer
-
+	pagination_class = None
 	def get_queryset(self):
 		tenant_id = self.kwargs.get('tenant_id', None)
 		# print(tenant_id)
@@ -164,6 +182,15 @@ class ProjectControlModelViewSet(viewsets.ModelViewSet):
 			return ProjectControl.objects.filter(project__tenant_id=tenant_id).distinct()
 		else:
 			return ProjectControl.objects.all()
+	
+	def list(self, request, *args, **kwargs):
+			queryset = self.get_queryset()
+			serializer = self.get_serializer(queryset, many=True)
+			response_data = {
+					'results': serializer.data
+			}
+			return Response(response_data)
+
 
 class ProjectSubControlModelViewSet(viewsets.ModelViewSet):
 	queryset = ProjectSubControl.objects.all()
@@ -447,6 +474,7 @@ class ProjectMemberByProject(APIView):
 class TenantEvidenceModelViewSet(viewsets.ModelViewSet):
 	queryset = Evidence.objects.all()
 	serializer_class = EvidenceSerializer
+	pagination_class = None
 	filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
 
 	filterset_class = EvidenceFilterSet
@@ -455,6 +483,14 @@ class TenantEvidenceModelViewSet(viewsets.ModelViewSet):
 		return Evidence.objects.filter(
 			tenant_id=self.kwargs.get('tenant_id')
 		)
+
+	def list(self, request, *args, **kwargs):
+		queryset = self.get_queryset()
+		serializer = self.get_serializer(queryset, many=True)
+		response_data = {
+				'results': serializer.data
+		}
+		return Response(response_data)
 
 @api_view(
 		["GET"]
