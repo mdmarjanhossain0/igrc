@@ -685,13 +685,19 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 						description=item.description,
 						ref_id=item.ref_id
 					)
+			
 			for item in instance.framework.policy_set.all():
-				tenant_policy=TenantPolicy.objects.create(
+				tenant_policy=TenantPolicy.filter(
 					tenant=instance.tenant,
-					policy=item,
-					title=item.title,
-					description=item.description,
-					content=item.content,
-					ref_id=item.ref_id
+					policy=item
 				)
+				if not tenant_policy:
+					tenant_policy=TenantPolicy.objects.create(
+						tenant=instance.tenant,
+						policy=item,
+						title=item.title,
+						description=item.description,
+						content=item.content,
+						ref_id=item.ref_id
+					)
 				tenant_policy.project.add(instance)

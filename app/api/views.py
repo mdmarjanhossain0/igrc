@@ -154,19 +154,6 @@ class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 			return Response(response_data)
 
 
-class TenantPolicyDistinctModelViewSet(viewsets.ModelViewSet):
-	queryset = TenantPolicy.objects.all()
-	serializer_class = TenantPolicySerializer
-	pagination_class=None
-
-	def get_queryset(self):
-		tenant_id = self.kwargs.get('tenant_id', None)
-		if tenant_id:
-			distinct_policies = TenantPolicy.objects.filter(tenant_id=tenant_id).values_list('policy_id',flat=True).distinct()
-			return TenantPolicy.objects.filter(policy_id__in=distinct_policies).distinct()
-		# else:
-		# 	return TenantPolicy.objects.all()
-	
 	def list(self, request, *args, **kwargs):
 			queryset = self.get_queryset()
 			serializer = self.get_serializer(queryset, many=True)

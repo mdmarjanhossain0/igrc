@@ -16,7 +16,7 @@ from .views import (AditorFeedBackViewSet, AuditorFeedbackByProjectControlModelV
     ProjectStatusView, ProjectSubControlModelViewSet, ProjectTaskModelViewSet,
     RemoveEvidenceFileView, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
     TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet,
-    TenantPolicyDistinctModelViewSet, TenantPolicyModelViewSet)
+     TenantPolicyModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -36,7 +36,7 @@ router.register(r'projects', ProjectModelViewSet)
 router.register(r'project-members', ProjectMemberModelViewSet)
 router.register(r'project-tasks', ProjectTaskModelViewSet)
 router.register(r'project-clauses', ProjectClauseModelViewSet)
-router.register(r'tenant-policies/(?P<tenant_id>\d+)', TenantPolicyDistinctModelViewSet)
+router.register(r'tenant-policies/(?P<tenant_id>\d+)', TenantPolicyModelViewSet)
 router.register(r'project-controls/(?P<tenant_id>\d+)', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
 router.register(r'evidence', EvidenceModelViewSet)
