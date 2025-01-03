@@ -484,7 +484,7 @@ class TenantEvidenceModelViewSet(viewsets.ModelViewSet):
 	serializer_class = EvidenceSerializer
 	pagination_class = None
 	filter_backends = (SearchFilter, OrderingFilter, DjangoFilterBackend)
-	
+
 	filterset_class = EvidenceFilterSet
 
 	def get_queryset(self):

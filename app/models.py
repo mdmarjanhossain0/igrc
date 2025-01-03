@@ -5,7 +5,7 @@ from account.models import Account, Audit
 from django.core.validators import MinValueValidator, MaxValueValidator
 # from django_ckeditor_5.fields import CKEditor5Field
 
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from grc_config.models import (
@@ -373,6 +373,13 @@ def copy_policy_fields(sender, instance, created, **kwargs):
         instance.content = instance.policy.content
         instance.ref_id = instance.policy.ref_id
         instance.save()
+
+@receiver(post_delete, sender=Project)
+def delete_tenant_policy(sender, instance, **kwargs):
+    tenant_policies = TenantPolicy.objects.filter(project=instance)
+    for tenant_policy in tenant_policies:
+        tenant_policy.delete()
+
 
 class ProjectControl(BaseModel):
 	status_choices=[
