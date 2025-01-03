@@ -3,7 +3,7 @@ import os
 import django.contrib.auth
 from rest_framework import viewsets, status
 
-from rest_framework.exceptions import PermissionDenied
+from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.decorators import (
 	api_view,
 	authentication_classes,
@@ -397,6 +397,7 @@ class TasksByProjectView(viewsets.ModelViewSet):
 
 class ProjectMembersByProject(viewsets.ModelViewSet):
 	serializer_class = ProjectMemberSerializer
+	pagination_class = None
 	def get_permissions(self):
 		if self.action in ['list','retrieve']:
 			return  [IsAuthenticated()]
@@ -405,10 +406,22 @@ class ProjectMembersByProject(viewsets.ModelViewSet):
 	def get_queryset(self):
 		project_id = self.kwargs.get('project_id')
 		return ProjectMember.objects.filter(project_id=project_id)
+	
+	def list(self, request, *args, **kwargs):
+		queryset = self.get_queryset()
+		serializer = self.get_serializer(queryset, many=True)
+		response_data = {
+				'results': serializer.data
+		}
+		return Response(response_data)
 
 	def perform_create(self, serializer):
+
 		project_id = self.kwargs.get('project_id')
 		project = Project.objects.get(id=project_id)
+		user=serializer.validated_data.get('user')
+		if ProjectMember.objects.filter(project=project, user=user).exists():
+			raise ValidationError("User already exists")
 		serializer.save(project=project)
 	
 	def perform_update(self, serializer):
