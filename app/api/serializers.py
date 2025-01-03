@@ -59,9 +59,27 @@ class SubControlSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TenantSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model= Tenant
         fields = '__all__'
+        
+    def to_representation(self, instance):
+        # Get the default serialized data
+        data = super().to_representation(instance)
+        # Include only specific fields for created_by
+        if instance.owner:
+            owner = AccountSerializer(instance.owner).data
+            data['owner'] = {
+                'id': owner['id'],
+                'username': owner['username'],
+                'email': owner['email'],
+                "profile_picture":owner['profile_picture'],
+                
+            }
+        return data 
+
+
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -181,7 +199,7 @@ class TenantPolicySerializer(serializers.ModelSerializer):
         model = TenantPolicy
         fields = '__all__'
 
-    def get_project_list(self):
+    def get_project_list(self, obj):
         return ProjectSerializer(obj.project.all(), many=True).data
 
 
