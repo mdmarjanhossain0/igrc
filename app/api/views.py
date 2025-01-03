@@ -157,6 +157,7 @@ class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
 	queryset = TenantPolicy.objects.all()
 	serializer_class = TenantPolicySerializer
+	pagination_class = None
 	def get_queryset(self):
 		# Check if the request method is PUT or PATCH
 		if self.request.method in ['PUT', 'PATCH']:
@@ -171,6 +172,13 @@ class ProjectPoicyModelViewSet(viewsets.ModelViewSet):
 		self.perform_update(serializer)
 		return Response(serializer.data, status=status.HTTP_200_OK)
 
+	def list(self, request, *args, **kwargs):
+			queryset = self.get_queryset()
+			serializer = self.get_serializer(queryset, many=True)
+			response_data = {
+					'results': serializer.data
+			}
+			return Response(response_data)
 class ProjectControlModelViewSet(viewsets.ModelViewSet):
 	queryset = ProjectControl.objects.all()
 	serializer_class = ProjectControlWithSubControlSerializer
