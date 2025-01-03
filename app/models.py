@@ -690,7 +690,8 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 				tenant_policy=TenantPolicy.objects.filter(
 					tenant=instance.tenant,
 					policy=item
-				)
+				).first()
+				
 				if not tenant_policy:
 					tenant_policy=TenantPolicy.objects.create(
 						tenant=instance.tenant,
