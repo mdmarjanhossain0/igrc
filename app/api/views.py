@@ -422,7 +422,8 @@ class ProjectMembersByProject(viewsets.ModelViewSet):
 		member=serializer.validated_data.get('member')
 		if ProjectMember.objects.filter(project=project, member=member).exists():
 			raise ValidationError("User already exists")
-		serializer.save(project=project)
+		else: 
+			serializer.save(project=project)
 	
 	def perform_update(self, serializer):
 		project_id = self.kwargs.get('project_id')

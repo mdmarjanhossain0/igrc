@@ -148,7 +148,7 @@ class ProjectMemberSerializer(serializers.ModelSerializer):
         return obj.member.email
 
 class ProjectTaskSerializer(serializers.ModelSerializer):
-    assignee_name = serializers.SerializerMethodField()
+    assignee_member = serializers.SerializerMethodField()
     files = serializers.SerializerMethodField()
     user_files = serializers.SerializerMethodField()
     
@@ -161,9 +161,9 @@ class ProjectTaskSerializer(serializers.ModelSerializer):
         model = ProjectTask
         fields = '__all__'
     
-    def get_assignee_name(self,obj):
+    def get_assignee_member(self,obj):
         try:
-            return obj.assignee.username
+            return AccountSerializer(obj.assignee).data
         except:
             return None
     

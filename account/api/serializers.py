@@ -26,4 +26,4 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         # fields = "__all__"
-        exclude = ["groups", "user_permissions"]
+        exclude = ["groups", "user_permissions",'password','otp','otp_send_time','is_verified','verified_at','tenant_limit','is_active','is_staff','is_superuser','is_admin','last_login','date_joined',]
