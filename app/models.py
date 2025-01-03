@@ -548,6 +548,13 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 	if created:
 		# instance.framework_name = instance.framework.name
 		# instance.framework_description = instance.framework.description
+		
+		ProjectMember.objects.create(
+			project=instance,
+			member=instance.owner,
+			role="Admin"
+		)
+		
 		if instance.framework:
 			for item in instance.framework.task_set.all():
 				project_task=ProjectTask.objects.create(
