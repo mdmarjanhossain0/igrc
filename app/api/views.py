@@ -974,7 +974,7 @@ class ProjectByTenantView(APIView):
             projects = Project.objects.filter(tenant_id=tenant_id)
             if projects.exists():
                 serializer = ProjectSerializer(projects, many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response({"results":serializer.data}, status=status.HTTP_200_OK)
             else:
                 return Response(
                     {"response": "error", "message": "The requested resource could not be found."},
