@@ -141,7 +141,7 @@ class TenantPolicyModelViewSet(viewsets.ModelViewSet):
 	def get_queryset(self):
 		tenant_id = self.kwargs.get('tenant_id', None)
 		if tenant_id:
-			return TenantPolicy.objects.filter(tenant_id=tenant_id).values('policy_id').distinct()
+			return TenantPolicy.objects.filter(tenant_id=tenant_id).distinct()
 		# else:
 		# 	return TenantPolicy.objects.all()
 	
