@@ -9,13 +9,14 @@ from .views import (AditorFeedBackViewSet, AuditorFeedbackByProjectControlModelV
     ControlWithSubControlsByProjectView, EvidenceAddToProjectTaskView,
     EvidenceByProjectTaskModelViewSet, EvidenceModelViewSet, FrameworkModelViewSet,
     normative_reference_view, NoteByProjectControlModelViewSet, NoteByProjectTaskModelViewSet,
-    NoteViewSet, PolicyAddToProjectView, PolicyModelViewSet, ProjectClauseModelViewSet,
-    ProjectControlModelViewSet, ProjectEvidenceView, ProjectMemberByProject,
-    ProjectMemberModelViewSet, ProjectMembersByProject, ProjectModelViewSet,
-    ProjectPoicyModelViewSet, ProjectScratchpadModelViewSet, ProjectStatusView,
-    ProjectSubControlModelViewSet, ProjectTaskModelViewSet, RemoveEvidenceFileView,
-    SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet, TasksByProjectView,
-    TenantEvidenceModelViewSet, TenantModelViewSet, TenantPolicyModelViewSet, ProjectByTenantView)
+    NoteViewSet, PolicyAddToProjectView, PolicyModelViewSet, ProjectByTenantView,
+    ProjectClauseModelViewSet, ProjectControlModelViewSet, ProjectEvidenceView,
+    ProjectMemberByProject, ProjectMemberModelViewSet, ProjectMembersByProject,
+    ProjectModelViewSet, ProjectPoicyModelViewSet, ProjectScratchpadModelViewSet,
+    ProjectStatusView, ProjectSubControlModelViewSet, ProjectTaskModelViewSet,
+    RemoveEvidenceFileView, SubControlModelViewSet, SubControlsByProjectView, TaskModelViewSet,
+    TasksByProjectView, TenantEvidenceModelViewSet, TenantModelViewSet,
+    TenantPolicyDistinctModelViewSet, TenantPolicyModelViewSet)
 
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
@@ -35,7 +36,7 @@ router.register(r'projects', ProjectModelViewSet)
 router.register(r'project-members', ProjectMemberModelViewSet)
 router.register(r'project-tasks', ProjectTaskModelViewSet)
 router.register(r'project-clauses', ProjectClauseModelViewSet)
-router.register(r'tenant-policies/(?P<tenant_id>\d+)', TenantPolicyModelViewSet)
+router.register(r'tenant-policies/(?P<tenant_id>\d+)', TenantPolicyDistinctModelViewSet)
 router.register(r'project-controls/(?P<tenant_id>\d+)', ProjectControlModelViewSet)
 router.register(r'project-subcontrols', ProjectSubControlModelViewSet)
 router.register(r'evidence', EvidenceModelViewSet)
