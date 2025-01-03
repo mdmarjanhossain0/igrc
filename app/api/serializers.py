@@ -176,9 +176,14 @@ class ProjectSubClauseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class TenantPolicySerializer(serializers.ModelSerializer):
+    project_list=serializers.SerializerMethodField()
     class Meta:
         model = TenantPolicy
         fields = '__all__'
+
+    def get_project_list(self):
+        return ProjectSerializer(obj.project.all(), many=True).data
+
 
 class ProjectControlSerializer(serializers.ModelSerializer):
     completion=serializers.SerializerMethodField()
@@ -251,10 +256,14 @@ class EvidenceSerializer(serializers.ModelSerializer):
     # Change Becuase File not uploaded
     files = EvidenceFileSerializer(many=True, read_only=True)
     
+    project_list= serializers.SerializerMethodField
 
     class Meta:
         model = Evidence
         fields = '__all__'
+    
+    def get_project_list(self,obj):
+        return ProjectSerializer(obj.project.all(), many=True).data
 
 # class ClauseByProjectSerializer(serializers.ModelSerializer):
 #     project_clauses=serializers.SerializerMethodField()
