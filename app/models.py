@@ -687,7 +687,7 @@ def created_project_receiver(sender, instance=None, created=False, **kwargs):
 					)
 			
 			for item in instance.framework.policy_set.all():
-				tenant_policy=TenantPolicy.filter(
+				tenant_policy=TenantPolicy.objects.filter(
 					tenant=instance.tenant,
 					policy=item
 				)
