@@ -519,7 +519,7 @@ class TenantEvidenceModelViewSet(viewsets.ModelViewSet):
 	def perform_create(self, serializer):
 		tenant_id = self.kwargs.get('tenant_id')
 		if tenant_id:
-			tenant = ProjectTask.objects.get(id=tenant_id)  # Fetch the task instance
+			tenant = Tenant.objects.get(id=tenant_id)  # Fetch the task instance
 			evidence = serializer.save()  # Save the Evidence instance
 
 			# Add the task to the ManyToManyField
