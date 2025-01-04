@@ -283,7 +283,7 @@ class EvidenceSerializer(serializers.ModelSerializer):
     def get_task_list(self,obj):
         tasks=obj.task.all()
 
-        return [{'id': task.id, 'title': task.title, 'project_title': task.project.title} for task in tasks]
+        return [{'id': task.id, 'title': task.title, 'project_id':task.project.id , 'project_title': task.project.title} for task in tasks]
 
     def get_project_list(self,obj):
         return ProjectSerializer(obj.project.all(), many=True).data
