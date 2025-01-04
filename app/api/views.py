@@ -516,6 +516,21 @@ class TenantEvidenceModelViewSet(viewsets.ModelViewSet):
 			tenant_id=self.kwargs.get('tenant_id')
 		)
 
+	def perform_create(self, serializer):
+		tenant_id = self.kwargs.get('tenant_id')
+		if tenant_id:
+			tenant = ProjectTask.objects.get(id=tenant_id)  # Fetch the task instance
+			evidence = serializer.save()  # Save the Evidence instance
+
+			# Add the task to the ManyToManyField
+			evidence.task.add(tenant_id)
+
+			# Handling uploaded files
+			files = self.request.FILES.getlist('files')
+			for file in files:
+				evidence_file = EvidenceFile.objects.create(file=file)
+				evidence.files.add(evidence_file)  # Add each file to the ManyToManyField
+
 	def list(self, request, *args, **kwargs):
 		queryset = self.get_queryset()
 		serializer = self.get_serializer(queryset, many=True)
