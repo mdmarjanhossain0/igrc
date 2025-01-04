@@ -523,7 +523,7 @@ class TenantEvidenceModelViewSet(viewsets.ModelViewSet):
 			evidence = serializer.save()  # Save the Evidence instance
 
 			# Add the task to the ManyToManyField
-			evidence.task.add(tenant)
+			evidence.tenant.add(tenant)
 
 			# Handling uploaded files
 			files = self.request.FILES.getlist('files')
