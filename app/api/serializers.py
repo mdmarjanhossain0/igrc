@@ -281,7 +281,7 @@ class EvidenceSerializer(serializers.ModelSerializer):
         model = Evidence
         fields = '__all__'
     def get_task_list(self,obj):
-        tasks=obj.tasks.all()
+        tasks=obj.task.all()
 
         return [{'id': task.id, 'title': task.title, 'project_title': task.project.title} for task in tasks]
 
