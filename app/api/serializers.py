@@ -274,13 +274,17 @@ class EvidenceSerializer(serializers.ModelSerializer):
     # files = EvidenceFileSerializer(many=True, read_only=False)
     # Change Becuase File not uploaded
     files = EvidenceFileSerializer(many=True, read_only=True)
-    
+    task_list=serializers.SerializerMethodField()
     project_list= serializers.SerializerMethodField
 
     class Meta:
         model = Evidence
         fields = '__all__'
-    
+    def get_task_list(self,obj):
+        tasks=obj.tasks.all()
+
+        return [{'id': task.id, 'title': task.title, 'project_title': task.project.title} for task in tasks]
+
     def get_project_list(self,obj):
         return ProjectSerializer(obj.project.all(), many=True).data
 
